@@ -169,4 +169,5 @@ Public Class TokuisakiPrintCtrlService
     Return Convert.ToBoolean(value)
   End Function
 
+
 End Class

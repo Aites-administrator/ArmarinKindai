@@ -33,6 +33,9 @@ Public Class Form_MasterMente
       Case Keys.F1
         ' 得意先商品マスタメンテナンス
         OpenForm("M03")
+      Case Keys.F2
+        ' 即時発行設定マスタメンテ
+        OpenForm("M02")
 
       Case Keys.F5
         ' 計量器管理
@@ -52,7 +55,7 @@ Public Class Form_MasterMente
     OpenForm("M01")
   End Sub
 
-  Private Sub TenantMasterButton_Click(sender As Object, e As EventArgs) Handles TenantMasterButton.Click
+  Private Sub TenantMasterButton_Click(sender As Object, e As EventArgs) Handles PrintSettingMasterButton.Click
     OpenForm("M02")
   End Sub
 

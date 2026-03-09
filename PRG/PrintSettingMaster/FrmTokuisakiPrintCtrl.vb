@@ -30,13 +30,18 @@ Public Class FrmTokuisakiPrintCtrl
   Private Sub InitializeGrid()
     dgvList.AutoGenerateColumns = False
     dgvList.Columns.Clear()
+    dgvList.DefaultCellStyle.Font = New Font("Segoe UI", 15)
+    dgvList.ColumnHeadersDefaultCellStyle.Font = New Font("Segoe UI", 15)
+    dgvList.RowTemplate.Height = 50
 
     Dim colCd As New DataGridViewTextBoxColumn()
     colCd.Name = "TOKUISAKI_CD"
     colCd.HeaderText = "得意先コード"
     colCd.DataPropertyName = "TokuiCD"
     colCd.ReadOnly = True
-    colCd.Width = 120
+    colCd.Width = 160
+    colCd.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+
     dgvList.Columns.Add(colCd)
 
     Dim colNm As New DataGridViewTextBoxColumn()
@@ -44,14 +49,14 @@ Public Class FrmTokuisakiPrintCtrl
     colNm.HeaderText = "得意先名"
     colNm.DataPropertyName = "TokuiNM1"
     colNm.ReadOnly = True
-    colNm.Width = 260
+    colNm.Width = 400
     dgvList.Columns.Add(colNm)
 
     Dim colFlg As New DataGridViewCheckBoxColumn()
     colFlg.Name = "INSTANT_PRINT_FLG"
     colFlg.HeaderText = "即時印刷"
     colFlg.DataPropertyName = "INSTANT_PRINT_FLG"
-    colFlg.Width = 80
+    colFlg.Width = 100
     dgvList.Columns.Add(colFlg)
 
     dgvList.AllowUserToAddRows = False
@@ -60,6 +65,8 @@ Public Class FrmTokuisakiPrintCtrl
     dgvList.SelectionMode = DataGridViewSelectionMode.FullRowSelect
     dgvList.MultiSelect = False
     dgvList.EditMode = DataGridViewEditMode.EditOnEnter
+    dgvList.Columns(0).HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+
   End Sub
 
   Private Sub SearchData()
@@ -72,7 +79,7 @@ Public Class FrmTokuisakiPrintCtrl
     dgvList.DataSource = _dtList
   End Sub
 
-  Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
+  Private Sub btnSearch_Click(sender As Object, e As EventArgs)
     Try
       SearchData()
     Catch ex As Exception
@@ -117,10 +124,70 @@ Public Class FrmTokuisakiPrintCtrl
 
         e.SuppressKeyPress = True
         SearchData()
+      Else
+        Select Case e.KeyCode
+          Case Keys.F5
+            Me.btnSave.PerformClick()
+          Case Keys.F6
+            Me.btnClear.PerformClick()
+          Case Keys.F10
+            Me.btnClose.PerformClick()
+        End Select
       End If
+
     Catch ex As Exception
       ComWriteErrLog(ex, False)
     End Try
   End Sub
 
+  Private Sub MyApplication_Shutdown(ByVal sender As Object,
+            ByVal e As System.EventArgs) Handles Me.FormClosing
+    _sqlServer.Dispose()
+  End Sub
+
+  Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
+
+    If False = HasUnsavedData() _
+        OrElse typMsgBoxResult.RESULT_YES = ComMessageBox("未保存のデータあります。破棄しますか？" _
+                            , Me.Text _
+                            , typMsgBox.MSG_WARNING, typMsgBoxButton.BUTTON_YESNO) Then
+      Me.Close()
+    End If
+
+  End Sub
+
+  ''' <summary>
+  ''' 未保存データが存在するか確認
+  ''' </summary>
+  Private Function HasUnsavedData() As Boolean
+
+    Dim result As Boolean = False
+
+    Try
+
+      If _dtList IsNot Nothing Then
+
+        dgvList.EndEdit()
+
+        For Each row As DataRow In _dtList.Rows
+
+          Dim currentFlg As Boolean = Convert.ToBoolean(row("INSTANT_PRINT_FLG"))
+          Dim originalFlg As Boolean = Convert.ToBoolean(row("ORIGINAL_FLG"))
+
+          If currentFlg <> originalFlg Then
+            result = True
+            Exit For
+          End If
+
+        Next
+
+      End If
+
+    Catch ex As Exception
+      Throw
+    End Try
+
+    Return result
+
+  End Function
 End Class
