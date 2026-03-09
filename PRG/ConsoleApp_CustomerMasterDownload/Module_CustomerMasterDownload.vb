@@ -266,6 +266,11 @@ Module Module_CustomerMasterDownload
         End While
       End Using
 
+
+      dt.Rows.Add()
+      dt.Rows(dt.Rows.Count - 1).Item("TokuiCD") = "000000"
+      dt.Rows(dt.Rows.Count - 1).Item("TokuiNM1") = "共通"
+
       tmpDb.Execute("delete from MST_TOKUISAKI ")
 
       ' データベースに挿入

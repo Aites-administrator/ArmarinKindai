@@ -164,7 +164,7 @@ Public Class ClsAutoCommunication
       Select Case ProcessMode
         Case "ShippingMasterDownload"
           Dim DownloadExe As New ProcessStartInfo With {
-                  .FileName = CustomerMasterDownloadPath,
+                  .FileName = ShippingMasterDownloadPath,
                   .Arguments = Concat_ScaleNumber,
                       .CreateNoWindow = False,
                       .UseShellExecute = False
