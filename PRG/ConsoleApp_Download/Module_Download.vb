@@ -965,7 +965,7 @@ Module Module_Download
       rtnDic("ShohinKN") = tmpSDr("ShohinKana").ToString
       rtnDic("SMstKBN") = tmpSDr("SMstKBN").ToString
       rtnDic("Ku") = "0"
-      rtnDic("SokoCD") = If(tmpTSDr Is Nothing, tmpSDr("SokoCD").ToString, tmpTSDr("SokoCD").ToString)
+      rtnDic("SokoCD") = "0"
       rtnDic("Irisu") = prmDataRow("JISSEKI_KOSUU").ToString
       rtnDic("Hakosu") = prmDataRow("KEIRYO_FLG").ToString
       rtnDic("Suryo") = tmpSuryo
