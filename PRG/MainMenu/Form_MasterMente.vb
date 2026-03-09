@@ -108,6 +108,8 @@ Public Class Form_MasterMente
       GetMaster("ItemMasterDownload", Concat_ScaleNumber)
       LblMessage.Text = "商品マスタ取込完了"
 
+      GetMaster("ShippingMasterDownload", Concat_ScaleNumber)
+      LblMessage.Text = "発送先マスタ取込完了"
 
       ''商品登録
       'PcaInsShohin()

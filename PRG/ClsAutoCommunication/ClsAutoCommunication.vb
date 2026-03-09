@@ -154,6 +154,7 @@ Public Class ClsAutoCommunication
   Private Shared Sub CallProcess(ProcessMode As String, Concat_ScaleNumber As String)
     Try
       Dim CustomerMasterDownloadPath As String = ReadSettingIniFile("CUSTOMER_MASTER_DOWNLOAD_PATH", "VALUE")
+      Dim ShippingMasterDownloadPath As String = ReadSettingIniFile("SHIPPING_MASTER_DOWNLOAD_PATH", "VALUE")
       Dim ItemMasterDownloadPath As String = ReadSettingIniFile("ITEM_MASTER_DOWNLOAD_PATH", "VALUE")
       Dim DownloadPath As String = ReadSettingIniFile("DOWNLOAD_PATH", "VALUE")
       Dim UploadPath As String = ReadSettingIniFile("UPLOAD_PATH", "VALUE")
@@ -161,6 +162,16 @@ Public Class ClsAutoCommunication
       Dim ReportType As String = ReadSettingIniFile("REPORT_TYPE", "VALUE")
 
       Select Case ProcessMode
+        Case "ShippingMasterDownload"
+          Dim DownloadExe As New ProcessStartInfo With {
+                  .FileName = CustomerMasterDownloadPath,
+                  .Arguments = Concat_ScaleNumber,
+                      .CreateNoWindow = False,
+                      .UseShellExecute = False
+                  }
+          Dim p As System.Diagnostics.Process = System.Diagnostics.Process.Start(DownloadExe)
+          p.WaitForExit()
+          SelectFtpResult()
         Case "CustomerMasterDownload"
 
           Dim DownloadExe As New ProcessStartInfo With {
