@@ -4,10 +4,10 @@ Imports Common.ClsFunction
 Imports MainMenu.Form_Top
 Imports Microsoft.VisualBasic.FileIO
 
-Module Module_CustomerMasterDownload
-  Private Const CUSTOMER_COLUMN_ID As Integer = 3
-  Private Const FILE_NAME_BASE As String = "40FRE1"
+Module Modul_ShippingMasterDownload
 
+  Private Const SHIPPING_COLUMN_ID As Integer = 6
+  Private Const FILE_NAME_BASE As String = "40FRE2"
   Private ReadOnly tmpDb As New ClsSqlServer
   Dim tmpDt As New DataTable
   Dim tmpRcvFilePath As String = String.Empty
@@ -74,29 +74,27 @@ Module Module_CustomerMasterDownload
     '計量器毎にループ（実績）
     For j As Integer = 0 To UnitNumberArray.Length - 1
       tmpFileName = CreateDownloadFileName(FILE_NAME_BASE, UnitNumberArray(j))
-      Console.WriteLine(UnitNumberArray(j) & "号機の得意先マスタ受信処理 START")
+      Console.WriteLine(UnitNumberArray(j) & "号機の発送先マスタ受信処理 START")
       Console.WriteLine("******************************")
       DownloadPath = FtpDownloadPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & ".CSV"
       BackupPath = FtpBackupPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & "_" & dtNow.ToString("yyMMddHHmmss") & ".CSV"
       URL = "ftp://localhost" & "/" & UnitNumberArray(j) & "/" & tmpFileName & ".CSV"
-      DownloadFtp(DownloadPath, BackupPath, URL, UnitNumberArray(j))
+      Call DownloadFtp(DownloadPath, BackupPath, URL, UnitNumberArray(j))
       System.Threading.Thread.Sleep(2000)
       'ログ登録　＆ 削除ファイル送信
       If ErrorJudFlg Then
-        InsertTRNLOG(UnitNumberArray(j), "NG", "", "得意先マスタ受信失敗", SqlServer, "Module_CustomerMasterDownload")
-        Console.WriteLine("得意先マスタ受信処理失敗")
+        InsertTRNLOG(UnitNumberArray(j), "NG", "", "発送先マスタ受信失敗", SqlServer, "Module_CustomerMasterDownload")
+        Console.WriteLine("発送先マスタ受信処理失敗")
         Console.WriteLine("号機番号 ： " & UnitNumberArray(j))
         Console.WriteLine("******************************")
-        'ClsSetMessage.SetMessage("実績受信処理失敗")
       Else
-        InsertTRNLOG(UnitNumberArray(j), "OK", "", "得意先マスタ受信成功", SqlServer, "Module_CustomerMasterDownload")
-        Console.WriteLine("得意先マスタ受信処理成功")
+        InsertTRNLOG(UnitNumberArray(j), "OK", "", "発送先マスタ受信成功", SqlServer, "Module_CustomerMasterDownload")
+        Console.WriteLine("発送先マスタ受信処理成功")
         Console.WriteLine("号機番号 ： " & UnitNumberArray(j))
         Console.WriteLine("******************************")
         System.Threading.Thread.Sleep(2000)
-        'ClsSetMessage.SetMessage("実績受信処理成功")
       End If
-      Console.WriteLine(UnitNumberArray(j) & "号機の得意先マスタ受信処理 END")
+      Console.WriteLine(UnitNumberArray(j) & "号機の発送先マスタ受信処理 END")
       Console.WriteLine("******************************")
     Next
     Console.WriteLine("*******************************************************************************")
@@ -106,11 +104,12 @@ Module Module_CustomerMasterDownload
     Console.WriteLine("*** ********** ******* ********** ******** **  ***** *** **********************")
     Console.WriteLine("*** ********** ******* **********    ***** *** *****    ***********************")
     Console.WriteLine("*******************************************************************************")
-    Console.WriteLine("得意先マスタ受信処理終了")
+    Console.WriteLine("発送先マスタ受信処理終了")
     Console.WriteLine("******************************")
     Console.WriteLine("このウィンドウを閉じるには、任意のキーを押してください...")
 
   End Sub
+
   Private Sub DownloadFtp(DownloadPath As String, BackupPath As String, URL As String, UnitNumber As String)
     Dim FILE_NAME As String = Strings.Right(URL, CutFileNameDigits)
     Dim tmpCreateDate As String = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
@@ -162,7 +161,7 @@ Module Module_CustomerMasterDownload
 
       'ダウンロード実績ファイルコピー
       MoveToBackUpLoadFile(DownloadPath, BackupPath)
-      Console.WriteLine(BackupPath & "に得意先マスタCSV作成処理完了")
+      Console.WriteLine(BackupPath & "に発送先マスタCSV作成処理完了")
       Console.WriteLine("******************************")
 
       'IZ対応
@@ -171,9 +170,9 @@ Module Module_CustomerMasterDownload
       Call MoveToBackUpLoadFile(DownloadPath, tmpRcvFilePath)
       Call ModHeaderText(tmpRcvFilePath)    ' テンポラリファイルのヘッダーに連番追加
 
-      ''得意先マスタCSVを実績テーブルに登録
-      InsertItemTable(tmpRcvFilePath, UnitNumber, tmpCreateDate)
-      Console.WriteLine("得意先マスタテーブルにデータ更新")
+      ''発送先マスタCSVを実績テーブルに登録
+      InsertShippingTable(tmpRcvFilePath, UnitNumber, tmpCreateDate)
+      Console.WriteLine("発送先マスタテーブルにデータ更新")
       Console.WriteLine("******************************")
       System.IO.File.Delete(DownloadPath)
       System.IO.File.Delete(tmpRcvFilePath)
@@ -190,19 +189,19 @@ Module Module_CustomerMasterDownload
     End Try
   End Sub
 
-  Private Sub InsertItemTable(DownloadPath As String, UnitNumber As Integer, prmCreateDate As String)
-    Dim dt As New DataTable("MST_TOKUISAKI")
+  Private Sub InsertShippingTable(DownloadPath As String, UnitNumber As Integer, prmCreateDate As String)
+    Dim dt As New DataTable("MST_CHOKUSO")
     Dim tmpBeforeNohinDay As String = "0"
     Dim tmpBeforeTokuiCd As String = "0"
     Dim HeaderRow As String() = Nothing
     Dim column As New DataColumn
-    Dim tmpShohinDic As New List(Of Dictionary(Of String, String))
+    Dim tmpShippingDic As New List(Of Dictionary(Of String, String))
 
     Try
 
       tmpDb.TrnStart()
 
-      SqlServer.GetResult(tmpDt, GetMstColumnSet(CUSTOMER_COLUMN_ID))
+      SqlServer.GetResult(tmpDt, GetMstColumnSet(SHIPPING_COLUMN_ID))
 
       ' データベースのカラム名を定義
       Dim columnNames As New List(Of String)
@@ -237,7 +236,7 @@ Module Module_CustomerMasterDownload
 
           'DataRow新規追加
           Dim tmpCreateTmpDr As DataRow = dt.NewRow()
-          tmpShohinDic = New List(Of Dictionary(Of String, String))
+          tmpShippingDic = New List(Of Dictionary(Of String, String))
 
 
           For i As Integer = 0 To row.Length - 1
@@ -251,9 +250,9 @@ Module Module_CustomerMasterDownload
           Next
 
           '単価更新 or 実績データ作成
-          tmpShohinDic.Add(GetInsertDictionary(tmpCreateTmpDr))
+          tmpShippingDic.Add(GetInsertDictionary(tmpCreateTmpDr))
           '実行時の時刻を追加
-          Dim tmpDataRow As DataRow = ComDic2Dt(tmpShohinDic).Rows(0)
+          Dim tmpDataRow As DataRow = ComDic2Dt(tmpShippingDic).Rows(0)
 
           For Each tmpColumn As DataColumn In tmpDataRow.Table.Columns
             If False = dt.Columns.Contains(tmpColumn.ColumnName) Then
@@ -266,21 +265,19 @@ Module Module_CustomerMasterDownload
         End While
       End Using
 
-      tmpDb.Execute("delete from MST_TOKUISAKI ")
+      tmpDb.Execute("delete from MST_CHOKUSO ")
 
       ' データベースに挿入
       Dim sql As String = String.Empty
       For Each dr As DataRow In dt.Rows
-        sql = GetInsertSql("MST_TOKUISAKI", dr)
-        With tmpDb
-          If .Execute(sql) = 1 Then
-            ' 更新成功
-            InsertTRNLOG(UnitNumber, "", "", "マスタ登録完了", SqlServer, "Module_CustomerMasterDownload")
-          Else
-            ' 削除失敗
-            Throw New Exception("マスタ管理の登録処理に失敗しました。")
-          End If
-        End With
+        sql = GetInsertSql("MST_CHOKUSO", dr)
+        If tmpDb.Execute(sql) = 1 Then
+          ' 更新成功
+          InsertTRNLOG(UnitNumber, "", "", "マスタ登録完了", SqlServer, "Module_CustomerMasterDownload")
+        Else
+          ' 削除失敗
+          Throw New Exception("マスタ管理の登録処理に失敗しました。")
+        End If
       Next
 
       tmpDb.TrnCommit()
@@ -304,17 +301,13 @@ Module Module_CustomerMasterDownload
 
     Dim rtnDic As New Dictionary(Of String, String)
     For Each tmpDc As DataColumn In prmDataRow.Table.Columns
-      If tmpDc.ColumnName.ToUpper = "TokuiCD".ToUpper Then
+      If tmpDc.ColumnName.ToUpper = "CODE".ToUpper Then
         rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString.PadLeft(6, "0")
       Else
         rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString
       End If
     Next
 
-    rtnDic("TDATE") = tmpCreateDate
-    rtnDic("KDATE") = tmpCreateDate
-
     Return rtnDic
   End Function
-
 End Module

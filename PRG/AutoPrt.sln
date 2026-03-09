@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.33328.57
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1738
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MainMenu", "MainMenu\MainMenu.vbproj", "{0120BC84-B8B0-4821-BDEF-2626624F6EEA}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -132,6 +132,10 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ScaleMaster", "ScaleMaster\
 	EndProjectSection
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "IisFtpManager", "IisFtpManager\IisFtpManager.vbproj", "{384D87C1-A32C-4609-8A08-F899A71ECBF0}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "ConsoleApp_ShippingMasterDownload", "ConsoleApp_ShippingMasterDownload\ConsoleApp_ShippingMasterDownload.vbproj", "{10479D03-B3F5-4B9F-B00B-136162B27398}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "PrintSettingMaster", "PrintSettingMaster\PrintSettingMaster.vbproj", "{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -455,6 +459,30 @@ Global
 		{384D87C1-A32C-4609-8A08-F899A71ECBF0}.Release|x64.Build.0 = Release|Any CPU
 		{384D87C1-A32C-4609-8A08-F899A71ECBF0}.Release|x86.ActiveCfg = Release|Any CPU
 		{384D87C1-A32C-4609-8A08-F899A71ECBF0}.Release|x86.Build.0 = Release|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Debug|x64.Build.0 = Debug|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Debug|x86.Build.0 = Debug|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Release|x64.ActiveCfg = Release|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Release|x64.Build.0 = Release|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Release|x86.ActiveCfg = Release|Any CPU
+		{10479D03-B3F5-4B9F-B00B-136162B27398}.Release|x86.Build.0 = Release|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Debug|x64.Build.0 = Debug|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Debug|x86.Build.0 = Debug|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Release|x64.ActiveCfg = Release|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Release|x64.Build.0 = Release|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Release|x86.ActiveCfg = Release|Any CPU
+		{1292C157-E268-4326-A2EA-FA6BB5FC5F0E}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

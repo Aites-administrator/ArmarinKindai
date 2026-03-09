@@ -873,4 +873,282 @@ Err_Exit:
       tb.SelectionStart = Math.Min(cursorPos, text.Length)
     End If
   End Sub
+
+  ''' <summary>
+  ''' ヘッダー項目に連番を追記する
+  ''' </summary>
+  ''' <param name="prmFilePath">処理対象ファイルのパス</param>
+  ''' <remarks>
+  ''' 1行目をヘッダー行として扱い、各項目の前に連番と;（コロン）を追記する
+  ''' e.g)
+  '''     納品日,得意先コード,商品コード,単価
+  '''   	→		0001:納品日,0002:得意先コード,0003:商品コード,0004:単価
+  ''' 指定されたファイルを書き換える為、必要であれば呼出し前にバックアップを作成すること
+  ''' </remarks>
+  Public Shared Sub ModHeaderText(prmFilePath As String)
+    Try
+      Dim tmpNewHeaderz As String = String.Empty
+      Dim sjis As Encoding = Encoding.GetEncoding(932)
+
+      ' ファイル存在チェック
+      If Not File.Exists(prmFilePath) Then
+        Throw New FileNotFoundException("CSVファイルが存在しません", prmFilePath)
+      End If
+
+      Dim lines As List(Of String)
+
+      ' 全行読み込み
+      lines = File.ReadAllLines(prmFilePath, sjis).ToList()
+
+      If lines.Count = 0 Then
+        Throw New Exception("CSVファイルが空です")
+      End If
+
+      ' 1行目を書き換え
+      Dim tmpIdx As Integer = 0
+      For Each tmpHeader As String In lines(0).Split(",")
+        tmpIdx += 1
+        tmpNewHeaderz &= tmpHeader & ":" & tmpIdx.ToString("0000") & ","
+      Next
+      tmpNewHeaderz = tmpNewHeaderz.Substring(0, tmpNewHeaderz.Length - 1)
+      lines(0) = tmpNewHeaderz
+
+      ' 上書き保存
+      File.WriteAllLines(prmFilePath, lines, sjis)
+    Catch ex As Exception
+      ComWriteErrLog(ex)
+      Throw New Exception("ヘッダー情報の更新に失敗しました。")
+    End Try
+
+  End Sub
+
+  Public Shared Function ControlCodeEscape(prmStr As String) As String
+    Dim tmpStr As String = prmStr
+    Dim ControlCodeList As New List(Of String)
+
+    ControlCodeList.Add("<NS/>")
+    ControlCodeList.Add("<NL/>")
+    ControlCodeList.Add("<NLH/>")
+    ControlCodeList.Add("<NT/>")
+    ControlCodeList.Add("<SL/>")
+    ControlCodeList.Add("<SLH/>")
+    ControlCodeList.Add("<SS/>")
+    ControlCodeList.Add("<SSH/>")
+    ControlCodeList.Add("<ST/>")
+    ControlCodeList.Add("<B/>")
+    ControlCodeList.Add("<R/>")
+    ControlCodeList.Add("<U/>")
+    ControlCodeList.Add("<F/>")
+    ControlCodeList.Add("<ISD CD = ""15"" />")
+    ControlCodeList.Add("<ISD CD = ""16"" />")
+
+    For Each ControlCode In ControlCodeList
+      tmpStr = tmpStr.Replace(ControlCode, "")
+    Next
+
+    Return tmpStr
+  End Function
+
+  Public Shared Sub SelectScaleMaster(Para_ScaleNumber As String _
+                                    , prmSqlServer As ClsSqlServer _
+                                    , ByRef prmUnitNumberArray As String())
+    Dim sql As String = String.Empty
+    Dim tmpDt As New DataTable
+    Dim UnitNumberString As String = String.Empty
+    Dim IpAddressString As String = String.Empty
+
+    sql = GetMstScaleSelectSql(Para_ScaleNumber)
+
+    Try
+      prmSqlServer.GetResult(tmpDt, sql)
+      If tmpDt.Rows.Count = 0 Then
+        MessageBox.Show("計量器マスタにデータが登録されていません。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error)
+      Else
+        For i As Integer = 0 To tmpDt.Rows.Count - 1
+          If i = 0 Then
+            UnitNumberString = tmpDt.Rows(i)(0)
+            IpAddressString = tmpDt.Rows(i)(1)
+          Else
+            UnitNumberString = UnitNumberString + "," + tmpDt.Rows(i)(0)
+            IpAddressString = IpAddressString + "," + tmpDt.Rows(i)(1)
+          End If
+        Next
+      End If
+
+      prmUnitNumberArray = UnitNumberString.Split(","c)
+      InsertTRNLOG("", "", "", "計量器マスタ取得", prmSqlServer, "")
+    Catch ex As Exception
+      Call ComWriteErrLog("Module_Download",
+                              System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+      Throw New Exception(ex.Message)
+      InsertTRNLOG("", "", "", "計量器マスタ取得失敗", prmSqlServer, "")
+    Finally
+      tmpDt.Dispose()
+    End Try
+  End Sub
+
+  Public Shared Sub InsertTRNLOG(UNIT_NUMBER As String _
+                        , RESULT As String _
+                        , FILE_NAME As String _
+                        , NOTE As String _
+                        , prmDb As ClsSqlServer _
+                        , prmMdlName As String)
+    Dim sql As String = String.Empty
+    sql = GetInsertTRNLOGSql(UNIT_NUMBER, RESULT, FILE_NAME, NOTE)
+
+    With prmDb
+      Try
+        If .Execute(sql) = 1 Then
+          ' 更新成功
+          .TrnCommit()
+        Else
+          ' 削除失敗
+          Throw New Exception("ログの登録処理に失敗しました。")
+        End If
+      Catch ex As Exception
+        Call ComWriteErrLog(prmMdlName,
+                              System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+      End Try
+    End With
+  End Sub
+
+
+  Public Shared Function GetMstScaleSelectSql(Para_ScaleNumber As String) As String
+    Dim sql As String = String.Empty
+    sql &= " SELECT"
+    sql &= "     UNIT_NUMBER,"
+    sql &= "     IP_ADDRESS"
+    sql &= " FROM"
+    sql &= "     MST_SCALE"
+    sql &= " WHERE"
+    sql &= "     DELETE_FLG = 0"
+    If Para_ScaleNumber.Length <> 0 Then
+      sql &= "     AND UNIT_NUMBER IN(" & Para_ScaleNumber & ")"
+    End If
+    sql &= " ORDER BY  "
+    sql &= "     UNIT_NUMBER"
+    Call WriteExecuteLog("Module_Common", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
+    Return sql
+  End Function
+
+  Public Shared Function GetMstColumnSet(prmColumnId As Integer) As String
+    Dim sql As String = String.Empty
+    sql &= " SELECT"
+    sql &= "     COLUMN_NAME"
+    sql &= ",    COLUMN_NO"
+    sql &= " FROM"
+    sql &= "     MST_COLUMN_SET"
+    sql &= " WHERE COLUMN_ID = " & prmColumnId
+
+
+    Call WriteExecuteLog("Module_Common", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
+    Return sql
+  End Function
+
+  Public Shared Function GetInsertTRNLOGSql(UNIT_NUMBER As String, RESULT As String, FILE_NAME As String, NOTE As String)
+    Dim sql As String = String.Empty
+    Dim tmpdate As DateTime = CDate(ComGetProcTime())
+    Dim PROCESS_DATE As String = tmpdate.ToString("yyyy-MM-dd")
+    Dim PROCESS_TIME As String = tmpdate.ToString("HH:mm:ss.ss")
+    Dim ACHIEVEMENT_RECEIVE_TIME As String = tmpdate.ToString("yyyy-MM-dd HH:mm:ss.ss")
+
+    sql &= " INSERT INTO TRN_LOG("
+    sql &= "             PROCESS_DATE,"
+    sql &= "             MACHINE_NO,"
+    sql &= "             PROCESS_TIME,"
+    sql &= "             FILE_NAME,"
+    sql &= "             ACHIEVEMENT_RECEIVE_TIME,"
+    sql &= "             ACHIEVEMENT_RESULT,"
+    sql &= "             NOTE,"
+    sql &= "             CREATE_DATE,"
+    sql &= "             UPDATE_DATE"
+    sql &= " )"
+    sql &= " VALUES("
+    sql &= "     '" & PROCESS_DATE & "',"
+    sql &= "     '" & UNIT_NUMBER & "',"
+    sql &= "     '" & PROCESS_TIME & "',"
+    sql &= "     '" & FILE_NAME & "',"
+    sql &= "     '" & ACHIEVEMENT_RECEIVE_TIME & "',"
+    sql &= "     '" & RESULT & "',"
+    sql &= "     '" & NOTE.Replace("'", "") & "',"
+    sql &= "     '" & tmpdate & "',"
+    sql &= "     '" & tmpdate & "'"
+    sql &= " )"
+    Call WriteExecuteLog("Module_Common", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
+
+    Return sql
+
+  End Function
+
+  Public Shared Function GetInsertSql(prmTableName As String, dr As DataRow) As String
+    Dim sql As String = "INSERT INTO " & prmTableName & "("
+    Dim values As String = "VALUES ("
+    Dim tmpColumnz As New List(Of String)
+
+    For Each tmpColumn As DataColumn In dr.Table.Columns
+      tmpColumnz.Add(tmpColumn.ColumnName)
+    Next
+
+    ' カラム名と値をセット
+    For i As Integer = 0 To tmpColumnz.Count - 1
+      sql &= tmpColumnz(i)
+      values &= "'" & dr(i).ToString().Replace("'", "''") & "'"
+
+      If i < tmpColumnz.Count - 1 Then
+        sql &= ", "
+        values &= ", "
+      End If
+    Next
+
+    sql &= ") " & values & ")"
+    Call WriteExecuteLog("Module_Common", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
+    Return sql
+  End Function
+
+  Public Shared Sub MoveToBackUpLoadFile(DownloadPath As String, BackupPath As String)
+    ' コピー先ディレクトリを取得
+    Dim destinationDirectory As String = Path.GetDirectoryName(BackupPath)
+
+    ' ディレクトリが存在しない場合は作成
+    If Not Directory.Exists(destinationDirectory) Then
+      Directory.CreateDirectory(destinationDirectory)
+    End If
+
+    System.IO.File.Copy(DownloadPath, BackupPath)
+  End Sub
+
+  ''' <summary>
+  ''' CSVファイルをエラーフォルダに移動
+  ''' </summary>
+  ''' <param name="prmOrgFilePath">対象のCSVファイル</param>
+  ''' <remarks>
+  '''  対象ファイルが存在しない場合はスルー
+  '''  Error発生時に実行する処理の為、本関数内で発生したErrorは無視
+  '''  移動先のフォルダは実行プログラムルート直下の"\ERR_CSV"
+  ''' </remarks>
+  Public Shared Sub MoveErrCsv(prmOrgFilePath As String)
+    Dim tmpDstDir As String = Application.StartupPath & "\ERR_CSV\"
+    Dim tmpDstFilePath As String = tmpDstDir & Path.GetFileName(prmOrgFilePath)
+    Try
+      '対象ファイルは存在するか
+      If System.IO.File.Exists(prmOrgFilePath) Then
+        Call MoveToBackUpLoadFile(prmOrgFilePath, tmpDstFilePath) 'エラーフォルダに移動
+        File.Delete(prmOrgFilePath)                               '削除
+      End If
+    Catch ex As Exception
+      'Errorは無視
+      'Error発生時に呼び出す事を想定しているため
+    End Try
+  End Sub
+
+  ''' <summary>
+  ''' ダウンロードファイル名作成
+  ''' </summary>
+  ''' <param name="prmFileName"></param>
+  ''' <returns></returns>
+  Public Shared Function CreateDownloadFileName(prmFileName As String, prmMachineNumber As String) As String
+    Dim tmpFileNameDigits As String = ReadSettingIniFile("FILENAME_DIGITS", "VALUE")
+
+    Return prmFileName & tmpFileNameDigits & Integer.Parse(prmMachineNumber).ToString()
+  End Function
 End Class
