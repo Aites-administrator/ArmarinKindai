@@ -12,7 +12,9 @@ Module Module_Download
   Private Const JISSEKI_COLUMN_ID As Integer = 1
   Private Const GROUP_TYPE_OFF As Integer = 0
   Private Const GROUP_TYPE_ON As Integer = 1
+  Private Const FILE_NAME_BASE As String = "40TRAN"
   Private ReadOnly tmpDb As New ClsSqlServer
+
   Dim tmpDt As New DataTable
   ' SQLサーバー操作オブジェクト
   Private _SqlServer As ClsSqlServer
@@ -30,6 +32,7 @@ Module Module_Download
   ReadOnly FtpDownloadPath As String = ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE")
   ReadOnly FtpBackupPath As String = ReadSettingIniFile("FTP_BACKUP_PATH", "VALUE")
   ReadOnly FtpDelete As String = ReadSettingIniFile("FTP_DELETE", "VALUE")
+  ReadOnly FileNameDigits As String = ReadSettingIniFile("FILENAME_DIGITS", "VALUE")
 
   ReadOnly CutFileNameDigits As String = ReadSettingIniFile("CUT_FILENAME_DIGITS", "VALUE")
 
@@ -40,82 +43,85 @@ Module Module_Download
   Dim ErrorJudFlg As Boolean = False
 
   Sub Main(ScaleNumber() As String)
+    Dim tmpFileName As String = FILE_NAME_BASE
     Try
-    Dim ClsSetMessage As New SetMessage("")
+      Dim ClsSetMessage As New SetMessage("")
 
-    Console.WriteLine("*******************************************************************************")
-    Console.WriteLine("***    *****     *****     *****    *****     ****** ********    ******     ***")
-    Console.WriteLine("*** ********** ******* *** ***** ********** ******* * ******* *** ******* *****")
-    Console.WriteLine("***    ******* *******     *****    ******* ****** *** ******    ******** *****")
-    Console.WriteLine("*** ********** ******* ************ ******* ******     ****** *** ******* *****")
-    Console.WriteLine("*** ********** ******* *********    ******* ***** ***** ***** **** ****** *****")
-    Console.WriteLine("*******************************************************************************")
-    Console.WriteLine("実績受信処理開始")
-    Console.WriteLine("******************************")
-
-    ClsSetMessage = New SetMessage("実績受信処理開始")
-    Dim Para_ScaleNumber As String = String.Empty
-    If ScaleNumber.Length > 0 Then
-      For i As Integer = 0 To ScaleNumber.Length - 1
-        If i = 0 Then
-          Para_ScaleNumber = ScaleNumber(i)
-        Else
-          Para_ScaleNumber = Para_ScaleNumber + "','" + ScaleNumber(i)
-        End If
-      Next
-      Console.WriteLine("対象号機番号 ：" & Para_ScaleNumber)
+      Console.WriteLine("*******************************************************************************")
+      Console.WriteLine("***    *****     *****     *****    *****     ****** ********    ******     ***")
+      Console.WriteLine("*** ********** ******* *** ***** ********** ******* * ******* *** ******* *****")
+      Console.WriteLine("***    ******* *******     *****    ******* ****** *** ******    ******** *****")
+      Console.WriteLine("*** ********** ******* ************ ******* ******     ****** *** ******* *****")
+      Console.WriteLine("*** ********** ******* *********    ******* ***** ***** ***** **** ****** *****")
+      Console.WriteLine("*******************************************************************************")
+      Console.WriteLine("実績受信処理開始")
       Console.WriteLine("******************************")
-    End If
 
-    '「計量器マスタ」取得
-    SelectScaleMaster(Para_ScaleNumber)
-    '引数定義
-    Dim dtNow As DateTime = DateTime.Now
-    Dim DownloadPath As String
-    Dim BackupPath As String
-    'Dim UpLoadFile As String
-    Dim URL As String
-
-    '計量器毎にループ（実績）
-    For j As Integer = 0 To UnitNumberArray.Length - 1
-      Console.WriteLine(IpAddressArray(j) & "号機の実績受信処理 START")
-      Console.WriteLine("******************************")
-      DownloadPath = FtpDownloadPath & "/" & UnitNumberArray(j) & "/" & "01TRAN" & ".CSV"
-      BackupPath = FtpBackupPath & "/" & UnitNumberArray(j) & "/" & "01TRAN" & "_" & dtNow.ToString("yyMMddHHmmss") & ".CSV"
-      URL = "ftp://localhost" & "/" & UnitNumberArray(j) & "/" & "01TRAN" & ".CSV"
-      DownloadFtp(DownloadPath, BackupPath, URL, UnitNumberArray(j))
-      System.Threading.Thread.Sleep(2000)
-      'ログ登録　＆ 削除ファイル送信
-      If ErrorJudFlg Then
-        InsertTRNLOG(UnitNumberArray(j), "NG", "", "実績受信失敗")
-        Console.WriteLine("実績受信処理失敗")
-        Console.WriteLine("号機番号 ： " & UnitNumberArray(j))
+      ClsSetMessage = New SetMessage("実績受信処理開始")
+      Dim Para_ScaleNumber As String = String.Empty
+      If ScaleNumber.Length > 0 Then
+        For i As Integer = 0 To ScaleNumber.Length - 1
+          If i = 0 Then
+            Para_ScaleNumber = ScaleNumber(i)
+          Else
+            Para_ScaleNumber = Para_ScaleNumber + "','" + ScaleNumber(i)
+          End If
+        Next
+        Console.WriteLine("対象号機番号 ：" & Para_ScaleNumber)
         Console.WriteLine("******************************")
-        'ClsSetMessage.SetMessage("実績受信処理失敗")
-      Else
-        InsertTRNLOG(UnitNumberArray(j), "OK", "", "実績受信成功")
-        Console.WriteLine("実績受信処理成功")
-        Console.WriteLine("号機番号 ： " & UnitNumberArray(j))
-        Console.WriteLine("******************************")
-        System.Threading.Thread.Sleep(2000)
-        'ClsSetMessage.SetMessage("実績受信処理成功")
       End If
-      Console.WriteLine(UnitNumberArray(j) & "号機の実績受信処理 END")
-      Console.WriteLine("******************************")
-    Next
-    Console.WriteLine("*******************************************************************************")
-    Console.WriteLine("***    *****     *****     ******    ***** *** *****    ***********************")
-    Console.WriteLine("*** ********** ******* *** ****** ********  ** ***** *** **********************")
-    Console.WriteLine("***    ******* *******     ******   ****** * * ***** *** **********************")
-    Console.WriteLine("*** ********** ******* ********** ******** **  ***** *** **********************")
-    Console.WriteLine("*** ********** ******* **********    ***** *** *****    ***********************")
-    Console.WriteLine("*******************************************************************************")
-    Console.WriteLine("実績受信処理終了")
-    Console.WriteLine("******************************")
-    Console.WriteLine("このウィンドウを閉じるには、任意のキーを押してください...")
-    'ClsSetMessage.SetMessage("実績受信処理終了")
 
-    'Console.ReadKey()
+      '「計量器マスタ」取得
+      SelectScaleMaster(Para_ScaleNumber)
+      '引数定義
+      Dim dtNow As DateTime = DateTime.Now
+      Dim DownloadPath As String
+      Dim BackupPath As String
+      'Dim UpLoadFile As String
+      Dim URL As String
+
+      '計量器毎にループ（実績）
+      For j As Integer = 0 To UnitNumberArray.Length - 1
+        tmpFileName = FILE_NAME_BASE & FileNameDigits & Integer.Parse(UnitNumberArray(j)).ToString()
+
+        Console.WriteLine(IpAddressArray(j) & "号機の実績受信処理 START")
+        Console.WriteLine("******************************")
+        DownloadPath = FtpDownloadPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & ".CSV"
+        BackupPath = FtpBackupPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & "_" & dtNow.ToString("yyMMddHHmmss") & ".CSV"
+        URL = "ftp://localhost" & "/" & UnitNumberArray(j) & "/" & tmpFileName & ".CSV"
+        DownloadFtp(DownloadPath, BackupPath, URL, UnitNumberArray(j))
+        System.Threading.Thread.Sleep(2000)
+        'ログ登録　＆ 削除ファイル送信
+        If ErrorJudFlg Then
+          InsertTRNLOG(UnitNumberArray(j), "NG", "", "実績受信失敗")
+          Console.WriteLine("実績受信処理失敗")
+          Console.WriteLine("号機番号 ： " & UnitNumberArray(j))
+          Console.WriteLine("******************************")
+          'ClsSetMessage.SetMessage("実績受信処理失敗")
+        Else
+          InsertTRNLOG(UnitNumberArray(j), "OK", "", "実績受信成功")
+          Console.WriteLine("実績受信処理成功")
+          Console.WriteLine("号機番号 ： " & UnitNumberArray(j))
+          Console.WriteLine("******************************")
+          System.Threading.Thread.Sleep(2000)
+          'ClsSetMessage.SetMessage("実績受信処理成功")
+        End If
+        Console.WriteLine(UnitNumberArray(j) & "号機の実績受信処理 END")
+        Console.WriteLine("******************************")
+      Next
+      Console.WriteLine("*******************************************************************************")
+      Console.WriteLine("***    *****     *****     ******    ***** *** *****    ***********************")
+      Console.WriteLine("*** ********** ******* *** ****** ********  ** ***** *** **********************")
+      Console.WriteLine("***    ******* *******     ******   ****** * * ***** *** **********************")
+      Console.WriteLine("*** ********** ******* ********** ******** **  ***** *** **********************")
+      Console.WriteLine("*** ********** ******* **********    ***** *** *****    ***********************")
+      Console.WriteLine("*******************************************************************************")
+      Console.WriteLine("実績受信処理終了")
+      Console.WriteLine("******************************")
+      Console.WriteLine("このウィンドウを閉じるには、任意のキーを押してください...")
+      'ClsSetMessage.SetMessage("実績受信処理終了")
+
+      'Console.ReadKey()
     Catch ex As Exception
       Throw New Exception(ex.Message)
     End Try
@@ -123,8 +129,9 @@ Module Module_Download
   End Sub
   Private Sub DownloadFtp(DownloadPath As String, BackupPath As String, URL As String, UnitNumber As String)
     Dim FILE_NAME As String = Strings.Right(URL, CutFileNameDigits)
-    Dim tmpCreateDate As String = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss")
+    Dim tmpCreateDate As String = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
     Dim BkFolderFileName As String = GetAddBkFolder(DownloadPath)    'bkフォルダ取得
+    Dim tmpRcvFilePath As String = String.Empty
 
     Try
       'ダウンロードするファイルのURI
@@ -176,20 +183,32 @@ Module Module_Download
       MoveToBackUpLoadFile(DownloadPath, BackupPath)
       Console.WriteLine(BackupPath & "に実績CSV作成処理完了")
       Console.WriteLine("******************************")
+
+      'IZ対応
+      tmpRcvFilePath = Application.StartupPath _
+                      & "\tmp\FTP_RCV_" & DateTime.Now.ToString("yyyyMMddHHmmss") & ".csv"
+      Call MoveToBackUpLoadFile(DownloadPath, tmpRcvFilePath)
+      Call ModHeaderText(tmpRcvFilePath)    ' テンポラリファイルのヘッダーに連番追加
+
+      SqlServer.TrnStart()
       '実績CSVを計量テーブルに登録
-      InsertResultTable(DownloadPath, UnitNumber, tmpCreateDate)
+      InsertResultTable(tmpRcvFilePath, UnitNumber, tmpCreateDate)
       'Console.WriteLine("計量テーブルにデータ更新")
       'Console.WriteLine("******************************")
       '実績CSVを実績テーブルに登録
-      InsertJissekiTable(DownloadPath, UnitNumber, tmpCreateDate)
+      InsertJissekiTable(tmpRcvFilePath, UnitNumber, tmpCreateDate)
+      SqlServer.TrnCommit()
       Console.WriteLine("実績テーブルにデータ更新")
       Console.WriteLine("******************************")
       System.IO.File.Delete(DownloadPath)
+      System.IO.File.Delete(tmpRcvFilePath)
 
 
       InsertTRNLOG(UnitNumber, "", FILE_NAME, ftpRes.StatusCode & " " & ftpRes.StatusDescription)
       ErrorJudFlg = False
     Catch ex As Exception
+      Call MoveErrCsv(tmpRcvFilePath) ' 読込エラーのCSVを退避
+      SqlServer.TrnRollBack()
       InsertTRNLOG(UnitNumber, "", FILE_NAME, ex.Message)
       ErrorJudFlg = True
       Environment.Exit(999)
@@ -306,6 +325,7 @@ Module Module_Download
     sql &= "     MST_COLUMN_SET"
     sql &= " WHERE"
     sql &= "     COLUMN_ID = " & prmColumnId
+    sql &= " AND COLUMN_NO is not null"
 
     Call WriteExecuteLog("Module_MasterDownload", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
@@ -321,6 +341,7 @@ Module Module_Download
     sql &= ",    MIN(JISSEKI_TIME) JISSEKI_TIME"
     sql &= ",    BUMON_NUMBER"
     sql &= ",    YOBI_NUMBER"
+    sql &= ",    YOBI_NAME"
     sql &= ",    SHOP_NUMBER"
     sql &= ",    KEIRYO_FLG"
     sql &= ",    CASE KEIRYO_FLG"
@@ -348,6 +369,17 @@ Module Module_Download
     sql &= ",     KOTAINO1 "
     sql &= ",     KOTAINO2 "
     sql &= ",     KOTAINO3 "
+    sql &= ",    FREE1_CD "
+    sql &= ",    FREE1_NM "
+    sql &= ",    FREE2_CD "
+    sql &= ",    FREE2_NM "
+    sql &= ",    FREE3_CD "
+    sql &= ",    FREE3_NM "
+    sql &= ",    FREE4_CD "
+    sql &= ",    FREE4_NM "
+    sql &= ",    FREE5_CD "
+    sql &= ",    FREE5_NM "
+    sql &= ",    LOT_NUMBER "
     sql &= " FROM"
     sql &= "     TRN_KEIRYO"
     sql &= " WHERE "
@@ -357,6 +389,7 @@ Module Module_Download
     sql &= " ,   JISSEKI_DATE"
     sql &= " ,   BUMON_NUMBER"
     sql &= " ,   YOBI_NUMBER"
+    sql &= ",    YOBI_NAME"
     sql &= " ,   SHOP_NUMBER"
     sql &= " ,   KEIRYO_FLG"
     sql &= " ,   TANKA"
@@ -364,6 +397,17 @@ Module Module_Download
     sql &= " ,   KOTAINO1 "
     sql &= " ,   KOTAINO2 "
     sql &= " ,   KOTAINO3 "
+    sql &= ",    FREE1_CD "
+    sql &= ",    FREE1_NM "
+    sql &= ",    FREE2_CD "
+    sql &= ",    FREE2_NM "
+    sql &= ",    FREE3_CD "
+    sql &= ",    FREE3_NM "
+    sql &= ",    FREE4_CD "
+    sql &= ",    FREE4_NM "
+    sql &= ",    FREE5_CD "
+    sql &= ",    FREE5_NM "
+    sql &= ",    LOT_NUMBER "
     sql &= " ORDER BY  "
     sql &= "     JISSEKI_DATE,SHOP_NUMBER,YOBI_NUMBER"
     Call WriteExecuteLog("Module_MasterDownload", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
@@ -379,6 +423,7 @@ Module Module_Download
     sql &= ",    JISSEKI_TIME "
     sql &= ",    BUMON_NUMBER"
     sql &= ",    YOBI_NUMBER"
+    sql &= ",    YOBI_NAME"
     sql &= ",    SHOP_NUMBER"
     sql &= ",     JYURYO"
     sql &= ",    TANKA"
@@ -390,6 +435,17 @@ Module Module_Download
     sql &= ",    KOTAINO1 "
     sql &= ",    KOTAINO2 "
     sql &= ",    KOTAINO3 "
+    sql &= ",    FREE1_CD "
+    sql &= ",    FREE1_NM "
+    sql &= ",    FREE2_CD "
+    sql &= ",    FREE2_NM "
+    sql &= ",    FREE3_CD "
+    sql &= ",    FREE3_NM "
+    sql &= ",    FREE4_CD "
+    sql &= ",    FREE4_NM "
+    sql &= ",    FREE5_CD "
+    sql &= ",    FREE5_NM "
+    sql &= ",    LOT_NUMBER "
     sql &= " FROM"
     sql &= "     TRN_KEIRYO"
     sql &= " WHERE "
@@ -604,62 +660,70 @@ Module Module_Download
         tmpJissekiDic.Add(GetKeiryoInsertDictionary(tmpCreateTmpDr, prmCreateDate))
 
         Dim tmpDataRow As DataRow = ComDic2Dt(tmpJissekiDic).Rows(0)
+
+        For Each tmpColumn As DataColumn In tmpDataRow.Table.Columns
+          If False = dt.Columns.Contains(tmpColumn.ColumnName) Then
+            dt.Columns.Add(New DataColumn(tmpColumn.ColumnName, GetType(String)))
+          End If
+        Next
+
         dt.ImportRow(tmpDataRow)
       End While
     End Using
 
-      ' データベースに挿入
-      Dim sql As String = String.Empty
-      For Each dr As DataRow In dt.Rows
-          sql = GetInsertSql("TRN_KEIRYO", columnNames, dr)
-          With tmpDb
-              Try
-                  If .Execute(sql) = 1 Then
-                      ' 更新成功
-                      InsertTRNLOG(UnitNumber, "", "", "実績登録完了")
-                  Else
-                      ' 削除失敗
-                      Throw New Exception("実績管理の登録処理に失敗しました。")
-                  End If
-              Catch ex As Exception
-                  Call ComWriteErrLog("Module_MasterDownload",
+    ' データベースに挿入
+    Dim sql As String = String.Empty
+    For Each dr As DataRow In dt.Rows
+      sql = GetInsertSql("TRN_KEIRYO", dr)
+      With SqlServer
+        Try
+          If .Execute(sql) = 1 Then
+            ' 更新成功
+            InsertTRNLOG(UnitNumber, "", "", "実績登録完了")
+          Else
+            ' 削除失敗
+            Throw New Exception("実績管理の登録処理に失敗しました。")
+          End If
+        Catch ex As Exception
+          Call ComWriteErrLog("Module_MasterDownload",
                         System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-                  InsertTRNLOG(UnitNumber, "", "", ex.Message)
-              End Try
-          End With
-      Next
+          InsertTRNLOG(UnitNumber, "", "", ex.Message)
+        End Try
+      End With
+    Next
   End Sub
 
   Private Sub InsertJissekiTable(DownloadPath As String, UnitNumber As Integer, prmCreateDate As String)
     Try
-    Dim dt As New DataTable("TRN_Jisseki")
-    Dim tmpKeiryoDt As New DataTable
-    Dim tmpDenpyoNo As String = "0"
-    Dim tmpGyoNo As Integer = 0
-    Dim tmpBeforeNohinDay As String = "0"
-    Dim tmpBeforeTokuiCd As String = "0"
-    Dim HeaderRow As String() = Nothing
-    Dim column As New DataColumn
-    Dim sqlKeiryo As String = If(ReadSettingIniFile("GROUP_TYPE", "VALUE") = GROUP_TYPE_ON, GetMstGroupKeiryo(prmCreateDate), GetMstNonGroupKeiryo(prmCreateDate))
+      Dim dt As New DataTable("TRN_Jisseki")
+      Dim tmpKeiryoDt As New DataTable
+      Dim tmpDenpyoNo As String = "0"
+      Dim tmpGyoNo As Integer = 0
+      Dim tmpBeforeNohinDay As String = "0"
+      Dim tmpBeforeTokuiCd As String = "0"
+      Dim HeaderRow As String() = Nothing
+      Dim column As New DataColumn
+      Dim sqlKeiryo As String = If(GROUP_TYPE_ON = ReadSettingIniFile("GROUP_TYPE", "VALUE") _
+                                , GetMstGroupKeiryo(prmCreateDate) _
+                                , GetMstNonGroupKeiryo(prmCreateDate))
 
-    SqlServer.GetResult(tmpKeiryoDt, sqlKeiryo)
-    SqlServer.GetResult(tmpDt, GetMstColumnSet(JISSEKI_COLUMN_ID))
+      SqlServer.GetResult(tmpKeiryoDt, sqlKeiryo)
+      SqlServer.GetResult(tmpDt, GetMstColumnSet(JISSEKI_COLUMN_ID))
 
+      ' データベースのカラム名を定義
+      Dim columnNames As New List(Of String)
+      For Each tmpRow In tmpDt.Rows
+        columnNames.Add(tmpRow("COLUMN_NAME"))
+      Next
 
-    ' データベースのカラム名を定義
-    Dim columnNames As New List(Of String)
-    For Each tmpRow In tmpDt.Rows
-      columnNames.Add(tmpRow("COLUMN_NAME"))
-    Next
+      ' データテーブルにカラムを追加
+      For Each columnName As String In columnNames
+        dt.Columns.Add(New DataColumn(columnName, GetType(String)))
+      Next
 
-    ' データテーブルにカラムを追加
-    For Each columnName As String In columnNames
-      dt.Columns.Add(New DataColumn(columnName, GetType(String)))
-    Next
-
-    'CSV読込
-    'Forで計量データをループする
-    For Each tmpDr In tmpKeiryoDt.Rows
+      'CSV読込
+      'Forで計量データをループする
+      For Each tmpDr In tmpKeiryoDt.Rows
       'DataRow新規追加
       Dim tmpCreateTmpDr As DataRow = dt.NewRow()
       '実績データ
@@ -673,50 +737,74 @@ Module Module_Download
 
       tmpJissekiDic.Add(GetInsertDictionary(tmpDr, tmpDenpyoNo, tmpGyoNo))
 
-      '' 実行時の時刻を追加
-      'dr("create_date") = DateTime.Now.ToString("yyyy-MM-dd")
-      'dr("update_date") = DateTime.Now.ToString("yyyy-MM-dd")
-      Dim tmpDataRow As DataRow = ComDic2Dt(tmpJissekiDic).Rows(0)
-      dt.ImportRow(tmpDataRow)
+        '' 実行時の時刻を追加
+        'dr("create_date") = DateTime.Now.ToString("yyyy-MM-dd")
+        'dr("update_date") = DateTime.Now.ToString("yyyy-MM-dd")
+        Dim tmpDataRow As DataRow = ComDic2Dt(tmpJissekiDic).Rows(0)
+
+        For Each tmpColumn As DataColumn In tmpDataRow.Table.Columns
+          If False = dt.Columns.Contains(tmpColumn.ColumnName) Then
+            dt.Columns.Add(New DataColumn(tmpColumn.ColumnName, GetType(String)))
+          End If
+        Next
+
+        dt.ImportRow(tmpDataRow)
 
     Next
 
     ' データベースに挿入
     Dim sql As String = String.Empty
     For Each dr As DataRow In dt.Rows
-      sql = GetInsertSql("TRN_JISSEKI", columnNames, dr)
-      With tmpDb
-        Try
-          If .Execute(sql) = 1 Then
-            ' 更新成功
-            InsertTRNLOG(UnitNumber, "", "", "実績登録完了")
-          Else
-            ' 削除失敗
-            Throw New Exception("実績管理の登録処理に失敗しました。")
-          End If
-        Catch ex As Exception
-          Call ComWriteErrLog("Module_MasterDownload",
+        sql = GetInsertSql("TRN_JISSEKI", dr)
+        With SqlServer
+          Try
+            If .Execute(sql) = 1 Then
+              ' 更新成功
+              InsertTRNLOG(UnitNumber, "", "", "実績登録完了")
+            Else
+              ' 削除失敗
+              Throw New Exception("実績管理の登録処理に失敗しました。")
+            End If
+          Catch ex As Exception
+            Call ComWriteErrLog("Module_MasterDownload",
                           System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
-          InsertTRNLOG(UnitNumber, "", "", ex.Message)
-        End Try
-      End With
-    Next
+            InsertTRNLOG(UnitNumber, "", "", ex.Message)
+          End Try
+        End With
+      Next
     Catch ex As Exception
       Throw New Exception(ex.Message)
     End Try
 
   End Sub
 
-  Function GetInsertSql(prmTableName As String, columnNames As List(Of String), dr As DataRow) As String
+  Function GetInsertSql(prmTableName As String, dr As DataRow) As String
     Dim sql As String = "INSERT INTO " & prmTableName & "("
     Dim values As String = "VALUES ("
+    Dim tmpColumnz As New List(Of String)
+
+    For Each tmpColumn As DataColumn In dr.Table.Columns
+      tmpColumnz.Add(tmpColumn.ColumnName)
+    Next
 
     ' カラム名と値をセット
-    For i As Integer = 0 To columnNames.Count - 1
-      sql &= columnNames(i)
-      values &= "'" & dr(i).ToString().Replace("'", "''") & "'"
+    For i As Integer = 0 To tmpColumnz.Count - 1
+      sql &= tmpColumnz(i)
 
-      If i < columnNames.Count - 1 Then
+      Select Case tmpColumnz(i).ToUpper
+        Case "JISSEKI_DATE".ToUpper
+          values &= "'" & AdjustmentDateValue(dr(i).ToString().Replace("'", "''")) & "'"
+        Case "JISSEKI_TIME".ToUpper
+          values &= "'" & AdjustmentTimeValue(dr(i).ToString().Replace("'", "''")) & "'"
+        Case "JYURYO".ToUpper
+          ' 重量は端数処理を行う
+          values &= "'" & AdjustmentWeightValue(dr(i).ToString().Replace("'", "''")) & "'"
+        Case Else
+          values &= "'" & dr(i).ToString().Replace("'", "''") & "'"
+      End Select
+
+
+      If i < tmpColumnz.Count - 1 Then
         sql &= ", "
         values &= ", "
       End If
@@ -727,17 +815,6 @@ Module Module_Download
     Return sql
   End Function
 
-  Private Sub MoveToBackUpLoadFile(DownloadPath As String, BackupPath As String)
-    ' コピー先ディレクトリを取得
-    Dim destinationDirectory As String = Path.GetDirectoryName(BackupPath)
-
-    ' ディレクトリが存在しない場合は作成
-    If Not Directory.Exists(destinationDirectory) Then
-      Directory.CreateDirectory(destinationDirectory)
-    End If
-
-    System.IO.File.Copy(DownloadPath, BackupPath)
-  End Sub
   Private Sub InsertTRNLOG(UNIT_NUMBER As String, RESULT As String, FILE_NAME As String, NOTE As String)
     Dim sql As String = String.Empty
     sql = GetInsertTRNLOGSql(UNIT_NUMBER, RESULT, FILE_NAME, NOTE)
@@ -794,136 +871,142 @@ Module Module_Download
 
     'TRN_JISSEKIのカラム名で取得する必要がある。
     Try
-    Dim rtnDic As New Dictionary(Of String, String)
-    Dim tmpTokuisakiCd As String = prmDataRow.Item("SHOP_NUMBER").ToString.PadLeft(6, "0"c) ''6桁前0埋め
-    Dim tmpShohinCd As String = prmDataRow.Item("YOBI_NUMBER").ToString.PadLeft(6, "0"c) ''6桁前0埋め
-    Dim tmpHiduke As String = prmDataRow.Item("JISSEKI_DATE").ToString
-    tmpHiduke = tmpHiduke.Substring(0, 4) + "/" + tmpHiduke.Substring(4, 2) + "/" + tmpHiduke.Substring(6, 2)
-    Dim tmpJikan As String = prmDataRow.Item("JISSEKI_DATE").ToString.PadLeft(4, "0"c)
-    tmpJikan = tmpJikan.Substring(0, 2) + ":" + tmpJikan.Substring(2, 2)
+      Dim rtnDic As New Dictionary(Of String, String)
+      Dim tmpTokuisakiCd As String = prmDataRow.Item("SHOP_NUMBER").ToString.PadLeft(6, "0"c) ''6桁前0埋め
+      Dim tmpShohinCd As String = prmDataRow.Item("YOBI_NUMBER").ToString.PadLeft(6, "0"c) ''6桁前0埋め
 
-    'データ操作関連
-    Dim tmpTDt As New DataTable
-    Dim tmpSDt As New DataTable
-    Dim tmpTSDt As New DataTable
-    Dim tmpZeiDt As New DataTable
-    Dim tmpTDr As DataRow
-    Dim tmpSDr As DataRow
-    Dim tmpTSDr As DataRow
-    'Dim tmpZeiDr As DataRow
+      ' 商品名は得意先商品が設定されている場合はその名称
+      ' 設定されていない場合は計量器から受信した名称を使用
+      Dim tmpShohinNm As String = prmDataRow.Item("YOBI_NAME").ToString
 
-    '得意先取得
-    SqlServer.GetResult(tmpTDt, GetMstTokuisaki(tmpTokuisakiCd))
-    If (tmpTDt.Rows.Count = 0) Then
-      Throw New Exception("得意先マスタを取得できませんでした。")
-    Else
-      tmpTDr = tmpTDt.Rows(0)
-    End If
+      Dim tmpHiduke As String = prmDataRow.Item("JISSEKI_DATE").ToString
+      tmpHiduke = tmpHiduke.Substring(0, 4) + "/" + tmpHiduke.Substring(4, 2) + "/" + tmpHiduke.Substring(6, 2)
+      Dim tmpJikan As String = prmDataRow.Item("JISSEKI_DATE").ToString.PadLeft(4, "0"c)
+      tmpJikan = tmpJikan.Substring(0, 2) + ":" + tmpJikan.Substring(2, 2)
 
-    '商品取得
-    SqlServer.GetResult(tmpSDt, GetMstShohin(tmpShohinCd))
-    If (tmpSDt.Rows.Count = 0) Then
-      Throw New Exception("商品マスタを取得できませんでした。")
-    Else
-      tmpSDr = tmpSDt.Rows(0)
-    End If
+      'データ操作関連
+      Dim tmpTDt As New DataTable
+      Dim tmpSDt As New DataTable
+      Dim tmpTSDt As New DataTable
+      Dim tmpZeiDt As New DataTable
+      Dim tmpTDr As DataRow
+      Dim tmpSDr As DataRow
+      Dim tmpTSDr As DataRow
+      'Dim tmpZeiDr As DataRow
 
-    '得意先商品取得
-    SqlServer.GetResult(tmpTSDt, GetMstTokuisakiShohin(tmpTokuisakiCd, tmpShohinCd))
-    If (tmpTSDt.Rows.Count = 0) Then
-      '<TODO > 00000の得意先を入れる対応を行ったが、商品マスタで管理するのはありか。 
-      SqlServer.GetResult(tmpTSDt, GetMstTokuisakiShohin("000000", tmpShohinCd))
+      '得意先取得
+      SqlServer.GetResult(tmpTDt, GetMstTokuisaki(tmpTokuisakiCd))
+      If (tmpTDt.Rows.Count = 0) Then
+        Throw New Exception("得意先マスタを取得できませんでした。")
+      Else
+        tmpTDr = tmpTDt.Rows(0)
+      End If
+
+      '商品取得
+      SqlServer.GetResult(tmpSDt, GetMstShohin(tmpShohinCd))
+      If (tmpSDt.Rows.Count = 0) Then
+        Throw New Exception("商品マスタを取得できませんでした。")
+      Else
+        tmpSDr = tmpSDt.Rows(0)
+      End If
+
+      '得意先商品取得
+      SqlServer.GetResult(tmpTSDt, GetMstTokuisakiShohin(tmpTokuisakiCd, tmpShohinCd))
       If (tmpTSDt.Rows.Count = 0) Then
-        tmpTSDr = Nothing
+        '<TODO > 00000の得意先を入れる対応を行ったが、商品マスタで管理するのはありか。 
+        SqlServer.GetResult(tmpTSDt, GetMstTokuisakiShohin("000000", tmpShohinCd))
+        If (tmpTSDt.Rows.Count = 0) Then
+          tmpTSDr = Nothing
+        Else
+          tmpTSDr = tmpTSDt.Rows(0)
+        End If
       Else
         tmpTSDr = tmpTSDt.Rows(0)
+        ' 商品名は得意先商品が設定されている場合は、その名称を使用する
+        tmpShohinNm = tmpTSDr("ShohinNM").ToString
       End If
-    Else
-      tmpTSDr = tmpTSDt.Rows(0)
-    End If
-    '数量、単価、金額関連
-    Dim tmpTanka As String = If(tmpTSDr Is Nothing, If(tmpSDr("Baika1").ToString, "0"), tmpTSDr("Baika").ToString)
-    Dim tmpCalculationSuryo As String = If(prmDataRow("TANKA").ToString = "0", Decimal.Parse(prmDataRow("JISSEKI_KOSUU").ToString), Decimal.Parse(prmDataRow("JYURYO").ToString) / 100)
-    Dim tmpSuryo As String = prmDataRow("JYURYO").ToString 'If(prmDataRow("TANKA").ToString = "0", prmDataRow("SURYO").ToString, Decimal.Parse(prmDataRow("KOSUU").ToString) * Decimal.Parse(prmDataRow("TEI_KINGAKU").ToString))
-    Dim tmpKingaku As String = Fix(Decimal.Parse(tmpTanka) * Decimal.Parse(tmpCalculationSuryo)) 'If(prmDataRow("TANKA").ToString = "0", Decimal.Parse(tmpTanka) * Decimal.Parse(prmDataRow("SURYO").ToString), Decimal.Parse(tmpTanka) * Decimal.Parse(tmpSuryo))
-    Dim tmpGenka As String = "0" 'If(tmpSDr("Genka").ToString, "0")
-    Dim tmpGenKingaku As String = Decimal.Parse(tmpGenka) * Decimal.Parse(tmpSuryo) 'If(prmDataRow("TANKA").ToString = "0", Decimal.Parse(tmpGenka) * prmDataRow("SURYO").ToString, Decimal.Parse(tmpGenka) * Decimal.Parse(tmpSuryo))
-    'Dim tmpBaika As String = If(tmpSDr("HyojunKakaku").ToString, "0")
-    'Dim tmpBaiKingaku As String = If(prmDataRow("KEIRYO_FLG").ToString = "0", Decimal.Parse(tmpBaika) * prmDataRow("JYURYO").ToString, Decimal.Parse(tmpBaika) * Decimal.Parse(tmpSuryo))
-    Dim tmpBaika As String = prmDataRow("TANKA").ToString
-    Dim tmpBaiKingaku As String = prmDataRow("KINGAKU").ToString
 
-    rtnDic("Denku") = "0"
-    rtnDic("UketukeDay") = tmpHiduke
-    rtnDic("NohinDay") = Now.ToString("yyyyMMdd")
-    rtnDic("SeikyuDay") = Now.ToString("yyyyMMdd")
-    rtnDic("DenNo") = prmDenpyoNo
-    rtnDic("GyoNo") = prmGyoNo
-    rtnDic("TokuiCD") = tmpTokuisakiCd
-    rtnDic("TokuiNM") = tmpTDr("TokuiNM1").ToString
-    rtnDic("TokuiNM2") = tmpTDr("TokuiNM2").ToString
-    rtnDic("TokuiKN") = tmpTDr("TokuiKana").ToString
-    rtnDic("TokuiZipCD") = tmpTDr("ZipCD").ToString
-    rtnDic("TokuiAdd1") = tmpTDr("Add1").ToString
-    rtnDic("TokuiAdd2") = tmpTDr("Add2").ToString
-    rtnDic("TokuiTel") = tmpTDr("TelNo").ToString
-    rtnDic("TyokuCD") = ""
-    rtnDic("SenpoTantoNM") = tmpTDr("SenpoTanto").ToString
-    rtnDic("BumonCD") = prmDataRow("BUMON_NUMBER").ToString.PadLeft(2, "0"c)
-    rtnDic("UTantoCD") = "99"
-    rtnDic("TekiyoCD") = "0"
-    rtnDic("TekiyoNM") = ""
-    rtnDic("BunruiCD") = ""
+      '数量、単価、金額関連
+      Dim tmpTanka As String = If(tmpTSDr Is Nothing, If(tmpSDr("Baika1").ToString, "0"), tmpTSDr("Baika").ToString)
+      Dim tmpSuryo As String = prmDataRow("JYURYO").ToString 'If(prmDataRow("TANKA").ToString = "0", prmDataRow("SURYO").ToString, Decimal.Parse(prmDataRow("KOSUU").ToString) * Decimal.Parse(prmDataRow("TEI_KINGAKU").ToString))
+      Dim tmpKingaku As String = CalculateKingaku(tmpTanka, tmpSuryo).ToString
+      Dim tmpGenka As String = "0" 'If(tmpSDr("Genka").ToString, "0")
+      Dim tmpGenKingaku As String = Decimal.Parse(tmpGenka) * Decimal.Parse(tmpSuryo) 'If(prmDataRow("TANKA").ToString = "0", Decimal.Parse(tmpGenka) * prmDataRow("SURYO").ToString, Decimal.Parse(tmpGenka) * Decimal.Parse(tmpSuryo))
+      'Dim tmpBaika As String = If(tmpSDr("HyojunKakaku").ToString, "0")
+      'Dim tmpBaiKingaku As String = If(prmDataRow("KEIRYO_FLG").ToString = "0", Decimal.Parse(tmpBaika) * prmDataRow("JYURYO").ToString, Decimal.Parse(tmpBaika) * Decimal.Parse(tmpSuryo))
+      Dim tmpBaika As String = prmDataRow("TANKA").ToString
+      Dim tmpBaiKingaku As String = prmDataRow("KINGAKU").ToString
+
+      rtnDic("Denku") = "0"
+      rtnDic("UketukeDay") = tmpHiduke
+      rtnDic("NohinDay") = Now.ToString("yyyyMMdd")
+      rtnDic("SeikyuDay") = Now.ToString("yyyyMMdd")
+      rtnDic("DenNo") = prmDenpyoNo
+      rtnDic("GyoNo") = prmGyoNo
+      rtnDic("TokuiCD") = tmpTokuisakiCd
+      rtnDic("TokuiNM") = prmDataRow("FREE1_NM").ToString
+      'rtnDic("TokuiNM2") = tmpTDr("TokuiNM2").ToString
+      'rtnDic("TokuiKN") = tmpTDr("TokuiKana").ToString
+      'rtnDic("TokuiZipCD") = tmpTDr("ZipCD").ToString
+      'rtnDic("TokuiAdd1") = tmpTDr("Add1").ToString
+      'rtnDic("TokuiAdd2") = tmpTDr("Add2").ToString
+      'rtnDic("TokuiTel") = tmpTDr("TelNo").ToString
+      rtnDic("TyokuCD") = prmDataRow("FREE2_CD").ToString
+      rtnDic("TyokuNM") = prmDataRow("FREE2_NM").ToString
+      'rtnDic("SenpoTantoNM") = tmpTDr("SenpoTanto").ToString
+      rtnDic("BumonCD") = prmDataRow("BUMON_NUMBER").ToString.PadLeft(2, "0"c)
+      rtnDic("UTantoCD") = "99"
+      rtnDic("TekiyoCD") = "0"
+      'rtnDic("TekiyoNM") = ""
+      'rtnDic("BunruiCD") = ""
       rtnDic("DenKBN") = "0"
       rtnDic("ShohinCD") = tmpShohinCd
-    rtnDic("ShohinNM") = tmpSDr("ShohinNM").ToString
-    rtnDic("ShohinKN") = tmpSDr("ShohinKana").ToString
-    rtnDic("SMstKBN") = tmpSDr("SMstKBN").ToString
-    rtnDic("Ku") = "0"
-    rtnDic("SokoCD") = If(tmpTSDr Is Nothing, tmpSDr("SokoCD").ToString, tmpTSDr("SokoCD").ToString)
-    rtnDic("Irisu") = prmDataRow("JISSEKI_KOSUU").ToString
-    rtnDic("Hakosu") = prmDataRow("KEIRYO_FLG").ToString
-    rtnDic("Suryo") = If(prmDataRow("TANKA").ToString = "0", "", tmpSuryo)
-    rtnDic("Tani") = If(prmDataRow("TANKA").ToString = "0", "", "g")
-    rtnDic("Tanka") = tmpTanka
-    rtnDic("UriageKin") = tmpKingaku
-    rtnDic("GenTanka") = tmpGenka
-    rtnDic("GenkaGaku") = tmpGenKingaku
-    rtnDic("Arari") = Decimal.Parse(tmpKingaku) - Decimal.Parse(tmpGenKingaku)
-    rtnDic("Sotozei") = "" '税テーブルから検討
-    rtnDic("Utizei") = "" '税テーブルから検討
-    rtnDic("ZeiKBN") = tmpSDr("ZeiKBN").ToString
-    rtnDic("ZeikomiKBN") = tmpSDr("ZeikomiKBN").ToString
-    rtnDic("Biko") = prmDataRow("KOTAINO3").ToString
-    rtnDic("HyojunKKKu") = tmpBaika
-    rtnDic("DojiNyukaKBN") = "1"
-    rtnDic("UriTanka") = tmpBaika
-    rtnDic("Baikagaku") = tmpBaiKingaku
-    rtnDic("Kikaku") = ""
-    rtnDic("Iro") = ""
-    rtnDic("Size") = ""
-    rtnDic("JutyuSu") = "0"
-    rtnDic("Kingaku") = tmpKingaku
-    rtnDic("Gouki") = prmDataRow("MACHINE_NUMBER").ToString
-    rtnDic("ShukaPRTFLG") = "0"
-    rtnDic("NohinPRTFLG") = "0"
-    rtnDic("PCAFLG") = "0"
-    rtnDic("JANCD") = ""
-    rtnDic("SakuseiDay") = Now.ToString
-    rtnDic("OpenFLG") = "0"
-    rtnDic("HoryuFLG") = "0"
-    rtnDic("SShohinCD") = ""
-    rtnDic("ShatenCD") = tmpTDr("ShatenCD").ToString
-    rtnDic("TorihikisakiCD") = tmpTDr("TorihikiCD").ToString
-    rtnDic("Memo1") = prmDataRow("KOTAINO1").ToString
-    rtnDic("Memo2") = prmDataRow("KOTAINO2").ToString
-    rtnDic("Hoka1") = ""
-    rtnDic("Hoka2") = ""
-    rtnDic("TokuiKubun") = tmpTDr("TokuiKubun").ToString
-    rtnDic("ShoKubun") = tmpSDr("ShoKubun").ToString
-    rtnDic("UketukeDay2") = tmpHiduke & " " & tmpJikan
+      rtnDic("ShohinNM") = tmpShohinNm
+      rtnDic("ShohinKN") = tmpSDr("ShohinKana").ToString
+      rtnDic("SMstKBN") = tmpSDr("SMstKBN").ToString
+      rtnDic("Ku") = "0"
+      rtnDic("SokoCD") = If(tmpTSDr Is Nothing, tmpSDr("SokoCD").ToString, tmpTSDr("SokoCD").ToString)
+      rtnDic("Irisu") = prmDataRow("JISSEKI_KOSUU").ToString
+      rtnDic("Hakosu") = prmDataRow("KEIRYO_FLG").ToString
+      rtnDic("Suryo") = tmpSuryo
+      rtnDic("Tani") = "kg"
+      rtnDic("Tanka") = tmpTanka
+      rtnDic("UriageKin") = tmpKingaku
+      rtnDic("GenTanka") = tmpGenka
+      rtnDic("GenkaGaku") = tmpGenKingaku
+      rtnDic("Arari") = Decimal.Parse(tmpKingaku) - Decimal.Parse(tmpGenKingaku)
+      rtnDic("ZeiKBN") = tmpSDr("ZeiKBN").ToString
+      rtnDic("ZeikomiKBN") = tmpSDr("ZeikomiKBN").ToString
+      rtnDic("Biko") = prmDataRow("FREE4_NM").ToString
+      rtnDic("HyojunKKKu") = tmpBaika
+      rtnDic("DojiNyukaKBN") = "1"
+      rtnDic("UriTanka") = tmpBaika
+      rtnDic("Baikagaku") = tmpBaiKingaku
+      'rtnDic("Kikaku") = ""
+      rtnDic("Iro") = prmDataRow("FREE3_NM").ToString
+      'rtnDic("Size") = ""
+      rtnDic("JutyuSu") = "0"
+      rtnDic("Kingaku") = tmpKingaku
+      rtnDic("Gouki") = prmDataRow("MACHINE_NUMBER").ToString
+      rtnDic("ShukaPRTFLG") = "0"
+      rtnDic("NohinPRTFLG") = "0"
+      rtnDic("PCAFLG") = "0"
+      'rtnDic("JANCD") = ""
+      rtnDic("SakuseiDay") = Now.ToString
+      rtnDic("OpenFLG") = "0"
+      rtnDic("HoryuFLG") = "0"
+      'rtnDic("SShohinCD") = ""
+      'rtnDic("ShatenCD") = tmpTDr("ShatenCD").ToString
+      'rtnDic("TorihikisakiCD") = tmpTDr("TorihikiCD").ToString
+      rtnDic("Memo1") = prmDataRow("LOT_NUMBER").ToString
+      rtnDic("Memo2") = prmDataRow("KOTAINO2").ToString
+      'rtnDic("Hoka1") = ""
+      'rtnDic("Hoka2") = ""
+      'rtnDic("TokuiKubun") = tmpTDr("TokuiKubun").ToString
+      rtnDic("ShoKubun") = tmpSDr("ShoKubun").ToString
+      rtnDic("UketukeDay2") = tmpHiduke & " " & tmpJikan
 
-    Return rtnDic
+      Return rtnDic
     Catch ex As Exception
       Throw New Exception(ex.Message)
     End Try
@@ -935,38 +1018,44 @@ Module Module_Download
     'TRN_JISSEKIのカラム名で取得する必要がある。
 
     Dim rtnDic As New Dictionary(Of String, String)
-    rtnDic("MACHINE_NUMBER") = prmDataRow.Item("MACHINE_NUMBER").ToString
-    rtnDic("JISSEKI_DATE") = prmDataRow.Item("JISSEKI_DATE").ToString
-    rtnDic("JISSEKI_TIME") = prmDataRow.Item("JISSEKI_TIME").ToString
-    rtnDic("BUMON_NUMBER") = prmDataRow.Item("BUMON_NUMBER").ToString
-    rtnDic("YOBI_NUMBER") = prmDataRow.Item("YOBI_NUMBER").ToString
-    rtnDic("TANKA_NUMBER") = prmDataRow.Item("TANKA_NUMBER").ToString
-    rtnDic("SHOP_NUMBER") = prmDataRow.Item("SHOP_NUMBER").ToString
-    rtnDic("JISSEKI_KUBUN") = prmDataRow.Item("JISSEKI_KUBUN").ToString
-    rtnDic("KEIRYO_FLG") = prmDataRow.Item("KEIRYO_FLG").ToString
-    rtnDic("JYURYO") = prmDataRow.Item("JYURYO").ToString
-    rtnDic("TANKA") = prmDataRow.Item("TANKA").ToString
-    rtnDic("KINGAKU") = prmDataRow.Item("KINGAKU").ToString
-    rtnDic("M_TOKKA_FLG") = prmDataRow.Item("M_TOKKA_FLG").ToString
-    rtnDic("M_TOKKA_DATA") = prmDataRow.Item("M_TOKKA_DATA").ToString
-    rtnDic("HANBAI_KINGAKU") = prmDataRow.Item("HANBAI_KINGAKU").ToString
-    rtnDic("TEI_KINGAKU") = prmDataRow.Item("TEI_KINGAKU").ToString
-    rtnDic("KOSUU") = prmDataRow.Item("KOSUU").ToString
-    rtnDic("TEIGAKU_KIGOU") = prmDataRow.Item("TEIGAKU_KIGOU").ToString
-    rtnDic("JISSEKI_KOSUU") = prmDataRow.Item("JISSEKI_KOSUU").ToString
-    rtnDic("TEI_JYURYO") = prmDataRow.Item("TEI_JYURYO").ToString
-    rtnDic("SYOHIN_CODE") = prmDataRow.Item("SYOHIN_CODE").ToString
-    rtnDic("HOUSOU_MODE") = prmDataRow.Item("HOUSOU_MODE").ToString
-    rtnDic("SEISAN_MODE") = prmDataRow.Item("SEISAN_MODE").ToString
-    rtnDic("KOTAINO1") = prmDataRow.Item("KOTAINO1").ToString
-    rtnDic("KOTAINO2") = prmDataRow.Item("KOTAINO2").ToString
-    rtnDic("KOTAINO3") = prmDataRow.Item("KOTAINO3").ToString
-    rtnDic("LOT_NUMBER") = prmDataRow.Item("LOT_NUMBER").ToString
-    rtnDic("LOT_NUMBER2") = prmDataRow.Item("LOT_NUMBER2").ToString
-    rtnDic("LOT_NUMBER3") = prmDataRow.Item("LOT_NUMBER3").ToString
-    rtnDic("TRAY_NUMBER") = prmDataRow.Item("TRAY_NUMBER").ToString
+    For Each tmpDc As DataColumn In prmDataRow.Table.Columns
+      rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString
+    Next
     rtnDic("CREATE_DATE") = prmCreateDate
     rtnDic("UPDATE_DATE") = prmCreateDate
+
+    'rtnDic("MACHINE_NUMBER") = prmDataRow.Item("MACHINE_NUMBER").ToString
+    'rtnDic("JISSEKI_DATE") = prmDataRow.Item("JISSEKI_DATE").ToString
+    'rtnDic("JISSEKI_TIME") = prmDataRow.Item("JISSEKI_TIME").ToString
+    'rtnDic("BUMON_NUMBER") = prmDataRow.Item("BUMON_NUMBER").ToString
+    'rtnDic("YOBI_NUMBER") = prmDataRow.Item("YOBI_NUMBER").ToString
+    'rtnDic("TANKA_NUMBER") = prmDataRow.Item("TANKA_NUMBER").ToString
+    'rtnDic("SHOP_NUMBER") = prmDataRow.Item("SHOP_NUMBER").ToString
+    'rtnDic("JISSEKI_KUBUN") = prmDataRow.Item("JISSEKI_KUBUN").ToString
+    'rtnDic("KEIRYO_FLG") = prmDataRow.Item("KEIRYO_FLG").ToString
+    'rtnDic("JYURYO") = prmDataRow.Item("JYURYO").ToString
+    'rtnDic("TANKA") = prmDataRow.Item("TANKA").ToString
+    'rtnDic("KINGAKU") = prmDataRow.Item("KINGAKU").ToString
+    'rtnDic("M_TOKKA_FLG") = prmDataRow.Item("M_TOKKA_FLG").ToString
+    'rtnDic("M_TOKKA_DATA") = prmDataRow.Item("M_TOKKA_DATA").ToString
+    'rtnDic("HANBAI_KINGAKU") = prmDataRow.Item("HANBAI_KINGAKU").ToString
+    'rtnDic("TEI_KINGAKU") = prmDataRow.Item("TEI_KINGAKU").ToString
+    'rtnDic("KOSUU") = prmDataRow.Item("KOSUU").ToString
+    'rtnDic("TEIGAKU_KIGOU") = prmDataRow.Item("TEIGAKU_KIGOU").ToString
+    'rtnDic("JISSEKI_KOSUU") = prmDataRow.Item("JISSEKI_KOSUU").ToString
+    'rtnDic("TEI_JYURYO") = prmDataRow.Item("TEI_JYURYO").ToString
+    'rtnDic("SYOHIN_CODE") = prmDataRow.Item("SYOHIN_CODE").ToString
+    'rtnDic("HOUSOU_MODE") = prmDataRow.Item("HOUSOU_MODE").ToString
+    'rtnDic("SEISAN_MODE") = prmDataRow.Item("SEISAN_MODE").ToString
+    'rtnDic("KOTAINO1") = prmDataRow.Item("KOTAINO1").ToString
+    'rtnDic("KOTAINO2") = prmDataRow.Item("KOTAINO2").ToString
+    'rtnDic("KOTAINO3") = prmDataRow.Item("KOTAINO3").ToString
+    'rtnDic("LOT_NUMBER") = prmDataRow.Item("LOT_NUMBER").ToString
+    'rtnDic("LOT_NUMBER2") = prmDataRow.Item("LOT_NUMBER2").ToString
+    'rtnDic("LOT_NUMBER3") = prmDataRow.Item("LOT_NUMBER3").ToString
+    'rtnDic("TRAY_NUMBER") = prmDataRow.Item("TRAY_NUMBER").ToString
+    'rtnDic("CREATE_DATE") = prmCreateDate
+    'rtnDic("UPDATE_DATE") = prmCreateDate
 
     Return rtnDic
   End Function
@@ -1011,4 +1100,61 @@ Module Module_Download
     SqlServer.Execute(UpdDenNo(prmDenpyoNo))
 
   End Sub
+
+
+  ''' <summary>
+  ''' 計量値調整
+  ''' </summary>
+  ''' <param name="prmTargetData">調整対象の計量値</param>
+  ''' <returns>調整後の値</returns>
+  ''' <remarks>
+  '''   計量値が30kg未満
+  '''     小数点第二位が 1～4は0に調整
+  '''     小数点第二位が 5～9は5に調整
+  '''   計量値が30kg以上
+  '''     小数点第二位 2,4は0に調整
+  '''     小数点第二位 6,8は5に調整
+  '''     
+  ''' 計量器の仕様として
+  '''   30kg未満は小数点第二位は0～9が発生
+  '''   30kg以上は小数点第二位は0と偶数のみ発生
+  ''' の為、処理としては30kg未満・以上でロジックの変更はありません
+  ''' </remarks>
+  Private Function AdjustmentWeightValue(prmTargetData As String) As String
+    Dim tmpWeight As String = prmTargetData
+    Dim tmpPointPos As Integer = prmTargetData.IndexOf(".")
+    Dim tmpAdjustmentValue As String = ""
+
+    If tmpPointPos > 0 Then
+      If 5 <= Integer.Parse(prmTargetData.Substring(tmpPointPos + 2, 1)) Then
+        ' 小数点第二位が5以上は5に調整
+        tmpAdjustmentValue = "5"
+      Else
+        ' 小数点第二位が5未満は0に調整
+        tmpAdjustmentValue = "0"
+      End If
+
+      tmpWeight = prmTargetData.Substring(0, prmTargetData.Length - tmpPointPos) _
+                  & tmpAdjustmentValue
+    End If
+
+    Return tmpWeight
+
+  End Function
+
+  Private Function AdjustmentDateValue(prmTargetData As String) As String
+    Return DateTime.Parse(prmTargetData).ToString("yyyyMMdd")
+  End Function
+
+  Private Function AdjustmentTimeValue(prmTargetData As String) As String
+    Return DateTime.Parse(prmTargetData).ToString("HHmm")
+  End Function
+
+
+
+  Private Function CalculateKingaku(prmTanka As String, prmSuryo As String) As Decimal
+
+    Return Decimal.Parse(prmTanka)
+
+  End Function
 End Module
