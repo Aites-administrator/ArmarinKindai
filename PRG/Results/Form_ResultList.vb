@@ -276,7 +276,7 @@ Public Class Form_ResultList
         InsertData("Utizei") = ""
         InsertData("ZeiKBN") = tmpShohinDt.Rows(0).Item("ZeiKBN").ToString
         InsertData("ZeikomiKBN") = tmpShohinDt.Rows(0).Item("ZeikomiKBN").ToString
-        InsertData("Biko") = DataRow.Cells("個体識別番号３").Value
+        InsertData("Biko") = DataRow.Cells("原産地").Value
         InsertData("HyojunKKKu") = ""
         InsertData("DojiNyukaKBN") = "0"
         InsertData("UriTanka") = "0"
@@ -295,8 +295,8 @@ Public Class Form_ResultList
         InsertData("HoryuFLG") = ""
         InsertData("ShatenCD") = ""
         InsertData("TorihikisakiCD") = ""
-        InsertData("Memo1") = DataRow.Cells("個体識別番号１").Value
-        InsertData("Memo2") = DataRow.Cells("個体識別番号２").Value
+        InsertData("Memo1") = DataRow.Cells("生簀ロット番号").Value
+        InsertData("Memo2") = DataRow.Cells("メモ").Value
         InsertData("Hoka1") = Me.TxtHoka1.Text
         InsertData("Hoka2") = Me.TxtHoka2.Text
         InsertData("TokuiKubun") = "0"
@@ -308,7 +308,7 @@ Public Class Form_ResultList
 
 
         SqlServer.GetResult(tmpJissekiDt, SqlGetJisseki(DataRow.Cells("行No").Value))
-        Dim WhereSql As String = " WHERE DenNO = '" & Me.TxtDenNo.Text & "' AND GyoNO = '" & DataRow.Cells("行No").Value & "'"
+        Dim WhereSql As String = " WHERE ISNULL(DenNO2,DenNO) = '" & Me.TxtDenNo.Text & "' AND ISNULL(GyoNO2,GyoNO) = '" & DataRow.Cells("行No").Value & "'"
         Dim sql As String = If(tmpJissekiDt.Rows.Count = 0, CreateInsSql("TRN_JISSEKI", InsertData), CreateUpdSql("TRN_JISSEKI", InsertData) & WhereSql)
 
         SqlServer.Execute(sql)
@@ -893,18 +893,18 @@ Public Class Form_ResultList
   Private Function SqlGetJisseki(Optional prmGyoNo As String = "") As String
 
     Dim sql As String = String.Empty
-    sql &= " SELECT	DenNo 伝票番号 "
-    sql &= "	,	GyoNo GyoNo "
+    sql &= " SELECT	ISNULL(DenNo2,DenNo) 伝票番号 "
+    sql &= "	,	ISNULL(GyoNo2,GyoNo) GyoNo "
     sql &= "	,	Format(UketukeDay,'yyyy/MM/dd') 加工日 "
     sql &= "	,	NohinDay 納品日 "
     sql &= "	,	SeikyuDay 請求日 "
     sql &= "	,	Ku 売上区分 "
     sql &= "	,	TokuiCd 得意先コード "
     sql &= "	,	TokuiNM 得意先名 "
-    sql &= "	,	TokuiTel 得意先Tel "
+    sql &= "	,	IsNull(TokuiTel,'') 得意先Tel "
     sql &= "	,	Denku 伝区 "
     sql &= "	,	DenKBN 伝票区分 "
-    sql &= "	,	BunruiCD 分類コード "
+    sql &= "	,	ISNULL(BunruiCD,'') 分類コード "
     sql &= "	,	TyokuCD 直送先コード "
     sql &= "	,	ShohinCD ShohinCD "
     sql &= "	,	ShohinNM ShohinNM "
@@ -921,18 +921,18 @@ Public Class Form_ResultList
     sql &= "	,	Biko Biko "
     sql &= "	,	Memo1 Memo1 "
     sql &= "	,	Memo2 Memo2 "
-    sql &= "	,	BumonCD 部門コード"
+    sql &= "	,	ISNULL(BumonCD,'') 部門コード"
     sql &= "	,	UTantoCD 担当コード "
-    sql &= "	,	TekiyoNM 摘要 "
-    sql &= "	,	Hoka1 他１ "
-    sql &= "	,	Hoka2 他２ "
+    sql &= "	,	ISNULL(TekiyoNM,'') 摘要 "
+    sql &= "	,	ISNULL(Hoka1,'') 他１ "
+    sql &= "	,	ISNULL(Hoka2,'') 他２ "
     sql &= " FROM TRN_JISSEKI "
     sql &= " WHERE 1 = 1 "
-    sql &= " AND DenNo = '" & Me.TxtDenNo.Text & "'"
+    sql &= " AND ISNULL(DenNo2,DenNo) = '" & Me.TxtDenNo.Text & "'"
     If prmGyoNo <> "" Then
-      sql &= " AND GyoNo = " & prmGyoNo & " "
+      sql &= " AND ISNULL(GyoNo2,GyoNo) = " & prmGyoNo & " "
     End If
-    sql &= " ORDER BY DenNo,GyoNo "
+    sql &= " ORDER BY ISNULL(DenNo2,DenNo),ISNULL(GyoNo2,GyoNo) "
 
     Return sql
 
@@ -945,13 +945,13 @@ Public Class Form_ResultList
   Private Function SqlGetDenpyoSum() As String
 
     Dim sql As String = String.Empty
-    sql &= " SELECT	Count(GyoNO) 明細数 "
+    sql &= " SELECT	Count(ISNULL(GyoNO2,GyoNO)) 明細数 "
     sql &= "	,	SUM(CONVERT(numeric,UriTanka)) 売価合計 "
     sql &= "	,	Sum(CONVERT(numeric,UriageKin)) 合計Kingaku "
     sql &= " FROM TRN_JISSEKI "
     sql &= " WHERE 1 = 1 "
-    sql &= " AND DenNo = '" & Me.TxtDenNo.Text & "'"
-    sql &= " GROUP BY DenNo "
+    sql &= " AND ISNULL(DenNo2,DenNo) = '" & Me.TxtDenNo.Text & "'"
+    sql &= " GROUP BY ISNULL(DenNo2,DenNo) "
 
     Return sql
 
@@ -965,8 +965,8 @@ Public Class Form_ResultList
 
     Dim sql As String = String.Empty
     sql &= " DELETE FROM TRN_JISSEKI "
-    sql &= " WHERE DenNo = '" & Me.TxtDenNo.Text & "'"
-    sql &= " AND GyoNo > " & prmMaxGyoNo
+    sql &= " WHERE ISNULL(DenNo2,DenNo) = '" & Me.TxtDenNo.Text & "'"
+    sql &= " AND ISNULL(GyoNo2,GyoNo) > " & prmMaxGyoNo
 
     Return sql
 
@@ -974,7 +974,7 @@ Public Class Form_ResultList
   Private Function UpdDenNo(prmDenNo As String) As String
     Dim sql As String = String.Empty
     sql &= " UPDATE TBL_DENNO"
-    sql &= " SET  DenNo = '" & prmDenNo & "'"
+    sql &= " SET  ISNULL(DenNo2,DenNo) = '" & prmDenNo & "'"
     Call WriteExecuteLog("Module_Download", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function
@@ -982,7 +982,7 @@ Public Class Form_ResultList
   Private Function GetDenpyoNoSql() As String
     Dim sql As String = String.Empty
     sql &= " SELECT"
-    sql &= "     DenNo "
+    sql &= "     ISNULL(DenNo2,DenNo) "
     sql &= " FROM"
     sql &= "     TBL_DENNO "
     Call WriteExecuteLog("Module_Download", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
@@ -1123,9 +1123,9 @@ Public Class Form_ResultList
       DataGridView1.Rows(tmpCnt).Cells("数量").Value = tmpRow("Suryo").ToString
       DataGridView1.Rows(tmpCnt).Cells("単価").Value = tmpRow("Tanka").ToString
       DataGridView1.Rows(tmpCnt).Cells("金額").Value = tmpRow("Kingaku").ToString
-      DataGridView1.Rows(tmpCnt).Cells("個体識別番号１").Value = tmpRow("Memo1").ToString
-      DataGridView1.Rows(tmpCnt).Cells("個体識別番号２").Value = tmpRow("Memo2").ToString
-      DataGridView1.Rows(tmpCnt).Cells("個体識別番号３").Value = tmpRow("Biko").ToString
+      DataGridView1.Rows(tmpCnt).Cells("生簀ロット番号").Value = tmpRow("Memo1").ToString
+      DataGridView1.Rows(tmpCnt).Cells("メモ").Value = tmpRow("Memo2").ToString
+      DataGridView1.Rows(tmpCnt).Cells("原産地").Value = tmpRow("Biko").ToString
       tmpCnt += 1
 
     Next
@@ -1207,9 +1207,9 @@ Public Class Form_ResultList
       .Columns.Add(SetColumn("単位"))
       .Columns.Add(SetColumn("単価"))
       .Columns.Add(SetColumn("金額"))
-      .Columns.Add(SetColumn("個体識別番号１"))
-      .Columns.Add(SetColumn("個体識別番号２"))
-      .Columns.Add(SetColumn("個体識別番号３"))
+      .Columns.Add(SetColumn("生簀ロット番号"))
+      .Columns.Add(SetColumn("原産地"))
+      .Columns.Add(SetColumn("メモ"))
     End With
   End Sub
 

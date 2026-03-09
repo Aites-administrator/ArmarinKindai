@@ -85,6 +85,7 @@ Partial Class NohinPrint
         Me.TxtTanto.Size = New System.Drawing.Size(104, 33)
         Me.TxtTanto.TabIndex = 4
         Me.TxtTanto.TabStop = False
+        Me.TxtTanto.Visible = False
         '
         'Label14
         '
@@ -95,11 +96,12 @@ Partial Class NohinPrint
         Me.Label14.Size = New System.Drawing.Size(101, 30)
         Me.Label14.TabIndex = 182
         Me.Label14.Text = "担当者："
+        Me.Label14.Visible = False
         '
         'BtnPrint
         '
         Me.BtnPrint.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.BtnPrint.Location = New System.Drawing.Point(1145, 360)
+        Me.BtnPrint.Location = New System.Drawing.Point(1161, 360)
         Me.BtnPrint.Name = "BtnPrint"
         Me.BtnPrint.Size = New System.Drawing.Size(123, 43)
         Me.BtnPrint.TabIndex = 16
@@ -109,11 +111,11 @@ Partial Class NohinPrint
         'TxtGoukeiKin
         '
         Me.TxtGoukeiKin.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.TxtGoukeiKin.Location = New System.Drawing.Point(1210, 325)
+        Me.TxtGoukeiKin.Location = New System.Drawing.Point(1196, 325)
         Me.TxtGoukeiKin.MaxLength = 10
         Me.TxtGoukeiKin.Name = "TxtGoukeiKin"
         Me.TxtGoukeiKin.ReadOnly = True
-        Me.TxtGoukeiKin.Size = New System.Drawing.Size(57, 33)
+        Me.TxtGoukeiKin.Size = New System.Drawing.Size(86, 33)
         Me.TxtGoukeiKin.TabIndex = 14
         Me.TxtGoukeiKin.TabStop = False
         '
@@ -121,7 +123,7 @@ Partial Class NohinPrint
         '
         Me.Label12.AutoSize = True
         Me.Label12.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label12.Location = New System.Drawing.Point(1099, 324)
+        Me.Label12.Location = New System.Drawing.Point(1087, 324)
         Me.Label12.Name = "Label12"
         Me.Label12.Size = New System.Drawing.Size(123, 30)
         Me.Label12.TabIndex = 177
@@ -130,7 +132,7 @@ Partial Class NohinPrint
         'TxtMeisaiSu
         '
         Me.TxtMeisaiSu.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.TxtMeisaiSu.Location = New System.Drawing.Point(1036, 324)
+        Me.TxtMeisaiSu.Location = New System.Drawing.Point(1024, 324)
         Me.TxtMeisaiSu.MaxLength = 10
         Me.TxtMeisaiSu.Name = "TxtMeisaiSu"
         Me.TxtMeisaiSu.ReadOnly = True
@@ -142,7 +144,7 @@ Partial Class NohinPrint
         '
         Me.Label11.AutoSize = True
         Me.Label11.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label11.Location = New System.Drawing.Point(942, 324)
+        Me.Label11.Location = New System.Drawing.Point(930, 324)
         Me.Label11.Name = "Label11"
         Me.Label11.Size = New System.Drawing.Size(101, 30)
         Me.Label11.TabIndex = 175
@@ -237,7 +239,7 @@ Partial Class NohinPrint
         '
         Me.Label7.AutoSize = True
         Me.Label7.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label7.Location = New System.Drawing.Point(14, 283)
+        Me.Label7.Location = New System.Drawing.Point(7, 283)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(145, 30)
         Me.Label7.TabIndex = 156
@@ -271,17 +273,17 @@ Partial Class NohinPrint
         Me.DataGridView1.AllowUserToAddRows = False
         Me.DataGridView1.AllowUserToDeleteRows = False
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Location = New System.Drawing.Point(12, 360)
+        Me.DataGridView1.Location = New System.Drawing.Point(7, 360)
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.ReadOnly = True
         Me.DataGridView1.RowTemplate.Height = 21
-        Me.DataGridView1.Size = New System.Drawing.Size(1127, 293)
+        Me.DataGridView1.Size = New System.Drawing.Size(1148, 293)
         Me.DataGridView1.TabIndex = 15
         '
         'BtnClose
         '
         Me.BtnClose.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.BtnClose.Location = New System.Drawing.Point(1145, 610)
+        Me.BtnClose.Location = New System.Drawing.Point(1161, 610)
         Me.BtnClose.Name = "BtnClose"
         Me.BtnClose.Size = New System.Drawing.Size(123, 43)
         Me.BtnClose.TabIndex = 19
@@ -301,7 +303,7 @@ Partial Class NohinPrint
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label1.Location = New System.Drawing.Point(12, 71)
+        Me.Label1.Location = New System.Drawing.Point(7, 71)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(150, 30)
         Me.Label1.TabIndex = 148
@@ -311,7 +313,7 @@ Partial Class NohinPrint
         '
         Me.PeriodLabel.AutoSize = True
         Me.PeriodLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.PeriodLabel.Location = New System.Drawing.Point(12, 36)
+        Me.PeriodLabel.Location = New System.Drawing.Point(7, 36)
         Me.PeriodLabel.Name = "PeriodLabel"
         Me.PeriodLabel.Size = New System.Drawing.Size(101, 30)
         Me.PeriodLabel.TabIndex = 146
@@ -320,7 +322,7 @@ Partial Class NohinPrint
         'BtnEdit
         '
         Me.BtnEdit.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.BtnEdit.Location = New System.Drawing.Point(1145, 413)
+        Me.BtnEdit.Location = New System.Drawing.Point(1161, 413)
         Me.BtnEdit.Name = "BtnEdit"
         Me.BtnEdit.Size = New System.Drawing.Size(123, 43)
         Me.BtnEdit.TabIndex = 17
@@ -333,7 +335,7 @@ Partial Class NohinPrint
         Me.GroupBox1.Controls.Add(Me.RdoPrint)
         Me.GroupBox1.Controls.Add(Me.RdoNotPrint)
         Me.GroupBox1.Font = New System.Drawing.Font("Segoe UI", 15.75!)
-        Me.GroupBox1.Location = New System.Drawing.Point(17, 112)
+        Me.GroupBox1.Location = New System.Drawing.Point(7, 112)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(294, 82)
         Me.GroupBox1.TabIndex = 7
@@ -434,7 +436,7 @@ Partial Class NohinPrint
         'BtnDelete
         '
         Me.BtnDelete.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.BtnDelete.Location = New System.Drawing.Point(1145, 462)
+        Me.BtnDelete.Location = New System.Drawing.Point(1161, 462)
         Me.BtnDelete.Name = "BtnDelete"
         Me.BtnDelete.Size = New System.Drawing.Size(123, 43)
         Me.BtnDelete.TabIndex = 18
@@ -538,6 +540,7 @@ Partial Class NohinPrint
         Me.CmbMstTanto1.SkipChkCode = False
         Me.CmbMstTanto1.TabIndex = 4
         Me.CmbMstTanto1.ValueMember = "Code"
+        Me.CmbMstTanto1.Visible = False
         '
         'CmbMstCustomer1From
         '
@@ -614,11 +617,11 @@ Partial Class NohinPrint
         '
         Me.TitleLabel.AutoSize = True
         Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 20.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TitleLabel.Location = New System.Drawing.Point(10, 14)
+        Me.TitleLabel.Location = New System.Drawing.Point(7, 14)
         Me.TitleLabel.Name = "TitleLabel"
-        Me.TitleLabel.Size = New System.Drawing.Size(213, 37)
+        Me.TitleLabel.Size = New System.Drawing.Size(157, 37)
         Me.TitleLabel.TabIndex = 199
-        Me.TitleLabel.Text = "納品書検索画面"
+        Me.TitleLabel.Text = "納品書検索"
         '
         'NohinPrint
         '

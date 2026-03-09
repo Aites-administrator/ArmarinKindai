@@ -27,33 +27,34 @@ Public Class OutExcel
   End Property
 
 
+
   Private Sub OutExcel_Load(sender As Object, e As EventArgs) Handles MyBase.Load
     Try
-    Dim dtNow As DateTime = DateTime.Now
-    TxtUKakouDayFrom.Text = New Date(dtNow.Year, dtNow.Month, dtNow.Day)
-    TxtUKakouDayTo.Text = New Date(dtNow.Year, dtNow.Month, dtNow.Day)
+      Dim dtNow As DateTime = DateTime.Now
+      TxtUKakouDayFrom.Text = New Date(dtNow.Year, dtNow.Month, dtNow.Day)
+      TxtUKakouDayTo.Text = New Date(dtNow.Year, dtNow.Month, dtNow.Day)
 
-    '得意先コード設定値
-    lastCmbMstCustomer = CmbMstCustomer1From.Text
-    '得意先コード設定値
-    lastCmbMstItem = CmbMstItem1From.Text
-    ' コンボボックスの選択肢を設定する関数を呼び出し
-    CmbMstCustomerValidating(CmbMstCustomer1From, TxtTokuNameFrom)
-    CmbMstItemValidating(CmbMstItem1From, TxtItemNameFrom)
-    ' コンボボックスの選択肢を設定する関数を呼び出し
-    CmbMstCustomerValidating(CmbMstCustomer1To, TxtTokuNameTo)
-    CmbMstItemValidating(CmbMstItem1To, TxtItemNameTo)
+      '得意先コード設定値
+      lastCmbMstCustomer = CmbMstCustomer1From.Text
+      '得意先コード設定値
+      lastCmbMstItem = CmbMstItem1From.Text
+      ' コンボボックスの選択肢を設定する関数を呼び出し
+      CmbMstCustomerValidating(CmbMstCustomer1From, TxtTokuNameFrom)
+      CmbMstItemValidating(CmbMstItem1From, TxtItemNameFrom)
+      ' コンボボックスの選択肢を設定する関数を呼び出し
+      CmbMstCustomerValidating(CmbMstCustomer1To, TxtTokuNameTo)
+      CmbMstItemValidating(CmbMstItem1To, TxtItemNameTo)
 
-    ' DataGridView全体のフォントを変更する場合
-    DataGridView1.Font = New Font("Segoe UI", 10, FontStyle.Regular)
+      ' DataGridView全体のフォントを変更する場合
+      DataGridView1.Font = New Font("Segoe UI", 10, FontStyle.Regular)
 
-    DataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.False
-    DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
+      DataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.False
+      DataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None
 
-    RdoCross.Checked = True
+      RdoCross.Checked = True
 
       DispGrid()
-    TxtUKakouDayFrom.Focus()
+      TxtUKakouDayFrom.Focus()
 
     Catch ex As Exception
       ComWriteErrLog(ex)
@@ -276,22 +277,22 @@ Public Class OutExcel
         'Dim macroFilePath As String = "C:\AUTOPRT\集計マクロ.xlsm"
         'Dim p As System.Diagnostics.Process = System.Diagnostics.Process.Start(macroFilePath)
       Case RdoA4.Checked
-        Dim ClsPrintingProcess As New ClsPrintingProcess.ClsPrintingProcess()
+          'Dim ClsPrintingProcess As New ClsPrintingProcess.ClsPrintingProcess()
 
-        tmpWhereList.Add("UketukeDay >=", Me.TxtUKakouDayFrom.Text)
-        tmpWhereList.Add("UketukeDay <", DateTime.Parse(Me.TxtUKakouDayFrom.Text).AddDays(1).ToString("yyyy/MM/dd"))
+          'tmpWhereList.Add("UketukeDay >=", Me.TxtUKakouDayFrom.Text)
+          'tmpWhereList.Add("UketukeDay <", DateTime.Parse(Me.TxtUKakouDayFrom.Text).AddDays(1).ToString("yyyy/MM/dd"))
 
-        If Not String.IsNullOrWhiteSpace(CmbMstCustomer1From.Text) Then
-          tmpWhereList.Add("TokuiCd", CmbMstCustomer1From.Text)
-        End If
-        If Not String.IsNullOrWhiteSpace(CmbMstItem1From.Text) Then
-          tmpWhereList.Add("ShohinCD", CmbMstItem1From.Text)
-        End If
+          'If Not String.IsNullOrWhiteSpace(CmbMstCustomer1From.Text) Then
+          '  tmpWhereList.Add("TokuiCd", CmbMstCustomer1From.Text)
+          'End If
+          'If Not String.IsNullOrWhiteSpace(CmbMstItem1From.Text) Then
+          '  tmpWhereList.Add("ShohinCD", CmbMstItem1From.Text)
+          'End If
 
-        ClsPrintingProcess.PrintProcess(ClsCommonGlobalData.PRINT_NON_PREVIEW, "WK_LAYOUT", "R_LAYOUT", tmpWhereList)
+          'ClsPrintingProcess.PrintProcess(ClsCommonGlobalData.PRINT_NON_PREVIEW, "WK_LAYOUT", "R_LAYOUT", tmpWhereList)
 
 
-    End Select
+      End Select
 
     Catch ex As Exception
       ComWriteErrLog(ex)
@@ -502,47 +503,48 @@ Public Class OutExcel
     For Each tmpRow As DataRow In tmpDt.Rows
       DataGridView1.Rows.Add()
 
-      DataGridView1.Rows(tmpCnt).Cells("加工日").Value = tmpRow("加工日").ToString
-      DataGridView1.Rows(tmpCnt).Cells("納品日").Value = tmpRow("納品日").ToString
-      'DataGridView1.Rows(tmpCnt).Cells("請求日").Value = tmpRow("請求日").ToString
-      DataGridView1.Rows(tmpCnt).Cells("伝票番号").Value = tmpRow("伝票番号").ToString
+        DataGridView1.Rows(tmpCnt).Cells("伝票番号").Value = tmpRow("伝票番号").ToString
         DataGridView1.Rows(tmpCnt).Cells("行番号").Value = tmpRow("行番号").ToString
+        DataGridView1.Rows(tmpCnt).Cells("納品日").Value = tmpRow("納品日").ToString
         DataGridView1.Rows(tmpCnt).Cells("得意先コード").Value = tmpRow("得意先コード").ToString
         DataGridView1.Rows(tmpCnt).Cells("得意先名").Value = tmpRow("得意先名").ToString
-        'DataGridView1.Rows(tmpCnt).Cells("直送先コード").Value = tmpRow("直送先コード").ToString
+        DataGridView1.Rows(tmpCnt).Cells("直送先コード").Value = tmpRow("直送先コード").ToString
+        DataGridView1.Rows(tmpCnt).Cells("直送先名").Value = tmpRow("直送先名").ToString
+        DataGridView1.Rows(tmpCnt).Cells("商品コード").Value = tmpRow("商品コード").ToString
+        DataGridView1.Rows(tmpCnt).Cells("商品名").Value = tmpRow("商品名").ToString
+        DataGridView1.Rows(tmpCnt).Cells("色").Value = tmpRow("色").ToString 'なし
+        DataGridView1.Rows(tmpCnt).Cells("重量").Value = tmpRow("重量").ToString 'なし
+        DataGridView1.Rows(tmpCnt).Cells("単位").Value = tmpRow("単位").ToString
+        DataGridView1.Rows(tmpCnt).Cells("単価").Value = tmpRow("単価").ToString
+        DataGridView1.Rows(tmpCnt).Cells("原産地名").Value = tmpRow("原産地名").ToString
+        DataGridView1.Rows(tmpCnt).Cells("ロット番号").Value = tmpRow("ロット番号").ToString
+        'DataGridView1.Rows(tmpCnt).Cells("加工日").Value = tmpRow("加工日").ToString
+        'DataGridView1.Rows(tmpCnt).Cells("請求日").Value = tmpRow("請求日").ToString
         'DataGridView1.Rows(tmpCnt).Cells("先方担当者名").Value = tmpRow("先方担当者名").ToString
-        DataGridView1.Rows(tmpCnt).Cells("部門コード").Value = tmpRow("部門コード").ToString
+        'DataGridView1.Rows(tmpCnt).Cells("部門コード").Value = tmpRow("部門コード").ToString
         'DataGridView1.Rows(tmpCnt).Cells("担当者コード").Value = tmpRow("担当コード").ToString
         'DataGridView1.Rows(tmpCnt).Cells("摘要コード").Value = tmpRow("摘要コード").ToString 'なし
         'DataGridView1.Rows(tmpCnt).Cells("摘要名").Value = tmpRow("摘要名").ToString 'なし
         'DataGridView1.Rows(tmpCnt).Cells("分類コード").Value = tmpRow("分類コード").ToString
-        DataGridView1.Rows(tmpCnt).Cells("商品コード").Value = tmpRow("商品コード").ToString
-      DataGridView1.Rows(tmpCnt).Cells("商品名").Value = tmpRow("商品名").ToString
         'DataGridView1.Rows(tmpCnt).Cells("区").Value = tmpRow("区").ToString 'なし
-        DataGridView1.Rows(tmpCnt).Cells("入数").Value = tmpRow("入数").ToString
-        DataGridView1.Rows(tmpCnt).Cells("定貫フラグ").Value = tmpRow("箱数").ToString 'なし
-        DataGridView1.Rows(tmpCnt).Cells("数量").Value = tmpRow("納品数").ToString 'なし
-      DataGridView1.Rows(tmpCnt).Cells("単位").Value = tmpRow("単位").ToString
-      DataGridView1.Rows(tmpCnt).Cells("単価").Value = tmpRow("単価").ToString
-      DataGridView1.Rows(tmpCnt).Cells("売上金額").Value = tmpRow("金額").ToString 'なし
+        'DataGridView1.Rows(tmpCnt).Cells("入数").Value = tmpRow("入数").ToString
+        'DataGridView1.Rows(tmpCnt).Cells("定貫フラグ").Value = tmpRow("箱数").ToString 'なし
+        'DataGridView1.Rows(tmpCnt).Cells("売上金額").Value = tmpRow("金額").ToString 'なし
         'DataGridView1.Rows(tmpCnt).Cells("原単価").Value = tmpRow("原単価").ToString 'なし
         'DataGridView1.Rows(tmpCnt).Cells("原価金額").Value = tmpRow("原価金額").ToString 'なし
         'DataGridView1.Rows(tmpCnt).Cells("粗利益").Value = tmpRow("粗利益").ToString 'なし
         'DataGridView1.Rows(tmpCnt).Cells("外税額").Value = tmpRow("外税額").ToString 'なし
         'DataGridView1.Rows(tmpCnt).Cells("内税額").Value = tmpRow("内税額").ToString 'なし
         'DataGridView1.Rows(tmpCnt).Cells("税区分").Value = tmpRow("税区分").ToString 'なし
-        DataGridView1.Rows(tmpCnt).Cells("個体識別番号１").Value = tmpRow("個体識別番号１").ToString
-        DataGridView1.Rows(tmpCnt).Cells("個体識別番号２").Value = tmpRow("個体識別番号２").ToString
-      DataGridView1.Rows(tmpCnt).Cells("個体識別番号３").Value = tmpRow("個体識別番号３").ToString
+        'DataGridView1.Rows(tmpCnt).Cells("個体識別番号３").Value = tmpRow("個体識別番号３").ToString
         'DataGridView1.Rows(tmpCnt).Cells("標準価格").Value = tmpRow("標準価格").ToString
         'DataGridView1.Rows(tmpCnt).Cells("同時入荷区分").Value = tmpRow("同時入荷区分").ToString 'なし
         'DataGridView1.Rows(tmpCnt).Cells("売単価").Value = tmpRow("売単価").ToString
         'DataGridView1.Rows(tmpCnt).Cells("売価金額").Value = tmpRow("売価金額").ToString 'なし
         'DataGridView1.Rows(tmpCnt).Cells("規格・型番").Value = tmpRow("規格・型番").ToString 'なし
-        'DataGridView1.Rows(tmpCnt).Cells("色").Value = tmpRow("色").ToString 'なし
         tmpCnt += 1
 
-    Next
+      Next
 
     For Each col As DataGridViewColumn In DataGridView1.Columns
       col.Width = 125
@@ -575,44 +577,45 @@ Public Class OutExcel
 
   Private Sub SetColumnAdd()
     DataGridView1.Columns.Clear()
-    DataGridView1.Columns.Add(SetColumn("加工日"))
-    DataGridView1.Columns.Add(SetColumn("納品日"))
-    'DataGridView1.Columns.Add(SetColumn("請求日"))
     DataGridView1.Columns.Add(SetColumn("伝票番号"))
     DataGridView1.Columns.Add(SetColumn("行番号"))
+    DataGridView1.Columns.Add(SetColumn("納品日"))
     DataGridView1.Columns.Add(SetColumn("得意先コード"))
     DataGridView1.Columns.Add(SetColumn("得意先名"))
-    'DataGridView1.Columns.Add(SetColumn("直送先コード"))
+    DataGridView1.Columns.Add(SetColumn("直送先コード"))
+    DataGridView1.Columns.Add(SetColumn("直送先名"))
+    DataGridView1.Columns.Add(SetColumn("商品コード"))
+    DataGridView1.Columns.Add(SetColumn("商品名"))
+    DataGridView1.Columns.Add(SetColumn("色"))
+    DataGridView1.Columns.Add(SetColumn("重量"))
+    DataGridView1.Columns.Add(SetColumn("単位"))
+    DataGridView1.Columns.Add(SetColumn("単価"))
+    DataGridView1.Columns.Add(SetColumn("原産地名"))
+    DataGridView1.Columns.Add(SetColumn("ロット番号"))
+    'DataGridView1.Columns.Add(SetColumn("加工日"))
+    'DataGridView1.Columns.Add(SetColumn("請求日"))
     'DataGridView1.Columns.Add(SetColumn("先方担当者名"))
-    DataGridView1.Columns.Add(SetColumn("部門コード"))
+    'DataGridView1.Columns.Add(SetColumn("部門コード"))
     'DataGridView1.Columns.Add(SetColumn("担当者コード"))
     'DataGridView1.Columns.Add(SetColumn("摘要コード"))
     'DataGridView1.Columns.Add(SetColumn("摘要名"))
     'DataGridView1.Columns.Add(SetColumn("分類コード"))
-    DataGridView1.Columns.Add(SetColumn("商品コード"))
-    DataGridView1.Columns.Add(SetColumn("商品名"))
     'DataGridView1.Columns.Add(SetColumn("区"))
-    DataGridView1.Columns.Add(SetColumn("入数"))
-    DataGridView1.Columns.Add(SetColumn("定貫フラグ"))
-    DataGridView1.Columns.Add(SetColumn("数量"))
-    DataGridView1.Columns.Add(SetColumn("単位"))
-    DataGridView1.Columns.Add(SetColumn("単価"))
-    DataGridView1.Columns.Add(SetColumn("売上金額"))
+    'DataGridView1.Columns.Add(SetColumn("入数"))
+    'DataGridView1.Columns.Add(SetColumn("定貫フラグ"))
+    'DataGridView1.Columns.Add(SetColumn("売上金額"))
     'DataGridView1.Columns.Add(SetColumn("原単価"))
     'DataGridView1.Columns.Add(SetColumn("原価金額"))
     'DataGridView1.Columns.Add(SetColumn("粗利益"))
     'DataGridView1.Columns.Add(SetColumn("外税額"))
     'DataGridView1.Columns.Add(SetColumn("内税額"))
     'DataGridView1.Columns.Add(SetColumn("税区分"))
-    DataGridView1.Columns.Add(SetColumn("個体識別番号１"))
-    DataGridView1.Columns.Add(SetColumn("個体識別番号２"))
-    DataGridView1.Columns.Add(SetColumn("個体識別番号３"))
+    'DataGridView1.Columns.Add(SetColumn("個体識別番号３"))
     'DataGridView1.Columns.Add(SetColumn("標準価格"))
     'DataGridView1.Columns.Add(SetColumn("同時入荷区分"))
     'DataGridView1.Columns.Add(SetColumn("売単価"))
     'DataGridView1.Columns.Add(SetColumn("売価金額"))
     'DataGridView1.Columns.Add(SetColumn("規格・型番"))
-    'DataGridView1.Columns.Add(SetColumn("色"))
   End Sub
 
   Private Function SetColumn(prmColumnName As String) As DataGridViewTextBoxColumn
@@ -695,59 +698,28 @@ Public Class OutExcel
     Dim dtTo As DateTime = DateTime.Parse(Me.TxtUKakouDayTo.Text)
     Dim sql As String = String.Empty
 
-    sql &= " SELECT	DenNo 伝票番号 "
+    sql &= " SELECT	ISNULL(DenNo2,DenNo) 伝票番号 "
     sql &= "	,	GyoNo 行番号 "
-    sql &= "	,	Format(UketukeDay,'yyyy/MM/dd') 加工日 "
     sql &= "	,	NohinDay 納品日 "
-    sql &= "	,	SeikyuDay 請求日 "
-    sql &= "	,	Ku 売上区分 "
     sql &= "	,	TokuiCd 得意先コード "
     sql &= "	,	TokuiNM 得意先名 "
-    sql &= "	,	TokuiTel 得意先Tel "
-    sql &= "	,	Denku 伝区 "
-    sql &= "	,	DenKBN 伝票区分 "
-    sql &= "	,	BunruiCD 分類コード "
     sql &= "	,	TyokuCD 直送先コード "
+    sql &= "	,	TyokuNM 直送先名 "
     sql &= "	,	ShohinCD 商品コード "
     sql &= "	,	ShohinNM 商品名 "
-    sql &= "	,	SenpoTantoNM 先方担当者名 "
-    sql &= "	,	Irisu 入数 "
-    sql &= "	,	Hakosu 箱数 "
-    sql &= "	,	Tani 単位 "
-    sql &= "	,	JutyuSu 受注数 "
-    sql &= "	,	Suryo 納品数 "
-    sql &= "	,	Tanka 単価 "
-    sql &= "	,	UriageKin 金額 "
-    sql &= "	,	HyojunKKKu 標準価格 "
-    sql &= "	,	UriTanka 売単価  "
-    sql &= "	,	SokoCD 倉庫コード "
-    sql &= "	,	Biko 個体識別番号３ "
-    sql &= "	,	Memo1 個体識別番号１ "
-    sql &= "	,	Memo2 個体識別番号２ "
-    sql &= "	,	BumonCD 部門コード"
-    sql &= "	,	UTantoCD 担当コード "
-    sql &= "	,	TekiyoCD 摘要コード "
-    sql &= "	,	TekiyoNM 摘要名 "
-    sql &= "	,	Ku 区 "
-    sql &= "	,	GenTanka 原単価 "
-    sql &= "	,	GenkaGaku 原価金額 "
-    sql &= "	,	Arari 粗利益 "
-    sql &= "	,	Sotozei 外税額　"
-    sql &= "	,	Utizei 内税額　"
-    sql &= "	,	ZeiKBN 税区分　"
-    sql &= "	,	DojiNyukaKBN 同時入荷区分　"
-    sql &= "	,	Baikagaku 売価金額 "
     sql &= "	,	Iro 色 "
-    sql &= "	,	kikaku 規格・型番 "
-    sql &= "	,	Hoka1 他１ "
-    sql &= "	,	Hoka2 他２ "
+    sql &= "	,	Suryo 重量 "
+    sql &= "	,	Tani 単位 "
+    sql &= "	,	Tanka 単価 "
+    sql &= "	,	Biko 原産地名 "
+    sql &= "	,	Memo1 ロット番号 "
     sql &= " FROM TRN_JISSEKI "
     sql &= " WHERE 1 = 1 "
     If Not String.IsNullOrWhiteSpace(dtFrom.ToString) Then
-      sql &= " AND UketukeDay >= '" & dtFrom.ToString("yyyy/MM/dd") & "'"
+      sql &= " AND NohinDay >= '" & dtFrom.ToString("yyyyMMdd") & "'"
     End If
     If Not String.IsNullOrWhiteSpace(dtTo.ToString) Then
-      sql &= " AND UketukeDay <= '" & dtTo.ToString("yyyy/MM/dd") & "'"
+      sql &= " AND NohinDay <= '" & dtTo.ToString("yyyyMMdd") & "'"
     End If
     If Not String.IsNullOrWhiteSpace(CmbMstCustomer1From.Text) Then
       sql &= " AND TokuiCd >= '" & CmbMstCustomer1From.Text & "' "
@@ -761,7 +733,7 @@ Public Class OutExcel
     If Not String.IsNullOrWhiteSpace(CmbMstItem1To.Text) Then
       sql &= " AND ShohinCD <= '" & CmbMstItem1To.Text & "' "
     End If
-    sql &= " ORDER BY DenNo,GyoNo "
+    sql &= " ORDER BY ISNULL(DenNo2,DenNo),ISNULL(GyoNo2,GyoNo) "
 
     Call WriteExecuteLog("OutExcel", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
 

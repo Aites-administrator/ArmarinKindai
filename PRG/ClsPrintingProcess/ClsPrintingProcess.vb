@@ -169,14 +169,52 @@ Public Class ClsPrintingProcess
 
   End Function
 
-  Public Sub PrintProcess(prmPreview As Integer, prmTableName As String, prmReportName As String, Optional ByRef prmWhereList As Dictionary(Of String, String) = Nothing)
+  Public Overloads Sub PrintProcess(prmPreview As Integer, prmTableName As String, prmReportName As String, Optional ByRef prmWhereList As Dictionary(Of String, String) = Nothing)
     Dim tmpDt As New DataTable
     Try
       '対象データ取得
       SqlServer.GetResult(tmpDt, SqlGetPrintData(prmWhereList))
 
+      '印刷処理
+      If Not AccessPrint(prmPreview, prmTableName, prmReportName, tmpDt) Then
+        Throw New Exception("印刷処理に失敗しました。")
+      End If
+
+      For Each tmpRow As DataRow In tmpDt.Rows
+        SqlServer.Execute(SqlUpdPrintFlg(tmpRow, prmWhereList))
+      Next
+    Catch ex As Exception
+      ComWriteErrLog(ex)
+    End Try
+
+  End Sub
+
+  Public Overloads Sub PrintProcess(prmPreview As Integer, prmTableName As String, prmReportName As String, Optional ByRef prmWhereList As Dictionary(Of String, List(Of String)) = Nothing)
+    Dim tmpDt As New DataTable
+    Try
+      '対象データ取得
+      SqlServer.GetResult(tmpDt, SqlGetPrintData(prmWhereList))
+
+      '印刷処理
+      If Not AccessPrint(prmPreview, prmTableName, prmReportName, tmpDt) Then
+        Throw New Exception("印刷処理に失敗しました。")
+      End If
+
+      For Each tmpRow As DataRow In tmpDt.Rows
+        SqlServer.Execute(SqlUpdPrintFlg(tmpRow, prmWhereList))
+      Next
+    Catch ex As Exception
+      ComWriteErrLog(ex, False)
+    End Try
+
+  End Sub
+
+  Private Function AccessPrint(prmPreview As Integer, prmTableName As String, prmReportName As String, tmpDt As DataTable) As Boolean
+    Dim rtn As Boolean = True
+
+    Try
       If (tmpDt.Rows.Count = 0) Then
-        Exit Sub
+        Throw New Exception
       End If
 
       'ワークテーブル作成
@@ -185,14 +223,11 @@ Public Class ClsPrintingProcess
       '印刷処理
       AccessRun(prmPreview, prmReportName, True)
 
-      For Each tmpRow As DataRow In tmpDt.Rows
-        SqlServer.Execute(SqlUpdPrintFlg(tmpRow))
-      Next
     Catch ex As Exception
-      ComWriteErrLog(ex)
+      rtn = False
     End Try
-
-  End Sub
+    Return rtn
+  End Function
 
   ''' <summary>
   ''' 量目表（セット）ワークテーブル削除と新規作成
@@ -254,22 +289,18 @@ Public Class ClsPrintingProcess
 
 
 
-  Private Function SqlGetPrintData(Optional ByRef prmWhereList As Dictionary(Of String, String) = Nothing) As String
+  Private Overloads Function SqlGetPrintData(Optional ByRef prmWhereList As Dictionary(Of String, String) = Nothing) As String
     Dim sql As String = String.Empty
     Dim ReportType As String = ReadSettingIniFile("REPORT_TYPE", "VALUE")
 
     sql &= "SELECT	trn_jisseki.NohinDay "
-    If prmWhereList.ContainsKey("DenNO2 = ") Then
-      sql &= "	,	trn_jisseki.DenNO2 DenNo "
-    Else
-      sql &= "	,	trn_jisseki.DenNO "
-    End If
-    sql &= "	,	trn_jisseki.GyoNo "
+    sql &= "	,	ISNULL(trn_jisseki.DenNO2,trn_jisseki.DenNO) DenNo "
+    sql &= "	,	ISNULL(trn_jisseki.GyoNo2,trn_jisseki.GyoNo2)GyoNo "
     sql &= "	,	trn_jisseki.TokuiCD "
     sql &= "	,	trn_jisseki.TokuiNm "
     sql &= "	,	trn_jisseki.ShohinCD "
     sql &= "	,	trn_jisseki.ShohinNM "
-    sql &= "	,	trn_jisseki.Irisu "
+    sql &= "	,	trn_jisseki.Iro IRISU "
     sql &= "	,	trn_jisseki.Suryo "
     sql &= "	,	trn_jisseki.Tanka "
     sql &= "	,	trn_jisseki.UriageKin "
@@ -288,6 +319,9 @@ Public Class ClsPrintingProcess
     '  sql &= "	    * iif(trn_jisseki.Suryo = '',ISNULL(MST_TOKUISAKI_SHOHIN.Tanka,ISNULL(TOKUISAKI0.Tanka,0)),ISNULL(MST_TOKUISAKI_SHOHIN.Tanka,ISNULL(TOKUISAKI0.Tanka,0)) /100)) UriageKin "
     'End If
     sql &= "	,	'8%' Zeiritsu "
+    sql &= "	,	trn_jisseki.Biko "
+    sql &= "	,	trn_jisseki.TyokuCD "
+    sql &= "	,	trn_jisseki.TyokuNM "
     sql &= "FROM trn_jisseki "
     sql &= "LEFT JOIN MST_TOKUISAKI_SHOHIN "
     sql &= "ON MST_TOKUISAKI_SHOHIN.TokuiCD = trn_jisseki.TokuiCD "
@@ -299,6 +333,54 @@ Public Class ClsPrintingProcess
     For Each strValue As KeyValuePair(Of String, String) In prmWhereList
       sql &= "AND " & strValue.Key & " '" & strValue.Value & "'"
     Next
+    sql &= "ORDER BY trn_jisseki.DenNO,trn_jisseki.GyoNo "
+
+    Return sql
+  End Function
+
+  Private Overloads Function SqlGetPrintData(Optional ByRef prmWhereList As Dictionary(Of String, List(Of String)) = Nothing) As String
+    Dim sql As String = String.Empty
+    Dim ReportType As String = ReadSettingIniFile("REPORT_TYPE", "VALUE")
+
+    sql &= "SELECT	trn_jisseki.NohinDay "
+    sql &= "	,	trn_jisseki.DenNO2 DenNo "
+    sql &= "	,	trn_jisseki.GyoNo2 GyoNo "
+    sql &= "	,	trn_jisseki.TokuiCD "
+    sql &= "	,	trn_jisseki.TokuiNm "
+    sql &= "	,	trn_jisseki.ShohinCD "
+    sql &= "	,	trn_jisseki.ShohinNM "
+    sql &= "	,	trn_jisseki.Iro IRISU "
+    sql &= "	,	trn_jisseki.Suryo "
+    sql &= "	,	trn_jisseki.Tanka "
+    sql &= "	,	trn_jisseki.UriageKin "
+    sql &= "	,	'8%' Zeiritsu "
+    sql &= "	,	trn_jisseki.Biko "
+    sql &= "	,	trn_jisseki.TyokuCD "
+    sql &= "	,	trn_jisseki.TyokuNM "
+    sql &= "FROM trn_jisseki "
+    sql &= "LEFT JOIN MST_TOKUISAKI_SHOHIN "
+    sql &= "ON MST_TOKUISAKI_SHOHIN.TokuiCD = trn_jisseki.TokuiCD "
+    sql &= "AND MST_TOKUISAKI_SHOHIN.ShohinCD  = trn_jisseki.ShohinCD "
+    sql &= "LEFT JOIN MST_TOKUISAKI_SHOHIN TOKUISAKI0 "
+    sql &= "ON TOKUISAKI0.TokuiCD = 0 "
+    sql &= "AND TOKUISAKI0.ShohinCD  =  trn_jisseki.ShohinCD "
+    sql &= "WHERE 1=1 "
+    If prmWhereList IsNot Nothing Then
+      For Each tmpValue As KeyValuePair(Of String, List(Of String)) In prmWhereList
+
+        Dim key As String = tmpValue.Key
+        Dim vals As List(Of String) = tmpValue.Value
+
+        If vals.Count = 1 Then
+          sql &= $" AND {key} '{vals(0)}'"
+        Else
+          Dim inList = String.Join(",", vals.Select(Function(v) $"'{v}'"))
+          sql &= $" AND {key} IN ({inList})"
+        End If
+
+      Next
+    End If
+
     sql &= "ORDER BY trn_jisseki.DenNO,trn_jisseki.GyoNo "
 
     Return sql
@@ -331,77 +413,115 @@ Public Class ClsPrintingProcess
     sql &= "                   , TANKA "                      '10:
     sql &= "                   , URIAGE_KIN "                       '11:
     sql &= "                   , ZEIRITSU "                       '12:
-    sql &= "                   , KDATE "                       '13:
+    sql &= "                   , BIKO "                       '13:
+    sql &= "                   , HASSO_CD "                       '14:
+    sql &= "                   , HASSO_NM "                       '15:
+    sql &= "                   , KDATE "                       '16:
     sql &= ") VALUES("
 
+    '納品日
     If String.IsNullOrWhiteSpace(tmpRow("NohinDay").ToString) Then
       sql &= "Null,"                                          '01:
     Else
       sql &= "'" & DateFormatChange(typDateFormat.FORMAT_DATE, tmpRow("NohinDay").ToString) & "'" & ","    '01:
     End If
 
+    '伝票No
     If String.IsNullOrWhiteSpace(tmpRow("DenNO").ToString) Then
       sql &= "0,"                                          '02:
     Else
       sql &= "'" & tmpRow("DenNO").ToString & "'" & ","                   '02:
     End If
 
+    '行No
     If String.IsNullOrWhiteSpace(tmpRow("GyoNo").ToString) Then
       sql &= "NULL,"                                          '03:
     Else
       sql &= "'" & tmpRow("GyoNo").ToString & "'" & ","       '03:
     End If
 
+    '得意先コード
     If String.IsNullOrWhiteSpace(tmpRow("TokuiCD").ToString) Then
       sql &= "0,"                                          '04:
     Else
       sql &= "'" & tmpRow("TokuiCD").ToString & "'" & ","                   '04:
     End If
 
+    '得意先名
     If String.IsNullOrWhiteSpace(tmpRow("TokuiNm").ToString) Then
       sql &= "NULL,"                                          '05:
     Else
       sql &= "'" & tmpRow("TokuiNm").ToString & "'" & ","     '05:
     End If
 
+    '商品コード
     If String.IsNullOrWhiteSpace(tmpRow("ShohinCD").ToString) Then
       sql &= "0,"                                          '06:
     Else
       sql &= "'" & tmpRow("ShohinCD").ToString & "'" & ","                   '06:
     End If
 
+    '商品名
     If String.IsNullOrWhiteSpace(tmpRow("ShohinNM").ToString) Then
       sql &= "NULL,"                                          '07:
     Else
       sql &= "'" & tmpRow("ShohinNM").ToString & "'" & ","                   '07:
     End If
 
+    '入り数
     If String.IsNullOrWhiteSpace(tmpRow("Irisu").ToString) Then
       sql &= "0,"                                          '08:
     Else
       sql &= "'" & tmpRow("Irisu").ToString & "'" & ","       '08:
     End If
 
+    '数量
     If String.IsNullOrWhiteSpace(tmpRow("Suryo").ToString) Then
       sql &= "0,"                                          '09:
     Else
       sql &= "'" & tmpRow("Suryo").ToString & "'" & ","       '09:
     End If
 
+    '単価
     If String.IsNullOrWhiteSpace(tmpRow("Tanka").ToString) Then
       sql &= "0,"                                          '10:
     Else
       sql &= "'" & tmpRow("Tanka").ToString & "'" & ","                   '10:
     End If
 
+    '売上金額
     If String.IsNullOrWhiteSpace(tmpRow("UriageKin").ToString) Then
       sql &= "0,"                                          '11:
     Else
       sql &= "'" & tmpRow("UriageKin").ToString & "'" & ","                   '11:
     End If
+
+    '税率
     'TODO 本来なら税率を商品マスタから取得して設定する。
-    sql &= "'" & tmpRow("Zeiritsu").ToString & "'" & ","                                          '12:
-    sql &= "'" & dt.ToString & "')"       '13:
+    sql &= "'" & tmpRow("Zeiritsu").ToString & "'" & ","                  '12:                        '12:
+
+
+    '備考
+    If String.IsNullOrWhiteSpace(tmpRow("Biko").ToString) Then
+      sql &= "NULL,"                                          '13:
+    Else
+      sql &= "'" & tmpRow("Biko").ToString & "'" & ","                   '13:
+    End If
+
+    '直送先コード
+    If String.IsNullOrWhiteSpace(tmpRow("TyokuCd").ToString) Then
+      sql &= "0,"                                          '14:
+    Else
+      sql &= "'" & tmpRow("TyokuCd").ToString & "'" & ","                   '14:
+    End If
+
+    '直送先名
+    If String.IsNullOrWhiteSpace(tmpRow("TyokuNM").ToString) Then
+      sql &= "NULL,"                                          '15:
+    Else
+      sql &= "'" & tmpRow("TyokuNM").ToString & "'" & ","                   '15:
+    End If
+    sql &= "'" & dt.ToString & "')"       '16:
 
     Console.WriteLine(sql)
 
@@ -409,17 +529,47 @@ Public Class ClsPrintingProcess
 
   End Function
 
-  Private Function SqlUpdPrintFlg(prmDb As DataRow) As String
+  Private Overloads Function SqlUpdPrintFlg(prmDb As DataRow, Optional ByRef prmWhereList As Dictionary(Of String, String) = Nothing) As String
     Dim sql As String = String.Empty
 
     sql &= " Update TRN_JISSEKI "
     sql &= " SET NohinPRTFLG = 1"
-    sql &= " WHERE DenNo = '" & prmDb.Item("DenNO").ToString & "'"
-    sql &= " AND GyoNo = '" & prmDb.Item("GyoNO").ToString & "'"
+    sql &= " WHERE 1 = 1 "
+    If Not prmWhereList Is Nothing _
+      AndAlso prmWhereList.Count > 0 Then
+      For Each strValue As KeyValuePair(Of String, String) In prmWhereList
+        sql &= "AND " & strValue.Key & " '" & strValue.Value & "'"
+      Next
+    Else
+      sql &= " AND DenNo = '" & prmDb.Item("DenNO").ToString & "'"
+      sql &= " AND GyoNo = '" & prmDb.Item("GyoNO").ToString & "'"
 
+    End If
 
+    Return sql
+  End Function
 
+  Private Overloads Function SqlUpdPrintFlg(prmDb As DataRow, Optional ByRef prmWhereList As Dictionary(Of String, List(Of String)) = Nothing) As String
+    Dim sql As String = String.Empty
 
+    sql &= " Update TRN_JISSEKI "
+    sql &= " SET NohinPRTFLG = 1"
+    sql &= " WHERE 1 = 1 "
+    If prmWhereList IsNot Nothing Then
+      For Each tmpValue As KeyValuePair(Of String, List(Of String)) In prmWhereList
+
+        Dim key As String = tmpValue.Key
+        Dim vals As List(Of String) = tmpValue.Value
+
+        If vals.Count = 1 Then
+          sql &= $" AND {key} '{vals(0)}'"
+        Else
+          Dim inList = String.Join(",", vals.Select(Function(v) $"'{v}'"))
+          sql &= $" AND {key} IN ({inList})"
+        End If
+
+      Next
+    End If
     Return sql
   End Function
 End Class

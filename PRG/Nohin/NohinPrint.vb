@@ -392,7 +392,7 @@ Public Class NohinPrint
     Dim sql As String = String.Empty
     sql &= " SELECT	Format(UketukeDay,'yyyy/MM/dd') 加工日 "
     sql &= "	,	NohinDay 納品日 "
-    sql &= "	,	DenNo 伝票番号 "
+    sql &= "	,	Isnull(DenNo2,DenNo) 伝票番号 "
     sql &= "	,	TokuiCd 得意先コード "
     sql &= "	,	TokuiNM 得意先名 "
     sql &= "	,	 COUNT(GyoNo) 明細数 "
@@ -405,7 +405,7 @@ Public Class NohinPrint
     sql &= " FROM TRN_JISSEKI "
     sql &= " WHERE 1 = 1 "
     If Not String.IsNullOrWhiteSpace(Me.TxtDenNo.Text) Then
-      sql &= " AND DenNo = '" & Me.TxtDenNo.Text & "'"
+      sql &= " AND Isnull(DenNo2,DenNo) = '" & Me.TxtDenNo.Text & "'"
     End If
     If Not String.IsNullOrWhiteSpace(Me.TxtKakouDayFrom.Text) Then
       sql &= " AND CONVERT(DATE, NohinDay, 112) >= '" & Me.TxtKakouDayFrom.Text & "'"
@@ -432,7 +432,7 @@ Public Class NohinPrint
     'sql &= "     ,    SeikyuDay "
     sql &= "     ,    denku "
     sql &= "     ,    DenKBN "
-    sql &= "     ,    DenNo "
+    sql &= "     ,    Isnull(DenNo2,DenNo) "
     sql &= "     ,    TokuiCD "
     sql &= "     ,    TokuiNM "
     sql &= "     ,    UTantoCD "
@@ -453,7 +453,7 @@ Public Class NohinPrint
     If Me.RdoTokuiDesc.Checked Then
       sql &= " TokuiCD DESC, "
     End If
-    sql &= " DenNo "
+    sql &= " Isnull(DenNo2, DenNo) "
     Return sql
 
   End Function
@@ -513,7 +513,7 @@ Public Class NohinPrint
 
     Dim sql As String = String.Empty
     sql &= " DELETE FROM TRN_JISSEKI"
-    sql &= " WHERE DenNo = '" & DataGridView1.CurrentRow.Cells("伝票番号").Value & "'"
+    sql &= " WHERE ISNULL(DenNo2,DenNo) = '" & DataGridView1.CurrentRow.Cells("伝票番号").Value & "'"
 
     Return sql
 
@@ -587,7 +587,7 @@ Public Class NohinPrint
       tmpRdoPrint = -1
     End If
 
-    tmpWhereList.Add("DenNO = ", DataGridView1.CurrentRow.Cells("伝票番号").Value)
+    tmpWhereList.Add("ISNULL(DenNO2,DenNO) = ", DataGridView1.CurrentRow.Cells("伝票番号").Value)
     If tmpRdoPrint <> -1 Then
       tmpWhereList.Add("NohinPRTFLG =", tmpRdoPrint)
     End If

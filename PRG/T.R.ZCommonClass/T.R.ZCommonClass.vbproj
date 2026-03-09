@@ -154,6 +154,7 @@
     <Compile Include="Form\ComErrorDialogue.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Function\clsCodeLengthSetting.vb" />
     <Compile Include="Interface\DgvForm02.vb" />
     <Compile Include="Interface\DgvForm01.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

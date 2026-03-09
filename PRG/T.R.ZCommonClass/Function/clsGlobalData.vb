@@ -112,6 +112,6 @@
   ' 得意先コードゼロ詰め
   Public Shared ReadOnly CUSTOMER_ZERO_PADDING As String = "000000"
   ' 直送先コードゼロ詰め
-  Public Shared ReadOnly CHOKU_ZERO_PADDING As String = "00"
+  Public Shared ReadOnly CHOKU_ZERO_PADDING As String = "000000"
 
 End Class

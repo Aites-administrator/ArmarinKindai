@@ -35,6 +35,7 @@ Partial Class Form_SelectPrint
     Me.btnEnd = New T.R.ZCommonCtrl.ButtonEnd()
     Me.Label3 = New System.Windows.Forms.Label()
     Me.btnShowLogForm = New T.R.ZCommonCtrl.ButtonUpdate()
+    Me.TxtMstCustomer1 = New System.Windows.Forms.TextBox()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -67,13 +68,13 @@ Partial Class Form_SelectPrint
         Me.CmbMstCustomer1.BorderStyle = System.Windows.Forms.ButtonBorderStyle.None
         Me.CmbMstCustomer1.BorderWidth = 1
         Me.CmbMstCustomer1.CodeFormat = ""
-        Me.CmbMstCustomer1.DisplayMember = "Name"
+        Me.CmbMstCustomer1.DisplayMember = "Code"
         Me.CmbMstCustomer1.DropDownWidth = 360
         Me.CmbMstCustomer1.EventCancel = False
         Me.CmbMstCustomer1.FormattingEnabled = True
         Me.CmbMstCustomer1.Location = New System.Drawing.Point(492, 58)
         Me.CmbMstCustomer1.Name = "CmbMstCustomer1"
-        Me.CmbMstCustomer1.Size = New System.Drawing.Size(435, 27)
+        Me.CmbMstCustomer1.Size = New System.Drawing.Size(110, 27)
         Me.CmbMstCustomer1.SkipChkCode = True
         Me.CmbMstCustomer1.TabIndex = 1
         Me.CmbMstCustomer1.ValueMember = "Code"
@@ -96,7 +97,7 @@ Partial Class Form_SelectPrint
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(69, 19)
         Me.Label2.TabIndex = 4
-        Me.Label2.Text = "出荷日"
+        Me.Label2.Text = "納品日"
         '
         'CmbDateProcessing1
         '
@@ -227,17 +228,28 @@ Partial Class Form_SelectPrint
         Me.btnShowLogForm.Size = New System.Drawing.Size(94, 84)
         Me.btnShowLogForm.TabIndex = 116
         Me.btnShowLogForm.TabStop = False
-        Me.btnShowLogForm.Text = "F5:売上作成ログ"
+        Me.btnShowLogForm.Text = "F5:集約取消"
         Me.btnShowLogForm.TextAlign = System.Drawing.ContentAlignment.BottomCenter
         Me.btnShowLogForm.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText
         Me.btnShowLogForm.UseVisualStyleBackColor = False
-        Me.btnShowLogForm.Visible = False
         '
-        'Form_OutConv
+        'TxtMstCustomer1
+        '
+        Me.TxtMstCustomer1.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+        Me.TxtMstCustomer1.Location = New System.Drawing.Point(607, 55)
+        Me.TxtMstCustomer1.MaxLength = 10
+        Me.TxtMstCustomer1.Name = "TxtMstCustomer1"
+        Me.TxtMstCustomer1.ReadOnly = True
+        Me.TxtMstCustomer1.Size = New System.Drawing.Size(401, 33)
+        Me.TxtMstCustomer1.TabIndex = 117
+        Me.TxtMstCustomer1.TabStop = False
+        '
+        'Form_SelectPrint
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 19.0!)
         Me.BackColor = System.Drawing.SystemColors.AppWorkspace
         Me.ClientSize = New System.Drawing.Size(1534, 909)
+        Me.Controls.Add(Me.TxtMstCustomer1)
         Me.Controls.Add(Me.btnShowLogForm)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.btnPostPca)
@@ -256,7 +268,7 @@ Partial Class Form_SelectPrint
         Me.Font = New System.Drawing.Font("MS UI Gothic", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
-        Me.Name = "Form_OutConv"
+        Me.Name = "Form_SelectPrint"
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -279,4 +291,5 @@ Partial Class Form_SelectPrint
   Friend WithEvents btnEnd As T.R.ZCommonCtrl.ButtonEnd
   Friend WithEvents Label3 As Label
   Friend WithEvents btnShowLogForm As T.R.ZCommonCtrl.ButtonUpdate
+  Friend WithEvents TxtMstCustomer1 As TextBox
 End Class

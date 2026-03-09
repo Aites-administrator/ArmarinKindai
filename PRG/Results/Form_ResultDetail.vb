@@ -131,8 +131,8 @@ Public Class Form_ResultDetail
   Private Function GetSelectJissekiSql() As String
     Dim sql As String = String.Empty
 
-    sql &= " SELECT DenNo  伝票番号 "
-    sql &= "    ,   GyoNo  GyoNo "
+    sql &= " SELECT ISNULL(DenNo2,DenNo)  伝票番号 "
+    sql &= "    ,   ISNULL(GyoNo2,GyoNo)  GyoNo "
     sql &= "    ,   ShohinCD ShohinCD "
     sql &= "    ,   ShohinNM ShohinNM "
     sql &= "    ,   JutyuSu 受注数 "
@@ -142,7 +142,7 @@ Public Class Form_ResultDetail
     sql &= " FROM TRN_JISSEKI "
     sql &= " WHERE 1 = 1 "
     sql &= GetSqlWhere()
-    sql &= " ORDER BY NohinDay,DenNo,GyoNo "
+    sql &= " ORDER BY NohinDay,ISNULL(DenNo2,DenNo),ISNULL(GyoNo2,GyoNo) "
 
     Call WriteExecuteLog([GetType]().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
@@ -171,7 +171,7 @@ Public Class Form_ResultDetail
       sql &= " AND ShohinCd LIKE '%" & Me.TxtShohinCd.Text & "%'"
     End If
     If Not String.IsNullOrWhiteSpace(Me.TxtDenNo.Text) Then
-      sql &= " AND DenNo LIKE '%" & Me.TxtDenNo.Text & "'"
+      sql &= " AND ISNULL(DenNo2,DenNo) LIKE '%" & Me.TxtDenNo.Text & "'"
     End If
     If Not String.IsNullOrWhiteSpace(Me.CmbNohinDay.Text) Then
       sql &= " AND NohinDay = '" & DateFormatChange(typDateFormat.FORMAT_STRING, Me.CmbNohinDay.Text) & "'"
@@ -191,7 +191,7 @@ Public Class Form_ResultDetail
     sql &= " FROM TRN_JISSEKI "
     sql &= " WHERE 1 = 1 "
     sql &= " AND TokuiCd = '" & Me.TokuiCd & "'"
-    sql &= " GROUP BY DenNo "
+    sql &= " GROUP BY ISNULL(DenNo2,DenNo) "
 
     Return sql
 

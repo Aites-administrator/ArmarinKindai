@@ -189,10 +189,10 @@ Public Class ItemAddForm
       Exit Sub
     End If
 
-    If Not ComChkKotaiNo(tb.Text) Then
-      ComMessageBox("正しい個体識別番号を入力してください。", PRG_TITLE, typMsgBox.MSG_WARNING)
-      e.Cancel = True  ' フォーカスを移動させない
-    End If
+    'If Not ComChkKotaiNo(tb.Text) Then
+    '  ComMessageBox("正しい個体識別番号を入力してください。", PRG_TITLE, typMsgBox.MSG_WARNING)
+    '  e.Cancel = True  ' フォーカスを移動させない
+    'End If
   End Sub
 
   ''' <summary>
@@ -471,9 +471,9 @@ Public Class ItemAddForm
           tmpDataGridRow.Cells("数量").Value = If(Me.TxtKeiryoFlg.Text = HU_TEI_KAN, Me.TxtHuteikanNohinSuryo.Text, "")
           tmpDataGridRow.Cells("単価").Value = If(Me.TxtKeiryoFlg.Text = HU_TEI_KAN, Me.TxtHuteikanTanka.Text, Me.TxtTeikanTanka.Text)
           tmpDataGridRow.Cells("金額").Value = If(Me.TxtKeiryoFlg.Text = HU_TEI_KAN, Me.TxtHuteikanKingaku.Text, Me.TxtTeikanKingaku.Text)
-          tmpDataGridRow.Cells("個体識別番号１").Value = Me.TxtKotai1.Text
-          tmpDataGridRow.Cells("個体識別番号２").Value = Me.TxtKotai2.Text
-          tmpDataGridRow.Cells("個体識別番号３").Value = Me.TxtKotai3.Text
+          tmpDataGridRow.Cells("生簀ロット番号").Value = Me.TxtKotai1.Text
+          tmpDataGridRow.Cells("原産地").Value = Me.TxtKotai2.Text
+          tmpDataGridRow.Cells("メモ").Value = Me.TxtKotai3.Text
           tmpAddGyoFlg = False
         End If
       Next
@@ -500,9 +500,9 @@ Public Class ItemAddForm
         .Cells("数量").Value = If(CmbTeikan.SelectedIndex = HU_TEI_KAN, If(String.IsNullOrWhiteSpace(Me.TxtHuteikanNohinSuryo.Text), "0", Me.TxtHuteikanNohinSuryo.Text), "")
         .Cells("単価").Value = If(String.IsNullOrWhiteSpace(Me.TxtHuteikanTanka.Text), "0", Me.TxtHuteikanTanka.Text)
         .Cells("金額").Value = Me.TxtHuteikanKingaku.Text
-        .Cells("個体識別番号１").Value = Me.TxtKotai1.Text
-        .Cells("個体識別番号２").Value = Me.TxtKotai2.Text
-        .Cells("個体識別番号３").Value = Me.TxtKotai3.Text
+        .Cells("生簀ロット番号").Value = Me.TxtKotai1.Text
+        .Cells("原産地").Value = Me.TxtKotai2.Text
+        .Cells("メモ").Value = Me.TxtKotai3.Text
       End With
 
     End If
@@ -549,6 +549,7 @@ Public Class ItemAddForm
     Dim tmpNohinsu As String = If(String.IsNullOrWhiteSpace(tmpSuryo), "0", tmpSuryo)
 
     If CmbTeikan.SelectedIndex = HU_TEI_KAN Then
+      'TODO 金額計算関数を使う
       strKingaku = Fix(Decimal.Parse(tmpCalcTanka) * Decimal.Parse(tmpNohinsu) / 100).ToString()
       Me.TxtHuteikanKingaku.Text = strKingaku
     Else
@@ -688,9 +689,9 @@ Public Class ItemAddForm
 
     End If
 
-    Me.TxtKotai1.Text = DataGridView2.Rows(prmIndex).Cells("個体識別番号１").Value
-    Me.TxtKotai2.Text = DataGridView2.Rows(prmGyoNo - 1).Cells("個体識別番号２").Value
-    Me.TxtKotai3.Text = DataGridView2.Rows(prmGyoNo - 1).Cells("個体識別番号３").Value
+    Me.TxtKotai1.Text = DataGridView2.Rows(prmIndex).Cells("生簀ロット番号").Value
+    Me.TxtKotai2.Text = DataGridView2.Rows(prmGyoNo - 1).Cells("原産地").Value
+    Me.TxtKotai3.Text = DataGridView2.Rows(prmGyoNo - 1).Cells("メモ").Value
     'End If
 
   End Sub
@@ -714,9 +715,9 @@ Public Class ItemAddForm
       .Columns.Add(SetColumn("数量"))
       .Columns.Add(SetColumn("単価"))
       .Columns.Add(SetColumn("金額"))
-      .Columns.Add(SetColumn("個体識別番号１"))
-      .Columns.Add(SetColumn("個体識別番号２"))
-      .Columns.Add(SetColumn("個体識別番号３"))
+      .Columns.Add(SetColumn("生簀ロット番号"))
+      .Columns.Add(SetColumn("原産地"))
+      .Columns.Add(SetColumn("メモ"))
 
     End With
   End Sub
@@ -747,11 +748,11 @@ Public Class ItemAddForm
   Private Function SqlGetDenpyoGyo(prmDenNo As String, prmGyoNo As String) As String
 
     Dim sql As String = String.Empty
-    sql &= " SELECT	GyoNo GyoNo "
+    sql &= " SELECT	ISNULL(GyoNo2,GyoNo) GyoNo "
     sql &= " 	,	ShohinCD ShohinCD "
     sql &= " 	,	ShohinNM ShohinNM "
-    sql &= " 	,	ShohinKN ShohinNMカナ "
-    sql &= " 	,	SShohinCD 先方ShohinCD "
+    sql &= " 	,	ISNULL(ShohinKN,'') ShohinNMカナ "
+    sql &= " 	,	ISNULL(SShohinCD,'') 先方ShohinCD "
     sql &= " 	,	Irisu 入数 "
     sql &= " 	,	Hakosu Hakosu "
     sql &= " 	,	Tani Tani "
@@ -767,8 +768,8 @@ Public Class ItemAddForm
     sql &= " 	,	Memo2 Memo2 "
     sql &= " FROM TRN_JISSEKI "
     sql &= " WHERE 1 = 1 "
-    sql &= " AND DenNo = '" & prmDenNo & "'"
-    sql &= " AND GyoNo = " & prmGyoNo
+    sql &= " AND ISNULL(DenNo2,DenNo) = '" & prmDenNo & "'"
+    sql &= " AND ISNULL(GyoNo2,GyoNo) = " & prmGyoNo
 
     Return sql
 
@@ -825,7 +826,25 @@ Public Class ItemAddForm
   Private Sub TxtTeikanTanka_TextChanged(sender As Object, e As EventArgs) Handles TxtHuteikanNohinSuryo.TextChanged, TxtHuteikanTanka.TextChanged, TxtTeikanNohinSuryo.TextChanged, TxtTeikanTanka.TextChanged
     Dim tb As TextBox = CType(sender, TextBox)
     ' 数字以外の文字をすべて除去
-    Dim cleanText As String = System.Text.RegularExpressions.Regex.Replace(tb.Text, "[^0-9]", "")
+    Dim cleanText As String = System.Text.RegularExpressions.Regex.Replace(tb.Text, "[^0-9.]", "")
+
+    ' 小数点が複数ある場合、2つ目以降を削除
+    Dim firstDot As Integer = cleanText.IndexOf("."c)
+    If firstDot >= 0 Then
+      cleanText = cleanText.Substring(0, firstDot + 1) &
+                cleanText.Substring(firstDot + 1).Replace(".", "")
+    End If
+
+    ' 先頭が小数点なら削除
+    If cleanText.StartsWith(".") Then
+      cleanText = cleanText.TrimStart("."c)
+    End If
+
+    ' 末尾が小数点なら削除
+    If cleanText.EndsWith(".") Then
+      cleanText = cleanText.TrimEnd("."c)
+    End If
+
     tb.Text = cleanText
 
   End Sub
