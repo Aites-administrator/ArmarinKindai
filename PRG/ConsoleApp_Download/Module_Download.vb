@@ -835,6 +835,7 @@ Module Module_Download
       End Try
     End With
   End Sub
+
   Private Function GetInsertTRNLOGSql(UNIT_NUMBER As String, RESULT As String, FILE_NAME As String, NOTE As String)
     Dim sql As String = String.Empty
     Dim tmpdate As DateTime = CDate(ComGetProcTime())
@@ -929,10 +930,10 @@ Module Module_Download
 
       '数量、単価、金額関連
       Dim tmpTanka As String = If(tmpTSDr Is Nothing, If(tmpSDr("Baika1").ToString, "0"), tmpTSDr("Baika").ToString)
-      Dim tmpSuryo As String = prmDataRow("JYURYO").ToString 'If(prmDataRow("TANKA").ToString = "0", prmDataRow("SURYO").ToString, Decimal.Parse(prmDataRow("KOSUU").ToString) * Decimal.Parse(prmDataRow("TEI_KINGAKU").ToString))
+      Dim tmpSuryo As String = prmDataRow("JYURYO").ToString
       Dim tmpKingaku As String = CalculateKingaku(tmpTanka, tmpSuryo).ToString
-      Dim tmpGenka As String = "0" 'If(tmpSDr("Genka").ToString, "0")
-      Dim tmpGenKingaku As String = Decimal.Parse(tmpGenka) * Decimal.Parse(tmpSuryo) 'If(prmDataRow("TANKA").ToString = "0", Decimal.Parse(tmpGenka) * prmDataRow("SURYO").ToString, Decimal.Parse(tmpGenka) * Decimal.Parse(tmpSuryo))
+      Dim tmpGenka As String = "0"
+      Dim tmpGenKingaku As String = (Decimal.Parse(tmpGenka) * Decimal.Parse(tmpSuryo)).ToString
       'Dim tmpBaika As String = If(tmpSDr("HyojunKakaku").ToString, "0")
       'Dim tmpBaiKingaku As String = If(prmDataRow("KEIRYO_FLG").ToString = "0", Decimal.Parse(tmpBaika) * prmDataRow("JYURYO").ToString, Decimal.Parse(tmpBaika) * Decimal.Parse(tmpSuryo))
       Dim tmpBaika As String = prmDataRow("TANKA").ToString
@@ -952,7 +953,7 @@ Module Module_Download
       'rtnDic("TokuiAdd1") = tmpTDr("Add1").ToString
       'rtnDic("TokuiAdd2") = tmpTDr("Add2").ToString
       'rtnDic("TokuiTel") = tmpTDr("TelNo").ToString
-      rtnDic("TyokuCD") = prmDataRow("FREE2_CD").ToString
+      rtnDic("TyokuCD") = prmDataRow("FREE2_CD").ToString.PadLeft(TYOKUSO_CODE_LENGTH, "0"c)
       rtnDic("TyokuNM") = prmDataRow("FREE2_NM").ToString
       'rtnDic("SenpoTantoNM") = tmpTDr("SenpoTanto").ToString
       rtnDic("BumonCD") = prmDataRow("BUMON_NUMBER").ToString.PadLeft(2, "0"c)
@@ -1152,10 +1153,27 @@ Module Module_Download
   End Function
 
 
-
+  ''' <summary>
+  ''' 金額計算
+  ''' </summary>
+  ''' <param name="prmTanka">単価（kg単価）</param>
+  ''' <param name="prmSuryo">数量(重量)</param>
+  ''' <returns>金額</returns>
   Private Function CalculateKingaku(prmTanka As String, prmSuryo As String) As Decimal
 
-    Return Decimal.Parse(prmTanka)
+    Dim tmpTanka As Decimal = Decimal.MaxValue
+    Dim tmpSuryo As Decimal = Decimal.MaxValue
+
+    If False = Decimal.TryParse(prmTanka, tmpTanka) Then
+      Throw New Exception("単価の形式が不正です")
+    End If
+
+    If False = Decimal.TryParse(prmSuryo, tmpSuryo) Then
+      Throw New Exception("数量の形式が不正です")
+    End If
+
+    ' 切り捨て
+    Return Math.Floor(tmpTanka * tmpSuryo)
 
   End Function
 End Module

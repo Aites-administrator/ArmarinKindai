@@ -36,7 +36,7 @@ Partial Class FrmTokuisakiPrintCtrl
     'txtTokuisakiCd
     '
     Me.txtTokuisakiCd.Font = New System.Drawing.Font("Segoe UI", 15.75!)
-    Me.txtTokuisakiCd.Location = New System.Drawing.Point(158, 40)
+    Me.txtTokuisakiCd.Location = New System.Drawing.Point(158, 17)
     Me.txtTokuisakiCd.Name = "txtTokuisakiCd"
     Me.txtTokuisakiCd.Size = New System.Drawing.Size(155, 35)
     Me.txtTokuisakiCd.TabIndex = 0
@@ -44,7 +44,7 @@ Partial Class FrmTokuisakiPrintCtrl
     'txtTokuisakiNm
     '
     Me.txtTokuisakiNm.Font = New System.Drawing.Font("Segoe UI", 15.75!)
-    Me.txtTokuisakiNm.Location = New System.Drawing.Point(462, 40)
+    Me.txtTokuisakiNm.Location = New System.Drawing.Point(462, 17)
     Me.txtTokuisakiNm.Name = "txtTokuisakiNm"
     Me.txtTokuisakiNm.Size = New System.Drawing.Size(321, 35)
     Me.txtTokuisakiNm.TabIndex = 1
@@ -52,7 +52,7 @@ Partial Class FrmTokuisakiPrintCtrl
     'btnClear
     '
     Me.btnClear.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-    Me.btnClear.Location = New System.Drawing.Point(660, 89)
+    Me.btnClear.Location = New System.Drawing.Point(660, 66)
     Me.btnClear.Name = "btnClear"
     Me.btnClear.Size = New System.Drawing.Size(123, 43)
     Me.btnClear.TabIndex = 3
@@ -63,7 +63,7 @@ Partial Class FrmTokuisakiPrintCtrl
     'btnSave
     '
     Me.btnSave.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-    Me.btnSave.Location = New System.Drawing.Point(501, 746)
+    Me.btnSave.Location = New System.Drawing.Point(501, 697)
     Me.btnSave.Name = "btnSave"
     Me.btnSave.Size = New System.Drawing.Size(123, 43)
     Me.btnSave.TabIndex = 4
@@ -74,17 +74,17 @@ Partial Class FrmTokuisakiPrintCtrl
     'dgvList
     '
     Me.dgvList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-    Me.dgvList.Location = New System.Drawing.Point(17, 143)
+    Me.dgvList.Location = New System.Drawing.Point(17, 120)
     Me.dgvList.Name = "dgvList"
     Me.dgvList.RowTemplate.Height = 21
-    Me.dgvList.Size = New System.Drawing.Size(766, 583)
+    Me.dgvList.Size = New System.Drawing.Size(766, 560)
     Me.dgvList.TabIndex = 5
     '
     'Label1
     '
     Me.Label1.AutoSize = True
     Me.Label1.Font = New System.Drawing.Font("Segoe UI", 15.75!)
-    Me.Label1.Location = New System.Drawing.Point(17, 41)
+    Me.Label1.Location = New System.Drawing.Point(17, 18)
     Me.Label1.Name = "Label1"
     Me.Label1.Size = New System.Drawing.Size(128, 30)
     Me.Label1.TabIndex = 6
@@ -94,7 +94,7 @@ Partial Class FrmTokuisakiPrintCtrl
     '
     Me.Label2.AutoSize = True
     Me.Label2.Font = New System.Drawing.Font("Segoe UI", 15.75!)
-    Me.Label2.Location = New System.Drawing.Point(352, 41)
+    Me.Label2.Location = New System.Drawing.Point(352, 18)
     Me.Label2.Name = "Label2"
     Me.Label2.Size = New System.Drawing.Size(101, 30)
     Me.Label2.TabIndex = 7
@@ -103,7 +103,7 @@ Partial Class FrmTokuisakiPrintCtrl
     'btnClose
     '
     Me.btnClose.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-    Me.btnClose.Location = New System.Drawing.Point(660, 746)
+    Me.btnClose.Location = New System.Drawing.Point(660, 697)
     Me.btnClose.Name = "btnClose"
     Me.btnClose.Size = New System.Drawing.Size(123, 43)
     Me.btnClose.TabIndex = 8
@@ -115,7 +115,7 @@ Partial Class FrmTokuisakiPrintCtrl
     '
     Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
     Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-    Me.ClientSize = New System.Drawing.Size(800, 801)
+    Me.ClientSize = New System.Drawing.Size(800, 756)
     Me.Controls.Add(Me.btnClose)
     Me.Controls.Add(Me.Label2)
     Me.Controls.Add(Me.Label1)
