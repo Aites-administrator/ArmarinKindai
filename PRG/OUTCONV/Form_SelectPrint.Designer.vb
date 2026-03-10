@@ -69,8 +69,9 @@ Partial Class Form_SelectPrint
         Me.CmbMstCustomer1.BorderWidth = 1
         Me.CmbMstCustomer1.CodeFormat = ""
         Me.CmbMstCustomer1.DisplayMember = "Code"
-        Me.CmbMstCustomer1.DropDownWidth = 360
-        Me.CmbMstCustomer1.EventCancel = False
+    Me.CmbMstCustomer1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+    Me.CmbMstCustomer1.DropDownWidth = 360
+    Me.CmbMstCustomer1.EventCancel = False
         Me.CmbMstCustomer1.FormattingEnabled = True
         Me.CmbMstCustomer1.Location = New System.Drawing.Point(492, 58)
         Me.CmbMstCustomer1.Name = "CmbMstCustomer1"

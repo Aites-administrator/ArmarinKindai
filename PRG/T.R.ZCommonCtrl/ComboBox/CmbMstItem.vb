@@ -10,7 +10,7 @@ Public Class CmbMstItem
 
     Public Sub New()
 
-    MyBase.New(ITEM_CODE_LENGTH)
+    MyBase.New("0".PadLeft(ITEM_CODE_LENGTH, "0"c))
     lcCallBackCreateSql = AddressOf SqlSelListSrc
         InitCmb()
         ' フォーカス時、表示メッセージ設定
@@ -57,7 +57,7 @@ Public Class CmbMstItem
         Return
       End If
 
-      .Text = StringToInt(.Text).ToString(ITEM_CODE_LENGTH)
+      .Text = StringToInt(.Text).ToString.PadLeft(ITEM_CODE_LENGTH, "0"c)
 
     End With
 
