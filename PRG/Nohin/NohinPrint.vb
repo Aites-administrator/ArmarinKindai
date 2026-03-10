@@ -587,9 +587,9 @@ Public Class NohinPrint
       tmpRdoPrint = -1
     End If
 
-    tmpWhereList.Add("ISNULL(DenNO2,DenNO) = ", DataGridView1.CurrentRow.Cells("伝票番号").Value)
+    tmpWhereList.Add("ISNULL(DenNO2,DenNO) = ", "'" & DataGridView1.CurrentRow.Cells("伝票番号").Value & "'")
     If tmpRdoPrint <> -1 Then
-      tmpWhereList.Add("NohinPRTFLG =", tmpRdoPrint)
+      tmpWhereList.Add("NohinPRTFLG =", "'" & tmpRdoPrint & "'")
     End If
 
     ReportName = If(ReportType = ClsCommonGlobalData.REPORT_TYPE_SHUKKA, "R_SHUKKA", "R_NOHIN")

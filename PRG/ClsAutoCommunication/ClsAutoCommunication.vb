@@ -219,9 +219,12 @@ Public Class ClsAutoCommunication
           End If
           'ComMessageBox("実績受信終了しました。" & vbCrLf & "処理結果をご確認下さい。", "確認", typMsgBox.MSG_NORMAL, typMsgBoxButton.BUTTON_OK)
           Dim tmpWhereList As New Dictionary(Of String, String)
-          tmpWhereList.Add("NohinPRTFLG =", "0")
+          tmpWhereList.Add("NohinPRTFLG =", "'0'")
+          tmpWhereList.Add("INSTANT_PRINT_FLG IS NOT ", "NULL")
 
-          If Not ReportType = ClsCommonGlobalData.REPORT_TYPE_NONE Then
+          '即時発行機能のため、条件追記
+          If Not ReportType = ClsCommonGlobalData.REPORT_TYPE_NONE _
+            OrElse tmpWhereList.ContainsKey("INSTANT_PRINT_FLG IS NOT ") Then
             ClsPrintingProcess.PrintProcess(ClsCommonGlobalData.PRINT_NON_PREVIEW, ReportWkTable, ReportName, tmpWhereList)
           End If
           SelectFtpResult()

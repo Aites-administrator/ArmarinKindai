@@ -13,6 +13,8 @@ Public Class ClsPrintingProcess
   Private tmpNouhinshoDT As New DataTable
   ' SQLサーバー操作オブジェクト
   Private _SqlServer As ClsSqlServer
+
+  Private Const MAX_PRINT_COUNT As Integer = 20
   Public Sub New()
   End Sub
 
@@ -176,6 +178,9 @@ Public Class ClsPrintingProcess
       SqlServer.GetResult(tmpDt, SqlGetPrintData(prmWhereList))
 
       '印刷処理
+      If tmpDt.Rows.Count = 0 Then
+        Exit Sub
+      End If
       If Not AccessPrint(prmPreview, prmTableName, prmReportName, tmpDt) Then
         Throw New Exception("印刷処理に失敗しました。")
       End If
@@ -241,7 +246,6 @@ Public Class ClsPrintingProcess
     Dim tmpDb As New ClsReport(ClsCommonGlobalData.REPORT_FILENAME)
     Dim dt As DateTime = DateTime.Parse(ComGetProcTime())
     Dim UpdEndFlg As Boolean = False
-    Dim tmpDt As New DataTable
 
     ' 実行
     With tmpDb
@@ -258,11 +262,46 @@ Public Class ClsPrintingProcess
 
       Try
         Dim sql As String
+        Dim tmpDenNo As String = String.Empty
+
         ' トランザクション開始
         .TrnStart()
 
         ' データテーブルから追加SQL文を作成
         For Each row As DataRow In prmDt.Rows
+
+          'TODO 伝票ナンバーと行Noをチェック
+          If tmpDenNo <> row("DenNo") Then
+
+            tmpDenNo = row("DenNo")
+
+            'TODO 変更があれば20でわった余り分を空行追加
+            Dim rows() As DataRow = prmDt.Select("DenNo = '" & row("DenNo") & "'")
+            Dim DenRowCount As Integer = rows.Length
+            Dim EmptyRowCount As Integer = MAX_PRINT_COUNT - (DenRowCount Mod MAX_PRINT_COUNT)
+
+            For i = 0 To EmptyRowCount - 1
+              Dim tmpDt As DataTable = prmDt.Clone()
+              tmpDt.Rows.Clear()
+              Dim tmpRow As DataRow = tmpDt.NewRow
+
+              'TODO 伝票番号、行番号、得意先、発送先、ソート番号=1を入れて追加
+              tmpRow("DenNo") = row("DenNo")
+              tmpRow("GyoNo") = row("GyoNo")
+              tmpRow("TokuiCD") = row("TokuiCD")
+              tmpRow("TokuiNm") = row("TokuiNm")
+              tmpRow("TyokuCd") = row("TyokuCd")
+              tmpRow("TyokuNM") = row("TyokuNM")
+              tmpRow("SortNumber") = 1
+
+              sql = SqlInsNohin(prmTableName, tmpRow, dt)
+              If String.IsNullOrWhiteSpace(sql) = False Then
+                .Execute(sql)
+              End If
+            Next
+
+          End If
+
           sql = SqlInsNohin(prmTableName, row, dt)
           If String.IsNullOrWhiteSpace(sql) = False Then
             .Execute(sql)
@@ -293,7 +332,7 @@ Public Class ClsPrintingProcess
     Dim sql As String = String.Empty
     Dim ReportType As String = ReadSettingIniFile("REPORT_TYPE", "VALUE")
 
-    sql &= "SELECT	trn_jisseki.NohinDay "
+    sql &= " SELECT	trn_jisseki.NohinDay "
     sql &= "	,	ISNULL(trn_jisseki.DenNO2,trn_jisseki.DenNO) DenNo "
     sql &= "	,	ISNULL(trn_jisseki.GyoNo2,trn_jisseki.GyoNo2)GyoNo "
     sql &= "	,	trn_jisseki.TokuiCD "
@@ -304,36 +343,25 @@ Public Class ClsPrintingProcess
     sql &= "	,	trn_jisseki.Suryo "
     sql &= "	,	trn_jisseki.Tanka "
     sql &= "	,	trn_jisseki.UriageKin "
-
-    'If ReportType = REPORT_TYPE_SHUKKA Then
-    '  sql &= "	,	ISNULL(MST_TOKUISAKI_SHOHIN.Baika,ISNULL(TOKUISAKI0.Baika,0)) UriTanka "
-    'Else
-    '  sql &= "	,	ISNULL(MST_TOKUISAKI_SHOHIN.Tanka,ISNULL(TOKUISAKI0.Tanka,0)) UriTanka "
-    'End If
-
-    'If ReportType = REPORT_TYPE_SHUKKA Then
-    '  sql &= "	,	Floor(iif(trn_jisseki.Suryo = '',trn_jisseki.irisu,trn_jisseki.Suryo) "
-    '  sql &= "	    * iif(trn_jisseki.Suryo = '',ISNULL(MST_TOKUISAKI_SHOHIN.Baika,ISNULL(TOKUISAKI0.Baika,0)),ISNULL(MST_TOKUISAKI_SHOHIN.Baika,ISNULL(TOKUISAKI0.Baika,0)) /100)) UriageKin "
-    'Else
-    '  sql &= "	,	Floor(iif(trn_jisseki.Suryo = '',trn_jisseki.irisu,trn_jisseki.Suryo) "
-    '  sql &= "	    * iif(trn_jisseki.Suryo = '',ISNULL(MST_TOKUISAKI_SHOHIN.Tanka,ISNULL(TOKUISAKI0.Tanka,0)),ISNULL(MST_TOKUISAKI_SHOHIN.Tanka,ISNULL(TOKUISAKI0.Tanka,0)) /100)) UriageKin "
-    'End If
     sql &= "	,	'8%' Zeiritsu "
     sql &= "	,	trn_jisseki.Biko "
     sql &= "	,	trn_jisseki.TyokuCD "
     sql &= "	,	trn_jisseki.TyokuNM "
-    sql &= "FROM trn_jisseki "
-    sql &= "LEFT JOIN MST_TOKUISAKI_SHOHIN "
-    sql &= "ON MST_TOKUISAKI_SHOHIN.TokuiCD = trn_jisseki.TokuiCD "
-    sql &= "AND MST_TOKUISAKI_SHOHIN.ShohinCD  = trn_jisseki.ShohinCD "
-    sql &= "LEFT JOIN MST_TOKUISAKI_SHOHIN TOKUISAKI0 "
-    sql &= "ON TOKUISAKI0.TokuiCD = 0 "
-    sql &= "AND TOKUISAKI0.ShohinCD  =  trn_jisseki.ShohinCD "
-    sql &= "WHERE 1=1 "
+    sql &= "	,	0 AS SortNumber "
+    sql &= " FROM trn_jisseki "
+    sql &= " LEFT JOIN MST_TOKUISAKI_SHOHIN "
+    sql &= " ON MST_TOKUISAKI_SHOHIN.TokuiCD = trn_jisseki.TokuiCD "
+    sql &= " AND MST_TOKUISAKI_SHOHIN.ShohinCD  = trn_jisseki.ShohinCD "
+    sql &= " LEFT JOIN MST_TOKUISAKI_SHOHIN TOKUISAKI0 "
+    sql &= " ON TOKUISAKI0.TokuiCD = 0 "
+    sql &= " AND TOKUISAKI0.ShohinCD  =  trn_jisseki.ShohinCD "
+    sql &= " LEFT JOIN M_TOKUISAKI_PRINT_CTRL "
+    sql &= " ON M_TOKUISAKI_PRINT_CTRL.TOKUISAKI_CD = trn_jisseki.TokuiCD "
+    sql &= " WHERE 1=1 "
     For Each strValue As KeyValuePair(Of String, String) In prmWhereList
-      sql &= "AND " & strValue.Key & " '" & strValue.Value & "'"
+      sql &= " AND " & strValue.Key & " " & strValue.Value
     Next
-    sql &= "ORDER BY trn_jisseki.DenNO,trn_jisseki.GyoNo "
+    sql &= " ORDER BY trn_jisseki.DenNO,trn_jisseki.GyoNo "
 
     Return sql
   End Function
@@ -357,6 +385,7 @@ Public Class ClsPrintingProcess
     sql &= "	,	trn_jisseki.Biko "
     sql &= "	,	trn_jisseki.TyokuCD "
     sql &= "	,	trn_jisseki.TyokuNM "
+    sql &= "	,	0 AS SortNumber "
     sql &= "FROM trn_jisseki "
     sql &= "LEFT JOIN MST_TOKUISAKI_SHOHIN "
     sql &= "ON MST_TOKUISAKI_SHOHIN.TokuiCD = trn_jisseki.TokuiCD "
@@ -416,7 +445,8 @@ Public Class ClsPrintingProcess
     sql &= "                   , BIKO "                       '13:
     sql &= "                   , HASSO_CD "                       '14:
     sql &= "                   , HASSO_NM "                       '15:
-    sql &= "                   , KDATE "                       '16:
+    sql &= "                   , SORT_NUMBER "                       '16:
+    sql &= "                   , KDATE "                       '17:
     sql &= ") VALUES("
 
     '納品日
@@ -520,6 +550,12 @@ Public Class ClsPrintingProcess
       sql &= "NULL,"                                          '15:
     Else
       sql &= "'" & tmpRow("TyokuNM").ToString & "'" & ","                   '15:
+    End If
+    'ソート番号
+    If String.IsNullOrWhiteSpace(tmpRow("SortNumber").ToString) Then
+      sql &= "0,"                                          '15:
+    Else
+      sql &= "'" & tmpRow("SortNumber").ToString & "'" & ","                   '15:
     End If
     sql &= "'" & dt.ToString & "')"       '16:
 
