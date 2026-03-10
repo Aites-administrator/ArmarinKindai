@@ -119,5 +119,11 @@
     </None>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\T.R.ZCommonClass\T.R.ZCommonClass.vbproj">
+      <Project>{b555bcbf-591c-4bd1-95d1-53ab1771eea5}</Project>
+      <Name>T.R.ZCommonClass</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

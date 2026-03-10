@@ -18,4 +18,10 @@
   '''  担当者コード
   ''' </summary>
   Public Shared ReadOnly TANTO_CODE_LENGTH As Integer = 6
+
+  ''' <summary>
+  '''  伝票番号
+  ''' </summary>
+  Public Shared ReadOnly DENPYO_NUMBER_LENGTH As Integer = 6
+
 End Class

@@ -5,6 +5,7 @@ Imports Common
 Imports Common.ClsFunction
 Imports Microsoft.VisualBasic.FileIO
 Imports MainMenu.Form_Top
+Imports T.R.ZCommonClass.clsCodeLengthSetting
 
 
 Module Module_Download
@@ -872,8 +873,8 @@ Module Module_Download
     'TRN_JISSEKIのカラム名で取得する必要がある。
     Try
       Dim rtnDic As New Dictionary(Of String, String)
-      Dim tmpTokuisakiCd As String = prmDataRow.Item("SHOP_NUMBER").ToString.PadLeft(6, "0"c) ''6桁前0埋め
-      Dim tmpShohinCd As String = prmDataRow.Item("YOBI_NUMBER").ToString.PadLeft(6, "0"c) ''6桁前0埋め
+      Dim tmpTokuisakiCd As String = prmDataRow.Item("SHOP_NUMBER").ToString.PadLeft(CUSTOMER_CODE_LENGTH, "0"c)
+      Dim tmpShohinCd As String = prmDataRow.Item("YOBI_NUMBER").ToString.PadLeft(ITEM_CODE_LENGTH, "0"c)
 
       ' 商品名は得意先商品が設定されている場合はその名称
       ' 設定されていない場合は計量器から受信した名称を使用
@@ -1083,7 +1084,7 @@ Module Module_Download
     prmDenpyoNo = tmpDt.Rows(0).Item("DenNo").ToString
 
     If prmChkSaiban Then
-      prmDenpyoNo = (Integer.Parse(prmDenpyoNo) + 1).ToString.PadLeft(6, "0"c)
+      prmDenpyoNo = (Integer.Parse(prmDenpyoNo) + 1).ToString.PadLeft(DENPYO_NUMBER_LENGTH, "0"c)
     End If
 
     If (tmpBeforeDenpyoNo <> prmDenpyoNo) Then
@@ -1091,8 +1092,8 @@ Module Module_Download
     Else
       prmGyoNo = prmGyoNo + 1
     End If
-    If prmDenpyoNo > 999999 Then
-      prmDenpyoNo = "000001"
+    If prmDenpyoNo.Length > DENPYO_NUMBER_LENGTH Then
+      prmDenpyoNo = "1".PadLeft(DENPYO_NUMBER_LENGTH, "0"c)
       prmGyoNo = 1
     End If
 

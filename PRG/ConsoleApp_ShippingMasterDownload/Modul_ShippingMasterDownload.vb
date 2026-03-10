@@ -3,6 +3,7 @@ Imports Common
 Imports Common.ClsFunction
 Imports MainMenu.Form_Top
 Imports Microsoft.VisualBasic.FileIO
+Imports T.R.ZCommonClass.clsCodeLengthSetting
 
 Module Modul_ShippingMasterDownload
 
@@ -302,7 +303,7 @@ Module Modul_ShippingMasterDownload
     Dim rtnDic As New Dictionary(Of String, String)
     For Each tmpDc As DataColumn In prmDataRow.Table.Columns
       If tmpDc.ColumnName.ToUpper = "CODE".ToUpper Then
-        rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString.PadLeft(6, "0")
+        rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString.PadLeft(TYOKUSO_CODE_LENGTH, "0"c)
       Else
         rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString
       End If

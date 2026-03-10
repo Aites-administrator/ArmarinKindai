@@ -4,6 +4,7 @@ Imports Common.ClsFunction
 Imports MainMenu.Form_Top
 Imports Microsoft.VisualBasic.FileIO
 Imports System.IO
+Imports T.R.ZCommonClass.clsCodeLengthSetting
 
 Module Module_ItemMasterDownload
   Private Const ITEM_COLUMN_ID As Integer = 2
@@ -766,7 +767,7 @@ Module Module_ItemMasterDownload
   '集計用SQL
   Private Function GetMstCustomerItem() As String
     Dim sql As String = String.Empty
-    Dim tmpTokuisaki As String = "000000"
+    Dim tmpTokuisaki As String = "0".PadLeft(CUSTOMER_CODE_LENGTH, "0"c)
 
     sql &= " SELECT "
     sql &= "    '" & tmpTokuisaki & "' 	AS	TokuiCD	"
@@ -819,7 +820,7 @@ Module Module_ItemMasterDownload
     Dim tmpTSDt As New DataTable
     Dim tmpZeiDt As New DataTable
 
-    rtnDic("ShohinCD") = prmDataRow.Item("YOBI").ToString.PadLeft(6, "0"c)
+    rtnDic("ShohinCD") = prmDataRow.Item("YOBI").ToString.PadLeft(ITEM_CODE_LENGTH, "0"c)
     rtnDic("ShohinNM") = prmDataRow.Item("SHOHINNAME").ToString
     rtnDic("TDATE") = prmCreateDate
     rtnDic("KDATE") = prmCreateDate

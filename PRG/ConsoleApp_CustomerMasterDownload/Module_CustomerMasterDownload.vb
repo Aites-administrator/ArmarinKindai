@@ -3,6 +3,7 @@ Imports Common
 Imports Common.ClsFunction
 Imports MainMenu.Form_Top
 Imports Microsoft.VisualBasic.FileIO
+Imports T.R.ZCommonClass.clsCodeLengthSetting
 
 Module Module_CustomerMasterDownload
   Private Const CUSTOMER_COLUMN_ID As Integer = 3
@@ -268,7 +269,7 @@ Module Module_CustomerMasterDownload
 
 
       dt.Rows.Add()
-      dt.Rows(dt.Rows.Count - 1).Item("TokuiCD") = "000000"
+      dt.Rows(dt.Rows.Count - 1).Item("TokuiCD") = "0".PadLeft(CUSTOMER_CODE_LENGTH, "0")
       dt.Rows(dt.Rows.Count - 1).Item("TokuiNM1") = "共通"
 
       tmpDb.Execute("delete from MST_TOKUISAKI ")
@@ -310,7 +311,7 @@ Module Module_CustomerMasterDownload
     Dim rtnDic As New Dictionary(Of String, String)
     For Each tmpDc As DataColumn In prmDataRow.Table.Columns
       If tmpDc.ColumnName.ToUpper = "TokuiCD".ToUpper Then
-        rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString.PadLeft(6, "0")
+        rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString.PadLeft(CUSTOMER_CODE_LENGTH, "0")
       Else
         rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString
       End If
