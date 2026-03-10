@@ -401,7 +401,7 @@ Public Class ClsPrintingProcess
         Dim vals As List(Of String) = tmpValue.Value
 
         If vals.Count = 1 Then
-          sql &= $" AND {key} '{vals(0)}'"
+          sql &= $" AND {key} = '{vals(0)}'"
         Else
           Dim inList = String.Join(",", vals.Select(Function(v) $"'{v}'"))
           sql &= $" AND {key} IN ({inList})"

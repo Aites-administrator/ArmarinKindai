@@ -923,7 +923,7 @@ Public Class Form_SelectPrint
 
         ReportName = If(ReportType = ClsCommonGlobalData.REPORT_TYPE_SHUKKA, "R_SHUKKA", "R_NOHIN")
 
-        tmpWhereList.Add("DenNO2 = ", tmpDenpyoList)
+        tmpWhereList.Add("DenNO2", tmpDenpyoList)
         '印刷処理
         ClsPrintingProcess.PrintProcess(ClsCommonGlobalData.PRINT_PREVIEW, ReportWkTable, ReportName, tmpWhereList)
 
