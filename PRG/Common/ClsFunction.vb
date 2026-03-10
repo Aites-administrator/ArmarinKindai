@@ -1151,4 +1151,29 @@ Err_Exit:
 
     Return prmFileName & tmpFileNameDigits & Integer.Parse(prmMachineNumber).ToString()
   End Function
+
+  ''' <summary>
+  ''' 金額計算
+  ''' </summary>
+  ''' <param name="prmTanka">単価（kg単価）</param>
+  ''' <param name="prmSuryo">数量(重量)</param>
+  ''' <returns>金額</returns>
+  Public Shared Function CalculateKingaku(prmTanka As String, prmSuryo As String) As Decimal
+
+    Dim tmpTanka As Decimal = Decimal.MaxValue
+    Dim tmpSuryo As Decimal = Decimal.MaxValue
+
+    If False = Decimal.TryParse(prmTanka, tmpTanka) Then
+      Throw New Exception("単価の形式が不正です")
+    End If
+
+    If False = Decimal.TryParse(prmSuryo, tmpSuryo) Then
+      Throw New Exception("数量の形式が不正です")
+    End If
+
+    ' 切り捨て
+    Return Math.Floor(tmpTanka * tmpSuryo)
+
+  End Function
+
 End Class

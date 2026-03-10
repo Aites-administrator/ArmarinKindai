@@ -1,5 +1,6 @@
 ﻿Imports T.R.ZCommonClass.clsGlobalData
 Imports T.R.ZCommonClass.clsCommonFnc
+Imports T.R.ZCommonClass.clsCodeLengthSetting
 
 Public Class CmbMstUriKbn
     Inherits CmbMstBase
@@ -22,8 +23,8 @@ Public Class CmbMstUriKbn
 #Region "コンストラクタ"
     Public Sub New()
 
-        MyBase.New(CUSTOMER_ZERO_PADDING)
-        lcCallBackCreateSql = AddressOf SqlSelListSrc
+    MyBase.New(CUSTOMER_CODE_LENGTH)
+    lcCallBackCreateSql = AddressOf SqlSelListSrc
         InitCmb()
         ' フォーカス時、表示メッセージ設定
         MyBase.SetMsgLabelText("売上区分を選択入力して下さい。")

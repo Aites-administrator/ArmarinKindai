@@ -9,6 +9,7 @@ Imports T.R.ZCommonCon.DbConnectData
 Imports ClsPrintingProcess
 Imports CommonPcaDx
 Imports Common
+Imports T.R.ZCommonClass.clsCodeLengthSetting
 
 
 Public Class Form_SelectPrint
@@ -354,7 +355,7 @@ Public Class Form_SelectPrint
         tmpSlipNumber = AssignNumber(tmpDbCutJ)
         tmpLineNumber = 1
 
-        prmDenpyoList.Add(tmpSlipNumber.ToString.PadLeft(6, "0"c))
+        prmDenpyoList.Add(tmpSlipNumber.ToString.PadLeft(DENPYO_NUMBER_LENGTH, "0"c))
         tmpTokuiCd = tmpGridData("TokuiCD")
         tmpHassoCD = tmpGridData("TyokuCD")
       End If
@@ -489,8 +490,8 @@ Public Class Form_SelectPrint
   Private Function SqlUpdateJisseki(tmpSrcData As Dictionary(Of String, String)) As String
     Dim sql As String = String.Empty
     sql &= " UPDATE TRN_JISSEKI "
-    sql &= " SET DenNo2 = '" & tmpSrcData("DenNo2").PadLeft(6, "0"c) & "'"
-        Sql &= " , GyoNo2 = '" & tmpSrcData("GyoNo2").PadLeft(2, "0"c) & "'"
+    sql &= " SET DenNo2 = '" & tmpSrcData("DenNo2").PadLeft(DENPYO_NUMBER_LENGTH, "0"c) & "'"
+    sql &= " , GyoNo2 = '" & tmpSrcData("GyoNo2").PadLeft(GYO_NUMBER_LENGTH, "0"c) & "'"
     sql &= " , ShukaPRTFLG = 1 "
     sql &= " WHERE DenNo = '" & tmpSrcData("DenNo") & "'"
     sql &= " AND GyoNo = " & tmpSrcData("GyoNo")
@@ -922,7 +923,7 @@ Public Class Form_SelectPrint
 
         ReportName = If(ReportType = ClsCommonGlobalData.REPORT_TYPE_SHUKKA, "R_SHUKKA", "R_NOHIN")
 
-        tmpWhereList.Add("DenNO2", tmpDenpyoList)
+        tmpWhereList.Add("DenNO2 = ", tmpDenpyoList)
         '印刷処理
         ClsPrintingProcess.PrintProcess(ClsCommonGlobalData.PRINT_PREVIEW, ReportWkTable, ReportName, tmpWhereList)
 

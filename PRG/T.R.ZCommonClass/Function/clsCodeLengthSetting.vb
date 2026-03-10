@@ -24,4 +24,8 @@
   ''' </summary>
   Public Shared ReadOnly DENPYO_NUMBER_LENGTH As Integer = 6
 
+  ''' <summary>
+  '''  行番号桁数
+  ''' </summary>
+  Public Shared ReadOnly GYO_NUMBER_LENGTH As Integer = 2
 End Class

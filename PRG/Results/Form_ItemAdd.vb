@@ -550,7 +550,7 @@ Public Class ItemAddForm
 
     If CmbTeikan.SelectedIndex = HU_TEI_KAN Then
       'TODO 金額計算関数を使う
-      strKingaku = Fix(Decimal.Parse(tmpCalcTanka) * Decimal.Parse(tmpNohinsu) / 100).ToString()
+      strKingaku = CalculateKingaku(Decimal.Parse(tmpCalcTanka), Decimal.Parse(tmpNohinsu)).ToString()
       Me.TxtHuteikanKingaku.Text = strKingaku
     Else
       strKingaku = Fix(Decimal.Parse(tmpCalcTanka) * Decimal.Parse(tmpNohinsu)).ToString()

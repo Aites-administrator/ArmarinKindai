@@ -2,6 +2,7 @@
 Imports Common
 Imports Common.ClsFunction
 Imports T.R.ZCommonCtrl
+Imports T.R.ZCommonClass.clsCodeLengthSetting
 
 Public Class Form_ResultList
   Inherits FormBase
@@ -1249,7 +1250,7 @@ Public Class Form_ResultList
     prmDenpyoNo = tmpDt.Rows(0).Item("DenNo").ToString
 
     If prmChkSaiban Then
-      prmDenpyoNo = (Integer.Parse(prmDenpyoNo) + 1).ToString.PadLeft(6, "0"c)
+      prmDenpyoNo = (Integer.Parse(prmDenpyoNo) + 1).ToString.PadLeft(DENPYO_NUMBER_LENGTH, "0"c)
     End If
 
     If (tmpBeforeDenpyoNo <> prmDenpyoNo) Then
@@ -1258,7 +1259,7 @@ Public Class Form_ResultList
       prmGyoNo = prmGyoNo + 1
     End If
     If prmDenpyoNo > 999999 Then
-      prmDenpyoNo = "000001"
+      prmDenpyoNo = "1".PadLeft(CUSTOMER_CODE_LENGTH, "0"c)
       prmGyoNo = 1
     End If
 

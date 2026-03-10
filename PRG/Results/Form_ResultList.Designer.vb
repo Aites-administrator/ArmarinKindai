@@ -161,6 +161,7 @@ Partial Class Form_ResultList
         Me.Label2.Size = New System.Drawing.Size(94, 30)
         Me.Label2.TabIndex = 55
         Me.Label2.Text = "伝　区："
+        Me.Label2.Visible = False
         '
         'Label6
         '
@@ -172,6 +173,7 @@ Partial Class Form_ResultList
         Me.Label6.TabIndex = 57
         Me.Label6.Text = "売上区分："
         Me.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.Label6.Visible = False
         '
         'TxtNohinDay2
         '
@@ -421,6 +423,7 @@ Partial Class Form_ResultList
         Me.TxtDenkuName.Size = New System.Drawing.Size(105, 33)
         Me.TxtDenkuName.TabIndex = 4
         Me.TxtDenkuName.TabStop = False
+        Me.TxtDenkuName.Visible = False
         '
         'TxtUriKbnName
         '
@@ -432,6 +435,7 @@ Partial Class Form_ResultList
         Me.TxtUriKbnName.Size = New System.Drawing.Size(104, 33)
         Me.TxtUriKbnName.TabIndex = 6
         Me.TxtUriKbnName.TabStop = False
+        Me.TxtUriKbnName.Visible = False
         '
         'BtnAddGyo
         '
@@ -602,6 +606,7 @@ Partial Class Form_ResultList
         Me.CmbMstUriKbn1.SkipChkCode = True
         Me.CmbMstUriKbn1.TabIndex = 5
         Me.CmbMstUriKbn1.ValueMember = "Code"
+        Me.CmbMstUriKbn1.Visible = False
         '
         'CmbMstDenku1
         '
@@ -622,6 +627,7 @@ Partial Class Form_ResultList
         Me.CmbMstDenku1.SkipChkCode = True
         Me.CmbMstDenku1.TabIndex = 3
         Me.CmbMstDenku1.ValueMember = "Code"
+        Me.CmbMstDenku1.Visible = False
         '
         'CmbMstCustomer1
         '

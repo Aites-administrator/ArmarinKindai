@@ -1,6 +1,7 @@
 ﻿Imports T.R.ZCommonClass
 Imports T.R.ZCommonClass.clsCommonFnc
 Imports T.R.ZCommonClass.clsGlobalData
+Imports T.R.ZCommonClass.clsCodeLengthSetting
 
 Public Class CmbMstChoku
   Inherits CmbMstBase
@@ -79,7 +80,7 @@ Public Class CmbMstChoku
         Return
       End If
 
-      .Text = StringToInt(.Text).ToString(CHOKU_ZERO_PADDING)
+      .Text = StringToInt(.Text).ToString.PadLeft(TYOKUSO_CODE_LENGTH, "0"c)
 
     End With
 

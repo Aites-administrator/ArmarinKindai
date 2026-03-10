@@ -2,6 +2,8 @@
 Imports Common
 Imports Common.ClsFunction
 Imports T.R.ZCommonCtrl
+Imports T.R.ZCommonClass.clsCodeLengthSetting
+
 
 Public Class NohinPrint
   Inherits FormBase
@@ -659,7 +661,7 @@ Public Class NohinPrint
                                                 RdoNotPrint.CheckedChanged, RdoUketsukeAsc.CheckedChanged, RdoUketsukeDesc.CheckedChanged,
                                                 RdoTokuiAsc.CheckedChanged, RdoTokuiDesc.CheckedChanged
     If Not String.IsNullOrWhiteSpace(TxtDenNo.Text) Then
-      TxtDenNo.Text = TxtDenNo.Text.PadLeft(6, "0"c)
+      TxtDenNo.Text = TxtDenNo.Text.PadLeft(DENPYO_NUMBER_LENGTH, "0"c)
     End If
 
     DispGrid()

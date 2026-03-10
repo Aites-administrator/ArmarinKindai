@@ -1,5 +1,6 @@
 ﻿Imports Common.ClsFunction
 Imports Common.ClsCommonGlobalData
+Imports T.R.ZCommonClass.clsCodeLengthSetting
 
 Public Class CmbMstTanto
     Inherits CmbMstBase
@@ -9,7 +10,7 @@ Public Class CmbMstTanto
 
     Public Sub New()
 
-    MyBase.New(TANTO_ZERO_PADDING)
+    MyBase.New(TANTO_CODE_LENGTH)
     lcCallBackCreateSql = AddressOf SqlSelListSrc
         InitCmb()
         ' フォーカス時、表示メッセージ設定
@@ -53,7 +54,7 @@ Public Class CmbMstTanto
         Return
       End If
 
-      .Text = StringToInt(.Text).ToString(TANTO_ZERO_PADDING)
+      .Text = StringToInt(.Text).ToString(TANTO_CODE_LENGTH)
 
     End With
 

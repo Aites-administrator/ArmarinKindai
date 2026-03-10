@@ -512,7 +512,7 @@ Public Class OutExcel
         DataGridView1.Rows(tmpCnt).Cells("直送先名").Value = tmpRow("直送先名").ToString
         DataGridView1.Rows(tmpCnt).Cells("商品コード").Value = tmpRow("商品コード").ToString
         DataGridView1.Rows(tmpCnt).Cells("商品名").Value = tmpRow("商品名").ToString
-        DataGridView1.Rows(tmpCnt).Cells("色").Value = tmpRow("色").ToString 'なし
+        DataGridView1.Rows(tmpCnt).Cells("尾数").Value = tmpRow("尾数").ToString 'なし
         DataGridView1.Rows(tmpCnt).Cells("重量").Value = tmpRow("重量").ToString 'なし
         DataGridView1.Rows(tmpCnt).Cells("単位").Value = tmpRow("単位").ToString
         DataGridView1.Rows(tmpCnt).Cells("単価").Value = tmpRow("単価").ToString
@@ -586,7 +586,7 @@ Public Class OutExcel
     DataGridView1.Columns.Add(SetColumn("直送先名"))
     DataGridView1.Columns.Add(SetColumn("商品コード"))
     DataGridView1.Columns.Add(SetColumn("商品名"))
-    DataGridView1.Columns.Add(SetColumn("色"))
+    DataGridView1.Columns.Add(SetColumn("尾数"))
     DataGridView1.Columns.Add(SetColumn("重量"))
     DataGridView1.Columns.Add(SetColumn("単位"))
     DataGridView1.Columns.Add(SetColumn("単価"))
@@ -707,7 +707,7 @@ Public Class OutExcel
     sql &= "	,	TyokuNM 直送先名 "
     sql &= "	,	ShohinCD 商品コード "
     sql &= "	,	ShohinNM 商品名 "
-    sql &= "	,	Iro 色 "
+    sql &= "	,	Iro 尾数 "
     sql &= "	,	Suryo 重量 "
     sql &= "	,	Tani 単位 "
     sql &= "	,	Tanka 単価 "

@@ -725,18 +725,18 @@ Module Module_Download
       'CSV読込
       'Forで計量データをループする
       For Each tmpDr In tmpKeiryoDt.Rows
-      'DataRow新規追加
-      Dim tmpCreateTmpDr As DataRow = dt.NewRow()
-      '実績データ
-      Dim tmpJissekiDic As New List(Of Dictionary(Of String, String))
+        'DataRow新規追加
+        Dim tmpCreateTmpDr As DataRow = dt.NewRow()
+        '実績データ
+        Dim tmpJissekiDic As New List(Of Dictionary(Of String, String))
 
 
-      '伝票番号、行番号採番
-      GetDenpyoNo(tmpDenpyoNo, tmpGyoNo, ChkSaiban(tmpDr, tmpBeforeNohinDay, tmpBeforeTokuiCd, tmpGyoNo))
+        '伝票番号、行番号採番
+        GetDenpyoNo(tmpDenpyoNo, tmpGyoNo, ChkSaiban(tmpDr, tmpBeforeNohinDay, tmpBeforeTokuiCd, tmpGyoNo))
 
-      '実績データ作成
+        '実績データ作成
 
-      tmpJissekiDic.Add(GetInsertDictionary(tmpDr, tmpDenpyoNo, tmpGyoNo))
+        tmpJissekiDic.Add(GetInsertDictionary(tmpDr, tmpDenpyoNo, tmpGyoNo))
 
         '' 実行時の時刻を追加
         'dr("create_date") = DateTime.Now.ToString("yyyy-MM-dd")
@@ -751,11 +751,11 @@ Module Module_Download
 
         dt.ImportRow(tmpDataRow)
 
-    Next
+      Next
 
-    ' データベースに挿入
-    Dim sql As String = String.Empty
-    For Each dr As DataRow In dt.Rows
+      ' データベースに挿入
+      Dim sql As String = String.Empty
+      For Each dr As DataRow In dt.Rows
         sql = GetInsertSql("TRN_JISSEKI", dr)
         With SqlServer
           Try
@@ -1152,28 +1152,4 @@ Module Module_Download
     Return DateTime.Parse(prmTargetData).ToString("HHmm")
   End Function
 
-
-  ''' <summary>
-  ''' 金額計算
-  ''' </summary>
-  ''' <param name="prmTanka">単価（kg単価）</param>
-  ''' <param name="prmSuryo">数量(重量)</param>
-  ''' <returns>金額</returns>
-  Private Function CalculateKingaku(prmTanka As String, prmSuryo As String) As Decimal
-
-    Dim tmpTanka As Decimal = Decimal.MaxValue
-    Dim tmpSuryo As Decimal = Decimal.MaxValue
-
-    If False = Decimal.TryParse(prmTanka, tmpTanka) Then
-      Throw New Exception("単価の形式が不正です")
-    End If
-
-    If False = Decimal.TryParse(prmSuryo, tmpSuryo) Then
-      Throw New Exception("数量の形式が不正です")
-    End If
-
-    ' 切り捨て
-    Return Math.Floor(tmpTanka * tmpSuryo)
-
-  End Function
 End Module
