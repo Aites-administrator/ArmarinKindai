@@ -569,12 +569,15 @@ Public Class ClsPrintingProcess
     Dim sql As String = String.Empty
 
     sql &= " Update TRN_JISSEKI "
-    sql &= " SET NohinPRTFLG = 1"
+    sql &= " SET TRN_JISSEKI.NohinPRTFLG = 1"
+    sql &= " FROM TRN_JISSEKI "
+    sql &= " LEFT JOIN M_TOKUISAKI_PRINT_CTRL "
+    sql &= " ON M_TOKUISAKI_PRINT_CTRL.TOKUISAKI_CD = TRN_JISSEKI.TokuiCD "
     sql &= " WHERE 1 = 1 "
     If Not prmWhereList Is Nothing _
       AndAlso prmWhereList.Count > 0 Then
       For Each strValue As KeyValuePair(Of String, String) In prmWhereList
-        sql &= "AND " & strValue.Key & " '" & strValue.Value & "'"
+        sql &= "AND " & strValue.Key & " " & strValue.Value
       Next
     Else
       sql &= " AND DenNo = '" & prmDb.Item("DenNO").ToString & "'"

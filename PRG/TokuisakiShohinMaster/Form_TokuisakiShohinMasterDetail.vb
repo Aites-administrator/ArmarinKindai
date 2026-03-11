@@ -145,12 +145,17 @@ Public Class Form_TokuisakiShohinMasterDetail
       e.Handled = True ' 入力を無効化
     End If
   End Sub
+
   Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
     MeClose()
   End Sub
 
-  Private Sub MeClose()
+  Private Sub Form_TokuisakiShohinMasterDetail_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
     parentForm.Enabled = True
+  End Sub
+
+
+  Private Sub MeClose()
     Close()
   End Sub
 
@@ -646,4 +651,5 @@ Public Class Form_TokuisakiShohinMasterDetail
     End If
 
   End Sub
+
 End Class

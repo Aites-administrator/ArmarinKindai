@@ -46,18 +46,20 @@ Partial Class Form_SelectPrint
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView1.Location = New System.Drawing.Point(20, 128)
         Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.RowHeadersWidth = 51
         Me.DataGridView1.RowTemplate.Height = 21
-        Me.DataGridView1.Size = New System.Drawing.Size(1495, 273)
+        Me.DataGridView1.Size = New System.Drawing.Size(1411, 258)
         Me.DataGridView1.TabIndex = 2
         '
         'DataGridView2
         '
         Me.DataGridView2.BackgroundColor = System.Drawing.SystemColors.Control
         Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView2.Location = New System.Drawing.Point(20, 452)
+        Me.DataGridView2.Location = New System.Drawing.Point(20, 420)
         Me.DataGridView2.Name = "DataGridView2"
+        Me.DataGridView2.RowHeadersWidth = 51
         Me.DataGridView2.RowTemplate.Height = 21
-        Me.DataGridView2.Size = New System.Drawing.Size(1495, 389)
+        Me.DataGridView2.Size = New System.Drawing.Size(1411, 389)
         Me.DataGridView2.TabIndex = 1
         Me.DataGridView2.TabStop = False
         '
@@ -69,13 +71,13 @@ Partial Class Form_SelectPrint
         Me.CmbMstCustomer1.BorderWidth = 1
         Me.CmbMstCustomer1.CodeFormat = ""
         Me.CmbMstCustomer1.DisplayMember = "Code"
-    Me.CmbMstCustomer1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
-    Me.CmbMstCustomer1.DropDownWidth = 360
-    Me.CmbMstCustomer1.EventCancel = False
+        Me.CmbMstCustomer1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed
+        Me.CmbMstCustomer1.DropDownWidth = 360
+        Me.CmbMstCustomer1.EventCancel = False
         Me.CmbMstCustomer1.FormattingEnabled = True
         Me.CmbMstCustomer1.Location = New System.Drawing.Point(492, 58)
         Me.CmbMstCustomer1.Name = "CmbMstCustomer1"
-        Me.CmbMstCustomer1.Size = New System.Drawing.Size(110, 27)
+        Me.CmbMstCustomer1.Size = New System.Drawing.Size(110, 32)
         Me.CmbMstCustomer1.SkipChkCode = True
         Me.CmbMstCustomer1.TabIndex = 1
         Me.CmbMstCustomer1.ValueMember = "Code"
@@ -84,9 +86,9 @@ Partial Class Form_SelectPrint
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("MS UI Gothic", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
-        Me.Label1.Location = New System.Drawing.Point(401, 61)
+        Me.Label1.Location = New System.Drawing.Point(374, 61)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(89, 19)
+        Me.Label1.Size = New System.Drawing.Size(110, 24)
         Me.Label1.TabIndex = 3
         Me.Label1.Text = "得意先名"
         '
@@ -96,7 +98,7 @@ Partial Class Form_SelectPrint
         Me.Label2.Font = New System.Drawing.Font("MS UI Gothic", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Label2.Location = New System.Drawing.Point(16, 61)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(69, 19)
+        Me.Label2.Size = New System.Drawing.Size(85, 24)
         Me.Label2.TabIndex = 4
         Me.Label2.Text = "納品日"
         '
@@ -112,7 +114,7 @@ Partial Class Form_SelectPrint
         Me.CmbDateProcessing1.FormattingEnabled = True
         Me.CmbDateProcessing1.Location = New System.Drawing.Point(95, 58)
         Me.CmbDateProcessing1.Name = "CmbDateProcessing1"
-        Me.CmbDateProcessing1.Size = New System.Drawing.Size(162, 27)
+        Me.CmbDateProcessing1.Size = New System.Drawing.Size(162, 32)
         Me.CmbDateProcessing1.TabIndex = 0
         Me.CmbDateProcessing1.ValueMember = "Code"
         '
@@ -122,9 +124,9 @@ Partial Class Form_SelectPrint
         Me.lblItemDetailListStat.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblItemDetailListStat.Font = New System.Drawing.Font("MS UI Gothic", 14.26415!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.lblItemDetailListStat.ForeColor = System.Drawing.Color.Black
-        Me.lblItemDetailListStat.Location = New System.Drawing.Point(20, 422)
+        Me.lblItemDetailListStat.Location = New System.Drawing.Point(20, 390)
         Me.lblItemDetailListStat.Name = "lblItemDetailListStat"
-        Me.lblItemDetailListStat.Size = New System.Drawing.Size(1495, 31)
+        Me.lblItemDetailListStat.Size = New System.Drawing.Size(1411, 31)
         Me.lblItemDetailListStat.TabIndex = 15
         Me.lblItemDetailListStat.Text = "Label18"
         Me.lblItemDetailListStat.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -137,7 +139,7 @@ Partial Class Form_SelectPrint
         Me.lblCustomerListStat.ForeColor = System.Drawing.Color.Black
         Me.lblCustomerListStat.Location = New System.Drawing.Point(20, 99)
         Me.lblCustomerListStat.Name = "lblCustomerListStat"
-        Me.lblCustomerListStat.Size = New System.Drawing.Size(1495, 31)
+        Me.lblCustomerListStat.Size = New System.Drawing.Size(1411, 31)
         Me.lblCustomerListStat.TabIndex = 16
         Me.lblCustomerListStat.Text = "Label18"
         Me.lblCustomerListStat.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
@@ -148,9 +150,9 @@ Partial Class Form_SelectPrint
         Me.lblInformation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblInformation.Font = New System.Drawing.Font("MS UI Gothic", 14.26415!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.lblInformation.ForeColor = System.Drawing.Color.Navy
-        Me.lblInformation.Location = New System.Drawing.Point(0, 881)
+        Me.lblInformation.Location = New System.Drawing.Point(0, 849)
         Me.lblInformation.Name = "lblInformation"
-        Me.lblInformation.Size = New System.Drawing.Size(1535, 29)
+        Me.lblInformation.Size = New System.Drawing.Size(1452, 29)
         Me.lblInformation.TabIndex = 18
         Me.lblInformation.Text = "Label18"
         Me.lblInformation.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
@@ -161,7 +163,7 @@ Partial Class Form_SelectPrint
         Me.lblUnSendCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblUnSendCount.Font = New System.Drawing.Font("MS UI Gothic", 14.26415!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.lblUnSendCount.ForeColor = System.Drawing.Color.Black
-        Me.lblUnSendCount.Location = New System.Drawing.Point(1252, 840)
+        Me.lblUnSendCount.Location = New System.Drawing.Point(1168, 808)
         Me.lblUnSendCount.Name = "lblUnSendCount"
         Me.lblUnSendCount.Size = New System.Drawing.Size(263, 31)
         Me.lblUnSendCount.TabIndex = 19
@@ -173,9 +175,9 @@ Partial Class Form_SelectPrint
         Me.lblPostCount.AutoSize = True
         Me.lblPostCount.Font = New System.Drawing.Font("MS UI Gothic", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.lblPostCount.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.lblPostCount.Location = New System.Drawing.Point(23, 852)
+        Me.lblPostCount.Location = New System.Drawing.Point(23, 820)
         Me.lblPostCount.Name = "lblPostCount"
-        Me.lblPostCount.Size = New System.Drawing.Size(73, 21)
+        Me.lblPostCount.Size = New System.Drawing.Size(93, 27)
         Me.lblPostCount.TabIndex = 21
         Me.lblPostCount.Text = "Label3"
         '
@@ -184,7 +186,7 @@ Partial Class Form_SelectPrint
         Me.btnPostPca.BackColor = System.Drawing.SystemColors.Control
         Me.btnPostPca.Font = New System.Drawing.Font("MS UI Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.btnPostPca.Image = CType(resources.GetObject("btnPostPca.Image"), System.Drawing.Image)
-        Me.btnPostPca.Location = New System.Drawing.Point(1143, 10)
+        Me.btnPostPca.Location = New System.Drawing.Point(1137, 12)
         Me.btnPostPca.Name = "btnPostPca"
         Me.btnPostPca.Size = New System.Drawing.Size(94, 84)
         Me.btnPostPca.TabIndex = 114
@@ -199,7 +201,7 @@ Partial Class Form_SelectPrint
         Me.btnEnd.BackColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.btnEnd.Font = New System.Drawing.Font("MS UI Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.btnEnd.Image = CType(resources.GetObject("btnEnd.Image"), System.Drawing.Image)
-        Me.btnEnd.Location = New System.Drawing.Point(1421, 9)
+        Me.btnEnd.Location = New System.Drawing.Point(1337, 12)
         Me.btnEnd.Name = "btnEnd"
         Me.btnEnd.Size = New System.Drawing.Size(94, 84)
         Me.btnEnd.TabIndex = 113
@@ -215,7 +217,7 @@ Partial Class Form_SelectPrint
         Me.Label3.Font = New System.Drawing.Font("MS UI Gothic", 21.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.Label3.Location = New System.Drawing.Point(15, 9)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(253, 29)
+        Me.Label3.Size = New System.Drawing.Size(321, 37)
         Me.Label3.TabIndex = 115
         Me.Label3.Text = "選択一括発行画面"
         '
@@ -224,7 +226,7 @@ Partial Class Form_SelectPrint
         Me.btnShowLogForm.BackColor = System.Drawing.SystemColors.Control
         Me.btnShowLogForm.Font = New System.Drawing.Font("MS UI Gothic", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.btnShowLogForm.Image = CType(resources.GetObject("btnShowLogForm.Image"), System.Drawing.Image)
-        Me.btnShowLogForm.Location = New System.Drawing.Point(1285, 9)
+        Me.btnShowLogForm.Location = New System.Drawing.Point(1237, 12)
         Me.btnShowLogForm.Name = "btnShowLogForm"
         Me.btnShowLogForm.Size = New System.Drawing.Size(94, 84)
         Me.btnShowLogForm.TabIndex = 116
@@ -241,15 +243,15 @@ Partial Class Form_SelectPrint
         Me.TxtMstCustomer1.MaxLength = 10
         Me.TxtMstCustomer1.Name = "TxtMstCustomer1"
         Me.TxtMstCustomer1.ReadOnly = True
-        Me.TxtMstCustomer1.Size = New System.Drawing.Size(401, 33)
+        Me.TxtMstCustomer1.Size = New System.Drawing.Size(401, 39)
         Me.TxtMstCustomer1.TabIndex = 117
         Me.TxtMstCustomer1.TabStop = False
         '
         'Form_SelectPrint
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(10.0!, 19.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(13.0!, 24.0!)
         Me.BackColor = System.Drawing.SystemColors.AppWorkspace
-        Me.ClientSize = New System.Drawing.Size(1534, 909)
+        Me.ClientSize = New System.Drawing.Size(1451, 877)
         Me.Controls.Add(Me.TxtMstCustomer1)
         Me.Controls.Add(Me.btnShowLogForm)
         Me.Controls.Add(Me.Label3)
