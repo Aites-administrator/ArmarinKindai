@@ -112,6 +112,7 @@ Module Module_CustomerMasterDownload
     Console.WriteLine("このウィンドウを閉じるには、任意のキーを押してください...")
 
   End Sub
+
   Private Sub DownloadFtp(DownloadPath As String, BackupPath As String, URL As String, UnitNumber As String)
     Dim FILE_NAME As String = Strings.Right(URL, CutFileNameDigits)
     Dim tmpCreateDate As String = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")
@@ -216,7 +217,6 @@ Module Module_CustomerMasterDownload
         dt.Columns.Add(New DataColumn(columnName, GetType(String)))
       Next
 
-
       'CSV読込
       Using textParser As New TextFieldParser(DownloadPath, System.Text.Encoding.GetEncoding("Shift-JIS"))
         textParser.TextFieldType = FieldType.Delimited
@@ -267,7 +267,6 @@ Module Module_CustomerMasterDownload
         End While
       End Using
 
-
       dt.Rows.Add()
       dt.Rows(dt.Rows.Count - 1).Item("TokuiCD") = "0".PadLeft(CUSTOMER_CODE_LENGTH, "0")
       dt.Rows(dt.Rows.Count - 1).Item("TokuiNM1") = "共通"
@@ -291,14 +290,12 @@ Module Module_CustomerMasterDownload
 
       tmpDb.TrnCommit()
 
-
     Catch ex As Exception
+      tmpDb.TrnRollBack()
       Call ComWriteErrLog("Module_CustomerMasterDownload",
                             System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
       InsertTRNLOG(UnitNumber, "", "", ex.Message, SqlServer, "Module_CustomerMasterDownload")
-      tmpDb.TrnRollBack()
       Throw New Exception(ex.Message)
-
     End Try
 
 

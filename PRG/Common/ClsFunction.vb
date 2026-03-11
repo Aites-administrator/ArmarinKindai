@@ -998,16 +998,15 @@ Err_Exit:
 
     With prmDb
       Try
-        If .Execute(sql) = 1 Then
-          ' 更新成功
-          .TrnCommit()
-        Else
+        If .Execute(sql) <> 1 Then
           ' 削除失敗
           Throw New Exception("ログの登録処理に失敗しました。")
         End If
       Catch ex As Exception
         Call ComWriteErrLog(prmMdlName,
                               System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
+        Call ComWriteErrLog("InsertTRNLOG",
+                              System.Reflection.MethodBase.GetCurrentMethod().Name, "ログ出力に失敗しました。")
       End Try
     End With
   End Sub

@@ -285,10 +285,10 @@ Module Modul_ShippingMasterDownload
 
 
     Catch ex As Exception
+      tmpDb.TrnRollBack()
       Call ComWriteErrLog("Module_CustomerMasterDownload",
                             System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
       InsertTRNLOG(UnitNumber, "", "", ex.Message, SqlServer, "Module_CustomerMasterDownload")
-      tmpDb.TrnRollBack()
       Throw New Exception(ex.Message)
 
     End Try

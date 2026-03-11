@@ -87,9 +87,7 @@ Module Module_ItemMasterDownload
       Console.WriteLine("******************************")
       DownloadOrgPath = FtpDownloadPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & "_org" & ".CSV"
       DownloadPath = FtpDownloadPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & ".CSV"
-      'DownloadPath = FtpDownloadPath & UnitNumberArray(j) & "/40TRAN" & FileNameDigits & UnitNumberArray(j) & ".CSV"
       BackupPath = FtpBackupPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & "_" & dtNow.ToString("yyMMddHHmmss") & ".CSV"
-      'BackupPath = FtpBackupPath & UnitNumberArray(j) & "/40TRAN" & FileNameDigits & UnitNumberArray(j) & "_" & dtNow.ToString("yyMMddHHmmss") & ".CSV"
       URL = "ftp://localhost" & "/" & UnitNumberArray(j) & "/" & tmpFileName & ".CSV"
       Call DownloadFtp(DownloadOrgPath, DownloadPath, BackupPath, URL, UnitNumberArray(j))
       System.Threading.Thread.Sleep(2000)
@@ -569,10 +567,10 @@ Module Module_ItemMasterDownload
       Next
       tmpDb.TrnCommit()
     Catch ex As Exception
+      tmpDb.TrnRollBack()
       Call ComWriteErrLog("Module_MasterDownload",
                        System.Reflection.MethodBase.GetCurrentMethod().Name, ex.Message)
       InsertTRNLOG(UnitNumber, "", "", ex.Message, SqlServer, "Module_ItemMasterDownload")
-      tmpDb.TrnRollBack()
       Throw New Exception(ex.Message)
     End Try
   End Sub
