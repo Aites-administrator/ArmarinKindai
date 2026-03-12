@@ -104,14 +104,5 @@
   ''' </summary>
   Public Shared ReadOnly EDABAN_MIN As Integer = 10001
 
-  ''' <summary>
-  ''' 自社電話番号・ＦＡＸ
-  ''' </summary>
-  Public Shared ReadOnly JISSYA_SYAMEI As String = "有限会社 三弘食品 TEL 06-6747-3123"
-
-  ' 得意先コードゼロ詰め
-  Public Shared ReadOnly CUSTOMER_ZERO_PADDING As String = "000000"
-  ' 直送先コードゼロ詰め
-  Public Shared ReadOnly CHOKU_ZERO_PADDING As String = "000000"
 
 End Class

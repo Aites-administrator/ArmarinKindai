@@ -7,6 +7,7 @@ Imports System.Threading
 Imports System.IO
 Imports System.IO.Pipes
 Imports IisFtpManager.IisFtpManager
+Imports Common.ClsCommonGlobalData
 
 Public Class Form_Top
   '  Private lblMessageText As Label = LblMessage ' これがエラーの原因
@@ -274,7 +275,6 @@ Public Class Form_Top
     LblMessage.Text = "待機中"
 
 
-    'TODO  計量器のフォルダを取得して、SetConcat_ScaleNumberの部分にはめる。
     'ファイル取込処理 
     '計量器管理を取得
     Dim tmpDt As DataTable = SelectFtpResult()
@@ -283,12 +283,20 @@ Public Class Form_Top
     For Each tmpDr As DataRow In tmpDt.Rows
       'ファイルがあれば、移動してFor分抜ける。
       Dim BkFolder As String = ClsFunction.ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE") & "\" & tmpDr.Item("IP_ADDRESS") & "\bk"    'bkフォルダ取得
+      Dim tmpBkFileName As String = TRAN_FILE_NAME & "*.csv"
+      Dim tmpFileName As String = TRAN_FILE_NAME & ReadSettingIniFile("FILENAME_DIGITS", "VALUE") & Integer.Parse(tmpDr.Item("IP_ADDRESS")) & ".csv"
       If Process.GetProcessesByName("Nohin").Count = 0 _
                    AndAlso Process.GetProcessesByName("Result").Count = 0 Then
-        If Dir(BkFolder & "\01TRAN*.csv") <> "" Then
-          System.IO.File.Move(BkFolder & "\" & Dir(BkFolder & "\01TRAN*.csv"), ClsFunction.ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE") & "\" & tmpDr.Item("IP_ADDRESS") & "\01TRAN.csv")
+
+        'バックアップファイルからFTP監視フォルダへ移動(計量器指定)
+        If MoveBackupTOImportPath(BkFolder, tmpDr.Item("IP_ADDRESS")) Then
           Exit For
         End If
+
+        'If Dir(BkFolder & "\" & tmpBkFileName) <> "" Then
+        '  System.IO.File.Move(BkFolder & "\" & Dir(BkFolder & "\" & tmpBkFileName), ClsFunction.ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE") & "\" & tmpDr.Item("IP_ADDRESS") & "\" & tmpFileName)
+        '  Exit For
+        'End If
       End If
     Next
 

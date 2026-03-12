@@ -4,6 +4,7 @@ Imports Common.ClsFunction
 Imports System.IO.Pipes
 Imports System.Text
 Imports System.Threading
+Imports T.R.ZCommonClass.clsGlobalData
 Public Class ClsAutoCommunication
 
   Private Shared watcher As System.IO.FileSystemWatcher = Nothing
@@ -76,9 +77,14 @@ Public Class ClsAutoCommunication
 
               CallProcess("DownLoad", FtpFolderName)
 
-              If Dir(BkFolder & "\01TRAN*.csv") <> "" Then
-                System.IO.File.Move(BkFolder & "\" & Dir(BkFolder & "\01TRAN*.csv"), FtpFolder & "\01TRAN.csv")
-              End If
+              'バックアップファイルからFTP監視フォルダへ移動(計量器指定)
+              MoveBackupTOImportPath(BkFolder, FtpFolderName)
+
+              'Dim tmpBkFileName As String = TRAN_FILE_NAME & "*.csv"
+              'Dim tmpFileName As String = TRAN_FILE_NAME & ReadSettingIniFile("FILENAME_DIGITS", "VALUE") & Integer.Parse(FtpFolderName) & ".csv"
+              'If Dir(BkFolder & "\" & tmpBkFileName) <> "" Then
+              '  System.IO.File.Move(BkFolder & "\" & Dir(BkFolder & "\" & tmpBkFileName), FtpFolder & "\" & tmpFileName)
+              'End If
             End If
 
         End Select
@@ -275,12 +281,6 @@ Public Class ClsAutoCommunication
     '    tmpDt.Dispose()
     'End Try
   End Sub
-
-  Public Shared Function ReadSettingIniFile(strKey As String, keyName As String)
-    Dim strPath As String = "C:\AUTOPRT\INI\setting.ini"
-    Dim stringValue As String = GetIniString(strKey, keyName, strPath)
-    Return stringValue
-  End Function
 
   Private Shared Function SetConcat_ScaleNumber() As String
     Dim InitialCheckFlg = True

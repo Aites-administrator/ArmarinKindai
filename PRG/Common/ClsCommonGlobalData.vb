@@ -35,13 +35,23 @@ Public Class ClsCommonGlobalData
   ''' </remarks>
   Public Shared ReadOnly REPORT_ORG_FILEPATH As String = "C:\AUTOPRT\report\Report.accdb"
 
-  ' レポートタイプ印刷なし
+  ''' <summary>
+  ''' レポートタイプ印刷なし
+  ''' </summary>
   Public Shared ReadOnly REPORT_TYPE_NONE As String = "0"
 
-  ' レポートタイプ納品書
+  ''' <summary>
+  ''' レポートタイプ納品書
+  ''' </summary>
   Public Shared ReadOnly REPORT_TYPE_NOHIN As String = "1"
 
-  ' レポートタイプ出荷明細書
+  ''' <summary>
+  ''' レポートタイプ出荷明細書
+  ''' </summary>
   Public Shared ReadOnly REPORT_TYPE_SHUKKA As String = "2"
 
+  ''' <summary>
+  ''' 実績ファイル名
+  ''' </summary>
+  Public Shared ReadOnly TRAN_FILE_NAME As String = "40TRAN"
 End Class

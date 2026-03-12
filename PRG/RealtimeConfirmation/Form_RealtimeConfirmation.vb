@@ -3,6 +3,7 @@ Imports System.Text
 Imports Microsoft.VisualBasic.FileIO
 Imports Common
 Imports Common.ClsFunction
+Imports Common.ClsCommonGlobalData
 Imports T.R.ZCommonCon.DbConnectData
 
 Imports CommonPcaDx
@@ -231,14 +232,20 @@ Public Class Form_RealtimeConfirmation
     Else
       CallProcess("DownLoad", SetConcat_ScaleNumber)
 
+      Dim tmpBkFileName As String = TRAN_FILE_NAME & "*.csv"
+      Dim tmpFileName As String = TRAN_FILE_NAME & ReadSettingIniFile("FILENAME_DIGITS", "VALUE") & Integer.Parse(SetConcat_ScaleNumber()) & ".csv"
+
       'ファイル取込処理 
       If Process.GetProcessesByName("Nohin").Count = 0 _
                    AndAlso Process.GetProcessesByName("Result").Count = 0 Then
-        If Dir(BkFolder & "\01TRAN*.csv") <> "" Then
-          System.IO.File.Move(BkFolder & "\" & Dir(BkFolder & "\01TRAN*.csv"), ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE") & "\" & SetConcat_ScaleNumber() & "\01TRAN.csv")
-        End If
-      End If
 
+        'バックアップファイルからFTP監視フォルダへ移動(計量器指定)
+        MoveBackupTOImportPath(BkFolder, SetConcat_ScaleNumber())
+
+        'If Dir(BkFolder & "\" & tmpBkFileName) <> "" Then
+        '  System.IO.File.Move(BkFolder & "\" & Dir(BkFolder & "\" & tmpBkFileName), ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE") & "\" & SetConcat_ScaleNumber() & "\" & tmpFileName)
+        'End If
+      End If
 
     End If
 

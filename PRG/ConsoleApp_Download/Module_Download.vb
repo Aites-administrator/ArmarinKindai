@@ -6,6 +6,7 @@ Imports Common.ClsFunction
 Imports Microsoft.VisualBasic.FileIO
 Imports MainMenu.Form_Top
 Imports T.R.ZCommonClass.clsCodeLengthSetting
+Imports Common.ClsCommonGlobalData
 
 
 Module Module_Download
@@ -13,7 +14,6 @@ Module Module_Download
   Private Const JISSEKI_COLUMN_ID As Integer = 1
   Private Const GROUP_TYPE_OFF As Integer = 0
   Private Const GROUP_TYPE_ON As Integer = 1
-  Private Const FILE_NAME_BASE As String = "40TRAN"
   Private ReadOnly tmpDb As New ClsSqlServer
 
   Dim tmpDt As New DataTable
@@ -44,7 +44,7 @@ Module Module_Download
   Dim ErrorJudFlg As Boolean = False
 
   Sub Main(ScaleNumber() As String)
-    Dim tmpFileName As String = FILE_NAME_BASE
+    Dim tmpFileName As String = TRAN_FILE_NAME
     Try
       Dim ClsSetMessage As New SetMessage("")
 
@@ -83,7 +83,7 @@ Module Module_Download
 
       '計量器毎にループ（実績）
       For j As Integer = 0 To UnitNumberArray.Length - 1
-        tmpFileName = FILE_NAME_BASE & FileNameDigits & Integer.Parse(UnitNumberArray(j)).ToString()
+        tmpFileName = TRAN_FILE_NAME & FileNameDigits & Integer.Parse(UnitNumberArray(j)).ToString()
 
         Console.WriteLine(IpAddressArray(j) & "号機の実績受信処理 START")
         Console.WriteLine("******************************")

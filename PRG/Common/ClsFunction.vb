@@ -3,6 +3,7 @@ Imports System.Text
 Imports System.Windows.Forms
 Imports System.Runtime.InteropServices
 Imports Common.ClsComDatabase
+Imports Common.ClsCommonGlobalData
 
 
 Public Class ClsFunction
@@ -1174,5 +1175,22 @@ Err_Exit:
     Return Math.Floor(tmpTanka * tmpSuryo)
 
   End Function
+
+  ''' <summary>
+  ''' 金額計算
+  ''' </summary>
+  ''' <param name="prmBackupFolder">バックアップフォルダ</param>
+  ''' <param name="prmScaleNumber">計量器No</param>
+  Public Shared Function MoveBackupTOImportPath(prmBackupFolder As String, prmScaleNumber As String) As Boolean
+    Dim rtn As Boolean = False
+    Dim tmpBkFileName As String = TRAN_FILE_NAME & "*.csv"
+    Dim tmpFileName As String = TRAN_FILE_NAME & ReadSettingIniFile("FILENAME_DIGITS", "VALUE") & Integer.Parse(prmScaleNumber) & ".csv"
+    If Dir(prmBackupFolder & "\" & tmpBkFileName) <> "" Then
+      System.IO.File.Move(prmBackupFolder & "\" & Dir(prmBackupFolder & "\" & tmpBkFileName), ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE") & "\" & prmScaleNumber & "\" & tmpFileName)
+      rtn = True
+    End If
+    Return rtn
+  End Function
+
 
 End Class
