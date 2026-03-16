@@ -1094,7 +1094,7 @@ Module Module_Download
         tmpAdjustmentValue = "0"
       End If
 
-      tmpWeight = prmTargetData.Substring(0, prmTargetData.Length - tmpPointPos) _
+      tmpWeight = prmTargetData.Substring(0, prmTargetData.Length - 1) _
                   & tmpAdjustmentValue
     End If
 
