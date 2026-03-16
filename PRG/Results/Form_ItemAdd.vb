@@ -427,6 +427,11 @@ Public Class ItemAddForm
     MeClose()
   End Sub
 
+  Private Sub ItemAddForm_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+    parentForm.Enabled = True
+  End Sub
+
+
   ''' <summary>
   ''' 終了処理
   ''' </summary>
@@ -434,7 +439,6 @@ Public Class ItemAddForm
   Private Sub MeClose()
     'データクリア処理
     DataClear()
-    parentForm.Enabled = True
     '終了処理
     Me.Close()
   End Sub
@@ -853,6 +857,7 @@ Public Class ItemAddForm
     LimitByByteLength(TxtItemName, 36)
 
   End Sub
+
 
 
 #End Region

@@ -350,7 +350,6 @@ Public Class Form_ResultList
         ClickCreateButton()
       End If
     Else
-      parentForm.Enabled = True
 
       Close()
     End If
@@ -478,6 +477,10 @@ Public Class Form_ResultList
 
   Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
     ClickCloseButton()
+  End Sub
+
+  Private Sub Form_ResultList_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
+    parentForm.Enabled = True
   End Sub
 
   Private Sub DateTimeTo_KeyPress(sender As Object, e As KeyPressEventArgs)
@@ -1341,4 +1344,5 @@ Public Class Form_ResultList
 
     Return prmDateTextBox.Text
   End Function
+
 End Class

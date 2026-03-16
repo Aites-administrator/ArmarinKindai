@@ -2,6 +2,7 @@
 Imports Common.ClsFunction
 Imports T.R.ZCommonCtrl
 Imports System.Text.RegularExpressions
+Imports System.ComponentModel
 
 Public Class Form_ScaleDetail
   Inherits FormBase
@@ -106,8 +107,12 @@ Public Class Form_ScaleDetail
     MeClose()
   End Sub
 
-  Private Sub MeClose()
+  Private Sub Form_ScaleDetail_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
     parentForm.Enabled = True
+  End Sub
+
+
+  Private Sub MeClose()
     Close()
   End Sub
 
@@ -305,7 +310,4 @@ Public Class Form_ScaleDetail
     End If
   End Sub
 
-  Private Sub IpAddressText_TextChanged(sender As Object, e As EventArgs) Handles TxtFolderName.TextChanged
-
-  End Sub
 End Class
