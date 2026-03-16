@@ -473,7 +473,7 @@ Public Class ItemAddForm
           tmpDataGridRow.Cells("金額").Value = If(Me.TxtKeiryoFlg.Text = HU_TEI_KAN, Me.TxtHuteikanKingaku.Text, Me.TxtTeikanKingaku.Text)
           tmpDataGridRow.Cells("生簀ロット番号").Value = Me.TxtKotai1.Text
           tmpDataGridRow.Cells("原産地").Value = Me.TxtKotai2.Text
-          tmpDataGridRow.Cells("メモ").Value = Me.TxtKotai3.Text
+          'tmpDataGridRow.Cells("メモ").Value = Me.TxtKotai3.Text
           tmpAddGyoFlg = False
         End If
       Next
@@ -502,7 +502,7 @@ Public Class ItemAddForm
         .Cells("金額").Value = Me.TxtHuteikanKingaku.Text
         .Cells("生簀ロット番号").Value = Me.TxtKotai1.Text
         .Cells("原産地").Value = Me.TxtKotai2.Text
-        .Cells("メモ").Value = Me.TxtKotai3.Text
+        '.Cells("メモ").Value = Me.TxtKotai3.Text
       End With
 
     End If
@@ -691,7 +691,7 @@ Public Class ItemAddForm
 
     Me.TxtKotai1.Text = DataGridView2.Rows(prmIndex).Cells("生簀ロット番号").Value
     Me.TxtKotai2.Text = DataGridView2.Rows(prmGyoNo - 1).Cells("原産地").Value
-    Me.TxtKotai3.Text = DataGridView2.Rows(prmGyoNo - 1).Cells("メモ").Value
+    'Me.TxtKotai3.Text = DataGridView2.Rows(prmGyoNo - 1).Cells("メモ").Value
     'End If
 
   End Sub
@@ -717,7 +717,7 @@ Public Class ItemAddForm
       .Columns.Add(SetColumn("金額"))
       .Columns.Add(SetColumn("生簀ロット番号"))
       .Columns.Add(SetColumn("原産地"))
-      .Columns.Add(SetColumn("メモ"))
+      '.Columns.Add(SetColumn("メモ"))
 
     End With
   End Sub

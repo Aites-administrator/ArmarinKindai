@@ -297,7 +297,7 @@ Public Class Form_ResultList
         InsertData("ShatenCD") = ""
         InsertData("TorihikisakiCD") = ""
         InsertData("Memo1") = DataRow.Cells("生簀ロット番号").Value
-        InsertData("Memo2") = DataRow.Cells("メモ").Value
+        'InsertData("Memo2") = DataRow.Cells("メモ").Value
         InsertData("Hoka1") = Me.TxtHoka1.Text
         InsertData("Hoka2") = Me.TxtHoka2.Text
         InsertData("TokuiKubun") = "0"
@@ -759,6 +759,10 @@ Public Class Form_ResultList
       ' 直送先コード
       prmCmbMstChoku.Text = String.Empty
       prmTxtLabelChoku.Text = String.Empty
+    ElseIf prmCmbMstChoku.Text = "0".PadLeft(TYOKUSO_CODE_LENGTH, "0"c) Then
+      ' 直送先コード
+      prmCmbMstChoku.Text = String.Empty
+      prmTxtLabelChoku.Text = String.Empty
     Else
       Dim tmpDt As New DataTable
       If (GetMstCode("MST_CHOKUSO", prmCmbMstChoku.Text, tmpDt)) Then
@@ -896,7 +900,7 @@ Public Class Form_ResultList
     Dim sql As String = String.Empty
     sql &= " SELECT	ISNULL(DenNo2,DenNo) 伝票番号 "
     sql &= "	,	ISNULL(GyoNo2,GyoNo) GyoNo "
-    sql &= "	,	Format(UketukeDay,'yyyy/MM/dd') 加工日 "
+    sql &= "	,	Format(UketukeDay,'yyyy/MM/dd') 納品日 "
     sql &= "	,	NohinDay 納品日 "
     sql &= "	,	SeikyuDay 請求日 "
     sql &= "	,	Ku 売上区分 "
@@ -1125,7 +1129,7 @@ Public Class Form_ResultList
       DataGridView1.Rows(tmpCnt).Cells("単価").Value = tmpRow("Tanka").ToString
       DataGridView1.Rows(tmpCnt).Cells("金額").Value = tmpRow("Kingaku").ToString
       DataGridView1.Rows(tmpCnt).Cells("生簀ロット番号").Value = tmpRow("Memo1").ToString
-      DataGridView1.Rows(tmpCnt).Cells("メモ").Value = tmpRow("Memo2").ToString
+      'DataGridView1.Rows(tmpCnt).Cells("メモ").Value = tmpRow("Memo2").ToString
       DataGridView1.Rows(tmpCnt).Cells("原産地").Value = tmpRow("Biko").ToString
       tmpCnt += 1
 
@@ -1210,7 +1214,7 @@ Public Class Form_ResultList
       .Columns.Add(SetColumn("金額"))
       .Columns.Add(SetColumn("生簀ロット番号"))
       .Columns.Add(SetColumn("原産地"))
-      .Columns.Add(SetColumn("メモ"))
+      '.Columns.Add(SetColumn("メモ"))
     End With
   End Sub
 

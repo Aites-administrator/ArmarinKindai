@@ -169,11 +169,11 @@ Partial Class OutExcel
         Me.PeriodLabel.Name = "PeriodLabel"
         Me.PeriodLabel.Size = New System.Drawing.Size(116, 30)
         Me.PeriodLabel.TabIndex = 78
-        Me.PeriodLabel.Text = "　加工日："
-        '
-        'BtnClose
-        '
-        Me.BtnClose.Font = New System.Drawing.Font("Segoe UI", 14.25!)
+    Me.PeriodLabel.Text = "　納品日："
+    '
+    'BtnClose
+    '
+    Me.BtnClose.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.BtnClose.Location = New System.Drawing.Point(1212, 611)
         Me.BtnClose.Name = "BtnClose"
         Me.BtnClose.Size = New System.Drawing.Size(123, 43)

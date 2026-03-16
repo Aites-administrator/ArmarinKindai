@@ -365,7 +365,7 @@ Public Class NohinPrint
 
       '不要列削除
       'DataGridView1.Columns("請求日").Visible = False
-      DataGridView1.Columns("加工日").Visible = False
+      DataGridView1.Columns("納品日").Visible = False
       DataGridView1.Columns("伝区").Visible = False
       DataGridView1.Columns("伝票区分").Visible = False
 
