@@ -1086,6 +1086,9 @@ Module Module_Download
     Dim tmpAdjustmentValue As String = ""
 
     If tmpPointPos > 0 Then
+      If prmTargetData.Length < (tmpPointPos + 3) Then
+        prmTargetData = prmTargetData.PadRight((tmpPointPos + 3), "0")
+      End If
       If 5 <= Integer.Parse(prmTargetData.Substring(tmpPointPos + 2, 1)) Then
         ' 小数点第二位が5以上は5に調整
         tmpAdjustmentValue = "5"
@@ -1094,8 +1097,9 @@ Module Module_Download
         tmpAdjustmentValue = "0"
       End If
 
-      tmpWeight = prmTargetData.Substring(0, prmTargetData.Length - 1) _
+      tmpWeight = prmTargetData.Substring(0, tmpPointPos + 2) _
                   & tmpAdjustmentValue
+
     End If
 
     Return tmpWeight
