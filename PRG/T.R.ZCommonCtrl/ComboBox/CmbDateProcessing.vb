@@ -16,7 +16,7 @@ Public Class CmbDateProcessing
     ' 初期化
     InitCmb()
     ' フォーカス時、表示メッセージ設定
-    MyBase.SetMsgLabelText("出荷日を選択してください。")
+    MyBase.SetMsgLabelText("納品日を選択してください。")
 
   End Sub
 

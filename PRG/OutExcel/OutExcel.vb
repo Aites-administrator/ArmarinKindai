@@ -516,8 +516,9 @@ Public Class OutExcel
         DataGridView1.Rows(tmpCnt).Cells("重量").Value = tmpRow("重量").ToString 'なし
         DataGridView1.Rows(tmpCnt).Cells("単位").Value = tmpRow("単位").ToString
         DataGridView1.Rows(tmpCnt).Cells("単価").Value = tmpRow("単価").ToString
+        DataGridView1.Rows(tmpCnt).Cells("金額").Value = tmpRow("金額").ToString
         DataGridView1.Rows(tmpCnt).Cells("原産地名").Value = tmpRow("原産地名").ToString
-        DataGridView1.Rows(tmpCnt).Cells("ロット番号").Value = tmpRow("ロット番号").ToString
+        DataGridView1.Rows(tmpCnt).Cells("生簀No").Value = tmpRow("生簀No").ToString
         'DataGridView1.Rows(tmpCnt).Cells("加工日").Value = tmpRow("加工日").ToString
         'DataGridView1.Rows(tmpCnt).Cells("請求日").Value = tmpRow("請求日").ToString
         'DataGridView1.Rows(tmpCnt).Cells("先方担当者名").Value = tmpRow("先方担当者名").ToString
@@ -590,8 +591,9 @@ Public Class OutExcel
     DataGridView1.Columns.Add(SetColumn("重量"))
     DataGridView1.Columns.Add(SetColumn("単位"))
     DataGridView1.Columns.Add(SetColumn("単価"))
+    DataGridView1.Columns.Add(SetColumn("金額"))
     DataGridView1.Columns.Add(SetColumn("原産地名"))
-    DataGridView1.Columns.Add(SetColumn("ロット番号"))
+    DataGridView1.Columns.Add(SetColumn("生簀No"))
     'DataGridView1.Columns.Add(SetColumn("加工日"))
     'DataGridView1.Columns.Add(SetColumn("請求日"))
     'DataGridView1.Columns.Add(SetColumn("先方担当者名"))
@@ -711,8 +713,9 @@ Public Class OutExcel
     sql &= "	,	Suryo 重量 "
     sql &= "	,	Tani 単位 "
     sql &= "	,	Tanka 単価 "
+    sql &= "	,	Kingaku 金額 "
     sql &= "	,	Biko 原産地名 "
-    sql &= "	,	Memo1 ロット番号 "
+    sql &= "	,	Memo1 生簀No "
     sql &= " FROM TRN_JISSEKI "
     sql &= " WHERE 1 = 1 "
     If Not String.IsNullOrWhiteSpace(dtFrom.ToString) Then

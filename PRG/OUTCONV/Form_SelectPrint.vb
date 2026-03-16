@@ -157,7 +157,7 @@ Public Class Form_SelectPrint
     With ret
 
       .Add(New clsDGVColumnSetting("一括発行", "POST_STAT", argTextAlignment:=typAlignment.MiddleCenter))
-      .Add(New clsDGVColumnSetting("出荷日", "NohinDay", argTextAlignment:=typAlignment.MiddleCenter))
+      .Add(New clsDGVColumnSetting("納品日", "NohinDay", argTextAlignment:=typAlignment.MiddleCenter))
       .Add(New clsDGVColumnSetting("伝票番号", "DenNo", argTextAlignment:=typAlignment.MiddleCenter))
       .Add(New clsDGVColumnSetting("得意先コード", "TokuiCD", argTextAlignment:=typAlignment.MiddleRight))
       .Add(New clsDGVColumnSetting("得意先名", "TokuiNM", argTextAlignment:=typAlignment.MiddleLeft, argColumnWidth:=220))
@@ -207,7 +207,7 @@ Public Class Form_SelectPrint
     With ret
       .Add(New clsDGVColumnSetting("一括発行", "POST_STAT", argTextAlignment:=typAlignment.MiddleCenter, argColumnWidth:=100))
       .Add(New clsDGVColumnSetting("行番号", "GyoNo", argTextAlignment:=typAlignment.MiddleCenter))
-      .Add(New clsDGVColumnSetting("出荷日", "NohinDay", argTextAlignment:=typAlignment.MiddleCenter))
+      .Add(New clsDGVColumnSetting("納品日", "NohinDay", argTextAlignment:=typAlignment.MiddleCenter))
       .Add(New clsDGVColumnSetting("発送先コード", "TyokuCD", argTextAlignment:=typAlignment.MiddleRight, argColumnWidth:=100))
       .Add(New clsDGVColumnSetting("発送先名", "TyokuNM", argTextAlignment:=typAlignment.MiddleLeft, argColumnWidth:=220))
       .Add(New clsDGVColumnSetting("得意先コード", "TokuiCD", argTextAlignment:=typAlignment.MiddleRight, argColumnWidth:=100))

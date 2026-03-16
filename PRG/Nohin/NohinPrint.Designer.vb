@@ -419,8 +419,8 @@ Partial Class NohinPrint
         Me.RdoUketsukeDesc.Size = New System.Drawing.Size(175, 34)
         Me.RdoUketsukeDesc.TabIndex = 1
         Me.RdoUketsukeDesc.TabStop = True
-        Me.RdoUketsukeDesc.Text = "加工日順(降順)"
-        Me.RdoUketsukeDesc.UseVisualStyleBackColor = True
+    Me.RdoUketsukeDesc.Text = "納品日順(降順)"
+    Me.RdoUketsukeDesc.UseVisualStyleBackColor = True
         '
         'RdoUketsukeAsc
         '
@@ -430,8 +430,8 @@ Partial Class NohinPrint
         Me.RdoUketsukeAsc.Size = New System.Drawing.Size(175, 34)
         Me.RdoUketsukeAsc.TabIndex = 2
         Me.RdoUketsukeAsc.TabStop = True
-        Me.RdoUketsukeAsc.Text = "加工日順(昇順)"
-        Me.RdoUketsukeAsc.UseVisualStyleBackColor = True
+    Me.RdoUketsukeAsc.Text = "納品日順(昇順)"
+    Me.RdoUketsukeAsc.UseVisualStyleBackColor = True
         '
         'BtnDelete
         '
