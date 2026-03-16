@@ -300,6 +300,10 @@ Module Module_Download
     sql &= ",    YOBI_NUMBER"
     sql &= ",    YOBI_NAME"
     sql &= ",    SHOP_NUMBER"
+    sql &= ",    FREE1_CD "
+    sql &= ",    FREE1_NM "
+    sql &= ",    FREE2_CD "
+    sql &= ",    FREE2_NM "
     sql &= ",    KEIRYO_FLG"
     sql &= ",    CASE KEIRYO_FLG"
     sql &= "     WHEN 0"
@@ -326,10 +330,6 @@ Module Module_Download
     sql &= ",     KOTAINO1 "
     sql &= ",     KOTAINO2 "
     sql &= ",     KOTAINO3 "
-    sql &= ",    FREE1_CD "
-    sql &= ",    FREE1_NM "
-    sql &= ",    FREE2_CD "
-    sql &= ",    FREE2_NM "
     sql &= ",    FREE3_CD "
     sql &= ",    FREE3_NM "
     sql &= ",    FREE4_CD "
@@ -348,16 +348,16 @@ Module Module_Download
     sql &= " ,   YOBI_NUMBER"
     sql &= ",    YOBI_NAME"
     sql &= " ,   SHOP_NUMBER"
+    sql &= ",    FREE1_CD "
+    sql &= ",    FREE1_NM "
+    sql &= ",    FREE2_CD "
+    sql &= ",    FREE2_NM "
     sql &= " ,   KEIRYO_FLG"
     sql &= " ,   TANKA"
     sql &= " ,   TEIGAKU_KIGOU"
     sql &= " ,   KOTAINO1 "
     sql &= " ,   KOTAINO2 "
     sql &= " ,   KOTAINO3 "
-    sql &= ",    FREE1_CD "
-    sql &= ",    FREE1_NM "
-    sql &= ",    FREE2_CD "
-    sql &= ",    FREE2_NM "
     sql &= ",    FREE3_CD "
     sql &= ",    FREE3_NM "
     sql &= ",    FREE4_CD "
@@ -366,7 +366,7 @@ Module Module_Download
     sql &= ",    FREE5_NM "
     sql &= ",    LOT_NUMBER "
     sql &= " ORDER BY  "
-    sql &= "     JISSEKI_DATE,SHOP_NUMBER,YOBI_NUMBER"
+    sql &= "     JISSEKI_DATE,SHOP_NUMBER,FREE1_CD,FREE2_CD,YOBI_NUMBER"
     Call WriteExecuteLog("Module_MasterDownload", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function
@@ -382,6 +382,10 @@ Module Module_Download
     sql &= ",    YOBI_NUMBER"
     sql &= ",    YOBI_NAME"
     sql &= ",    SHOP_NUMBER"
+    sql &= ",    FREE1_CD "
+    sql &= ",    FREE1_NM "
+    sql &= ",    FREE2_CD "
+    sql &= ",    FREE2_NM "
     sql &= ",     JYURYO"
     sql &= ",    TANKA"
     sql &= ",    KINGAKU"
@@ -392,10 +396,6 @@ Module Module_Download
     sql &= ",    KOTAINO1 "
     sql &= ",    KOTAINO2 "
     sql &= ",    KOTAINO3 "
-    sql &= ",    FREE1_CD "
-    sql &= ",    FREE1_NM "
-    sql &= ",    FREE2_CD "
-    sql &= ",    FREE2_NM "
     sql &= ",    FREE3_CD "
     sql &= ",    FREE3_NM "
     sql &= ",    FREE4_CD "
@@ -408,7 +408,7 @@ Module Module_Download
     sql &= " WHERE "
     sql &= "     CREATE_DATE = '" & prmCreateDate & "'"
     sql &= " ORDER BY  "
-    sql &= "     JISSEKI_DATE,SHOP_NUMBER,YOBI_NUMBER"
+    sql &= "     JISSEKI_DATE,SHOP_NUMBER,FREE1_CD,FREE2_CD,YOBI_NUMBER"
     Call WriteExecuteLog("Module_MasterDownload", System.Reflection.MethodBase.GetCurrentMethod().Name, sql)
     Return sql
   End Function
@@ -671,6 +671,7 @@ Module Module_Download
       Dim tmpGyoNo As Integer = 0
       Dim tmpBeforeNohinDay As String = "0"
       Dim tmpBeforeTokuiCd As String = "0"
+      Dim tmpHassousakiCd As String = "0"
       Dim HeaderRow As String() = Nothing
       Dim column As New DataColumn
       Dim sqlKeiryo As String = If(GROUP_TYPE_ON = ReadSettingIniFile("GROUP_TYPE", "VALUE") _
@@ -701,7 +702,7 @@ Module Module_Download
 
 
         '伝票番号、行番号採番
-        GetDenpyoNo(tmpDenpyoNo, tmpGyoNo, ChkSaiban(tmpDr, tmpBeforeNohinDay, tmpBeforeTokuiCd, tmpGyoNo))
+        GetDenpyoNo(tmpDenpyoNo, tmpGyoNo, ChkSaiban(tmpDr, tmpBeforeNohinDay, tmpBeforeTokuiCd, tmpHassousakiCd, tmpGyoNo))
 
         '実績データ作成
 
@@ -999,17 +1000,38 @@ Module Module_Download
   End Function
 
 
-  Private Function ChkSaiban(prmDr As DataRow, ByRef prmBeforeNohinDay As String, ByRef prmTokuiCd As String, prmGyoNo As Integer) As Boolean
+  ''' <summary>
+  ''' 伝票番号採番チェック
+  ''' </summary>
+  ''' <param name="prmDr">出力予定データ</param>
+  ''' <param name="prmBeforeNohinDay">出力中納品日</param>
+  ''' <param name="prmTokuiCd">出力中得意先コード</param>
+  ''' <param name="prmTokuiCd">出力中発送先コード</param>
+  ''' <param name="prmGyoNo">出力中行番号</param>
+  ''' <returns>True:採番必要
+  '''          False：採番不要  </returns>
+  ''' <remarks>以下何れかの条件に一致する場合は伝票番号の採番が必要
+  '''         ・納品日が変わった
+  '''         ・得意先が変わった
+  '''         ・明細行数が21行以上になった
+  '''         ・発送先が変わった </remarks>
+  Private Function ChkSaiban(prmDr As DataRow _
+                          , ByRef prmBeforeNohinDay As String _
+                          , ByRef prmTokuiCd As String _
+                          , ByRef prmHassousakiCd As String _
+                          , prmGyoNo As Integer) As Boolean
     Dim rtn As Boolean = False
 
     If (prmBeforeNohinDay <> prmDr("JISSEKI_DATE").ToString _
-                OrElse prmTokuiCd <> prmDr("SHOP_NUMBER").ToString _
-                OrElse prmGyoNo = 6) Then
+                OrElse prmTokuiCd <> prmDr("FREE1_CD").ToString _
+                OrElse prmHassousakiCd <> prmDr("FREE2_CD").ToString _
+                OrElse prmGyoNo = 20) Then
       rtn = True
     End If
 
     prmBeforeNohinDay = prmDr("JISSEKI_DATE").ToString
-    prmTokuiCd = prmDr("SHOP_NUMBER").ToString
+    prmTokuiCd = prmDr("FREE1_CD").ToString
+    prmHassousakiCd = prmDr("FREE2_CD").ToString
     Return rtn
   End Function
 
