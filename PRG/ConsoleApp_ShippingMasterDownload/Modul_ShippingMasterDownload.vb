@@ -45,10 +45,10 @@ Module Modul_ShippingMasterDownload
     Console.WriteLine("*** ********** ******* ************ ******* ******     ****** *** ******* *****")
     Console.WriteLine("*** ********** ******* *********    ******* ***** ***** ***** **** ****** *****")
     Console.WriteLine("*******************************************************************************")
-    Console.WriteLine("得意先マスタ受信処理開始")
+    Console.WriteLine("発送先マスタ受信処理開始")
     Console.WriteLine("******************************")
 
-    ClsSetMessage = New SetMessage("得意先マスタ受信処理開始")
+    ClsSetMessage = New SetMessage("発送先マスタ受信処理開始")
     Dim Para_ScaleNumber As String = String.Empty
     If ScaleNumber.Length > 0 Then
       For i As Integer = 0 To ScaleNumber.Length - 1
