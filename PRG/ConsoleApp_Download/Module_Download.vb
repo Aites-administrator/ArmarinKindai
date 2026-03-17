@@ -991,7 +991,11 @@ Module Module_Download
 
     Dim rtnDic As New Dictionary(Of String, String)
     For Each tmpDc As DataColumn In prmDataRow.Table.Columns
-      rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString
+      If tmpDc.ColumnName.ToUpper = "FREE3_NM".ToUpper Then
+        rtnDic(tmpDc.ColumnName) = StrConv(prmDataRow.Item(tmpDc.ColumnName).ToString(), VbStrConv.Narrow)
+      Else
+        rtnDic(tmpDc.ColumnName) = prmDataRow.Item(tmpDc.ColumnName).ToString
+      End If
     Next
     rtnDic("CREATE_DATE") = prmCreateDate
     rtnDic("UPDATE_DATE") = prmCreateDate
