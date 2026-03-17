@@ -173,10 +173,30 @@ Public Class ClsComDatabase
       _ObjTran = Nothing
       ' SQLSERVERのみログを残す
       If (_Provider = TypProvider.sqlServer) Then
-        'Call WriteExecuteLog(_SqlHistory)
+        Call lcWriteExecuteLog(_SqlHistory)
       End If
       _SqlHistory = String.Empty
     End If
+  End Sub
+
+  ''' <summary>
+  ''' SQL実行ログ保存
+  ''' </summary>
+  ''' <param name="prmSql">SQL文</param>
+  ''' <remarks>テストコードの為、エラーが発生しても無視</remarks>
+  Private Sub lcWriteExecuteLog(prmSql As String)
+
+    Try
+      Dim tmpProcTime As String = ComGetProcTime()
+      Dim tmpExeFileName As String = System.IO.Path.GetFileName(System.Windows.Forms.Application.ExecutablePath)
+      Dim logFileName As String = "SqlLog_" & Date.Parse(tmpProcTime).ToString("yyyyMM") & ".log"
+      Dim logText As String = tmpProcTime & ":" & Dns.GetHostName() & ":" & tmpExeFileName & ":" & prmSql
+      ' ComWriteLog(logText, "\\nikserver21\d$\TRZdotDX\sqllog\" & logFileName)
+      Dim myPath As String = System.IO.Path.Combine(My.Application.Info.DirectoryPath, logFileName)
+      ComWriteLog(logText, myPath)
+    Catch ex As Exception
+
+    End Try
   End Sub
 #End Region
 
