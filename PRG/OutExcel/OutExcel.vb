@@ -9,6 +9,8 @@ Public Class OutExcel
 
   Private Const PRG_TITLE As String = "CSV出力"
   Private ReadOnly ResultCsvPath As String = ReadSettingIniFile("RESULT_CSV_PATH", "VALUE")
+  Private beforeValue As String = ""
+  Private beforeControl As Control = Nothing
 
   '得意先コンボボックス
   Private lastCmbMstCustomer As String
@@ -93,7 +95,9 @@ Public Class OutExcel
     Try
     ' コンボボックスの選択肢を設定する関数を呼び出し
     CmbMstCustomerValidating(CmbMstCustomer1From, TxtTokuNameFrom)
-    DispGrid()
+      If beforeValue <> CmbMstCustomer1From.Text Then
+        DispGrid()
+      End If
 
     Catch ex As Exception
       ComWriteErrLog(ex)
@@ -120,7 +124,9 @@ Public Class OutExcel
     Try
     ' コンボボックスの選択肢を設定する関数を呼び出し
     CmbMstCustomerValidating(CmbMstCustomer1To, TxtTokuNameTo)
-    DispGrid()
+      If beforeValue <> CmbMstCustomer1To.Text Then
+        DispGrid()
+      End If
 
     Catch ex As Exception
       ComWriteErrLog(ex)
@@ -148,7 +154,9 @@ Public Class OutExcel
     Try
     ' コンボボックスの選択肢を設定する関数を呼び出し
     CmbMstItemValidating(CmbMstItem1From, TxtItemNameFrom)
-    DispGrid()
+      If beforeValue <> CmbMstItem1From.Text Then
+        DispGrid()
+      End If
 
     Catch ex As Exception
       ComWriteErrLog(ex)
@@ -173,7 +181,9 @@ Public Class OutExcel
     Try
     ' コンボボックスの選択肢を設定する関数を呼び出し
     CmbMstItemValidating(CmbMstItem1To, TxtItemNameTo)
-    DispGrid()
+      If beforeValue <> CmbMstItem1To.Text Then
+        DispGrid()
+      End If
 
     Catch ex As Exception
       ComWriteErrLog(ex)
@@ -214,8 +224,10 @@ Public Class OutExcel
         Exit Sub
       End If
 
-      DispGrid()
-    End If
+        If beforeValue <> TxtUKakouDayFrom.Text Then
+          DispGrid()
+        End If
+      End If
 
     Catch ex As Exception
       ComWriteErrLog(ex)
@@ -241,7 +253,9 @@ Public Class OutExcel
           Exit Sub
         End If
 
-        DispGrid()
+        If beforeValue <> TxtUKakouDayTo.Text Then
+          DispGrid()
+        End If
       End If
 
     Catch ex As Exception
@@ -744,4 +758,25 @@ Public Class OutExcel
 
   End Function
 
+  Private Sub Control_Enter(sender As Object, e As EventArgs) Handles CmbMstCustomer1From.Enter, CmbMstCustomer1To.Enter, TxtUKakouDayFrom.Enter, TxtUKakouDayTo.Enter, CmbMstItem1From.Enter, CmbMstItem1To.Enter
+    Dim ctrl = DirectCast(sender, Control)
+    beforeControl = ctrl
+
+    Select Case True
+      Case TypeOf ctrl Is TextBox
+        beforeValue = DirectCast(ctrl, TextBox).Text
+
+      Case TypeOf ctrl Is ComboBox
+        beforeValue = DirectCast(ctrl, ComboBox).Text
+
+      Case TypeOf ctrl Is CheckBox
+        beforeValue = DirectCast(ctrl, CheckBox).Checked.ToString()
+
+      Case TypeOf ctrl Is DateTimePicker
+        beforeValue = DirectCast(ctrl, DateTimePicker).Value.ToString()
+
+      Case Else
+        beforeValue = ctrl.Text
+    End Select
+  End Sub
 End Class

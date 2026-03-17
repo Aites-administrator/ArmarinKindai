@@ -279,26 +279,28 @@ Public Class ClsPrintingProcess
             Dim rows() As DataRow = prmDt.Select("DenNo = '" & row("DenNo") & "'")
             Dim DenRowCount As Integer = rows.Length
             Dim EmptyRowCount As Integer = MAX_PRINT_COUNT - (DenRowCount Mod MAX_PRINT_COUNT)
+            If DenRowCount Mod MAX_PRINT_COUNT <> 0 Then
 
-            For i = 0 To EmptyRowCount - 1
-              Dim tmpDt As DataTable = prmDt.Clone()
-              tmpDt.Rows.Clear()
-              Dim tmpRow As DataRow = tmpDt.NewRow
+              For i = 0 To EmptyRowCount - 1
+                Dim tmpDt As DataTable = prmDt.Clone()
+                tmpDt.Rows.Clear()
+                Dim tmpRow As DataRow = tmpDt.NewRow
 
-              'TODO 伝票番号、行番号、得意先、発送先、ソート番号=1を入れて追加
-              tmpRow("DenNo") = row("DenNo")
-              tmpRow("GyoNo") = row("GyoNo")
-              tmpRow("TokuiCD") = row("TokuiCD")
-              tmpRow("TokuiNm") = row("TokuiNm")
-              tmpRow("TyokuCd") = row("TyokuCd")
-              tmpRow("TyokuNM") = row("TyokuNM")
-              tmpRow("SortNumber") = 1
+                'TODO 伝票番号、行番号、得意先、発送先、ソート番号=1を入れて追加
+                tmpRow("DenNo") = row("DenNo")
+                tmpRow("GyoNo") = row("GyoNo")
+                tmpRow("TokuiCD") = row("TokuiCD")
+                tmpRow("TokuiNm") = row("TokuiNm")
+                tmpRow("TyokuCd") = row("TyokuCd")
+                tmpRow("TyokuNM") = row("TyokuNM")
+                tmpRow("SortNumber") = 1
 
-              sql = SqlInsNohin(prmTableName, tmpRow, dt)
-              If String.IsNullOrWhiteSpace(sql) = False Then
-                .Execute(sql)
-              End If
-            Next
+                sql = SqlInsNohin(prmTableName, tmpRow, dt)
+                If String.IsNullOrWhiteSpace(sql) = False Then
+                  .Execute(sql)
+                End If
+              Next
+            End If
 
           End If
 
@@ -334,7 +336,7 @@ Public Class ClsPrintingProcess
 
     sql &= " SELECT	trn_jisseki.NohinDay "
     sql &= "	,	ISNULL(trn_jisseki.DenNO2,trn_jisseki.DenNO) DenNo "
-    sql &= "	,	ISNULL(trn_jisseki.GyoNo2,trn_jisseki.GyoNo)GyoNo "
+    sql &= "	,	RIGHT('00' + CAST(ISNULL(trn_jisseki.GyoNo2,trn_jisseki.GyoNo)AS VARCHAR(2)), 2)  GyoNo "
     sql &= "	,	trn_jisseki.TokuiCD "
     sql &= "	,	trn_jisseki.TokuiNm "
     sql &= "	,	trn_jisseki.ShohinCD "
@@ -384,7 +386,7 @@ Public Class ClsPrintingProcess
 
     sql &= "SELECT	trn_jisseki.NohinDay "
     sql &= "	,	trn_jisseki.DenNO2 DenNo "
-    sql &= "	,	trn_jisseki.GyoNo2 GyoNo "
+    sql &= "	,	RIGHT('00' + CAST(trn_jisseki.GyoNo2 AS VARCHAR(2)), 2) GyoNo "
     sql &= "	,	trn_jisseki.TokuiCD "
     sql &= "	,	trn_jisseki.TokuiNm "
     sql &= "	,	trn_jisseki.ShohinCD "

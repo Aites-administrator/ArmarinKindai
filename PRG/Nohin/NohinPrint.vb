@@ -10,6 +10,9 @@ Public Class NohinPrint
 
   Private ReadOnly tmpDb As New ClsSqlServer
   Private Const PRG_TITLE As String = "納品書検索発行"
+  Private beforeValue As String = ""
+  Private beforeControl As Control = Nothing
+
 
   Dim tmpDt As New DataTable
 
@@ -604,7 +607,10 @@ Public Class NohinPrint
     If CmbMstTantoValidating(CmbMstTanto1, TxtTanto) Then
       e.Cancel = True
     End If
-    DispGrid()
+
+    If beforeValue <> CmbMstTanto1.Text Then
+      DispGrid()
+    End If
   End Sub
 
   Private Sub CmbMstCustomer1From_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles CmbMstCustomer1From.Validating
@@ -618,11 +624,11 @@ Public Class NohinPrint
         e.Cancel = True
         Exit Sub
       End If
-
     End If
 
-
-    DispGrid()
+    If beforeValue <> CmbMstCustomer1From.Text Then
+      DispGrid()
+    End If
   End Sub
 
   Private Sub CmbMstCustomer1To_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles CmbMstCustomer1To.Validating
@@ -640,7 +646,9 @@ Public Class NohinPrint
 
     End If
 
-    DispGrid()
+    If beforeValue <> CmbMstCustomer1To.Text Then
+      DispGrid()
+    End If
   End Sub
 
   Private Sub CmbMstDenku1_Validating(sender As Object, e As CancelEventArgs) Handles CmbMstDenku1.Validating
@@ -657,15 +665,24 @@ Public Class NohinPrint
 
   End Sub
 
-  Private Sub ValidatingForDispGrid() Handles TxtDenNo.Validating, RdoAll.CheckedChanged, RdoPrint.CheckedChanged,
+  Private Sub ValidatingForDispGrid() Handles RdoAll.CheckedChanged, RdoPrint.CheckedChanged,
+                                                RdoNotPrint.CheckedChanged, RdoUketsukeAsc.CheckedChanged, RdoUketsukeDesc.CheckedChanged,
+                                                RdoTokuiAsc.CheckedChanged, RdoTokuiDesc.CheckedChanged
+    DispGrid()
+  End Sub
+
+  Private Sub TxtDenNo_Validating() Handles TxtDenNo.Validating, RdoAll.CheckedChanged, RdoPrint.CheckedChanged,
                                                 RdoNotPrint.CheckedChanged, RdoUketsukeAsc.CheckedChanged, RdoUketsukeDesc.CheckedChanged,
                                                 RdoTokuiAsc.CheckedChanged, RdoTokuiDesc.CheckedChanged
     If Not String.IsNullOrWhiteSpace(TxtDenNo.Text) Then
       TxtDenNo.Text = TxtDenNo.Text.PadLeft(DENPYO_NUMBER_LENGTH, "0"c)
     End If
 
-    DispGrid()
+    If beforeValue <> TxtDenNo.Text Then
+      DispGrid()
+    End If
   End Sub
+
 
   Private Function SetDateText(prmDateTextBox As TextBox) As String
     Dim year As String = ""
@@ -682,56 +699,56 @@ Public Class NohinPrint
     Return prmDateTextBox.Text
   End Function
 
-    Private Sub DateTimeFrom_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TxtKakouDayFrom.KeyPress, TxtNohinDay.KeyPress, TxtSeikyuDay.KeyPress, TxtKakouDayTo.KeyPress
-        If Not (Char.IsDigit(e.KeyChar) Or e.KeyChar = ControlChars.Back Or e.KeyChar = "/"c) Then
-            e.Handled = True
-        End If
-    End Sub
+  Private Sub DateTimeFrom_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TxtKakouDayFrom.KeyPress, TxtNohinDay.KeyPress, TxtSeikyuDay.KeyPress, TxtKakouDayTo.KeyPress
+    If Not (Char.IsDigit(e.KeyChar) Or e.KeyChar = ControlChars.Back Or e.KeyChar = "/"c) Then
+      e.Handled = True
+    End If
+  End Sub
 
-    ''' <summary>
-    ''' 数値とバックスペースのみ入力可
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    Private Sub TxtNumericBase_KeyPress(sender As Object, e As System.Windows.Forms.KeyPressEventArgs) Handles TxtDenNo.KeyPress, TxtMeisaiSu.KeyPress, TxtGoukeiKin.KeyPress
+  ''' <summary>
+  ''' 数値とバックスペースのみ入力可
+  ''' </summary>
+  ''' <param name="sender"></param>
+  ''' <param name="e"></param>
+  Private Sub TxtNumericBase_KeyPress(sender As Object, e As System.Windows.Forms.KeyPressEventArgs) Handles TxtDenNo.KeyPress, TxtMeisaiSu.KeyPress, TxtGoukeiKin.KeyPress
 
-        ' 数値とバックスペースのみ入力可
-        If (e.KeyChar < "0"c OrElse "9"c < e.KeyChar) AndAlso e.KeyChar <> ControlChars.Back Then
-            '押されたキーが 0～9でない場合は、イベントをキャンセルする
-            e.Handled = True
-        End If
+    ' 数値とバックスペースのみ入力可
+    If (e.KeyChar < "0"c OrElse "9"c < e.KeyChar) AndAlso e.KeyChar <> ControlChars.Back Then
+      '押されたキーが 0～9でない場合は、イベントをキャンセルする
+      e.Handled = True
+    End If
 
-    End Sub
+  End Sub
 
-    Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles BtnDelete.Click
-        ClickDeleteButton()
-    End Sub
+  Private Sub BtnDelete_Click(sender As Object, e As EventArgs) Handles BtnDelete.Click
+    ClickDeleteButton()
+  End Sub
 
-    Private Sub ClickDeleteButton()
-        Try
-            If DataGridView1.CurrentRow Is Nothing Then
-                ComMessageBox("削除する伝票を選択してください。", "確認", typMsgBox.MSG_WARNING, typMsgBoxButton.BUTTON_OK)
-                Exit Sub
-            End If
+  Private Sub ClickDeleteButton()
+    Try
+      If DataGridView1.CurrentRow Is Nothing Then
+        ComMessageBox("削除する伝票を選択してください。", "確認", typMsgBox.MSG_WARNING, typMsgBoxButton.BUTTON_OK)
+        Exit Sub
+      End If
 
-            If ComMessageBox("伝票を削除しますか？" _
+      If ComMessageBox("伝票を削除しますか？" _
                               , PRG_TITLE _
                               , typMsgBox.MSG_WARNING _
                               , typMsgBoxButton.BUTTON_OKCANCEL) = typMsgBoxResult.RESULT_OK Then
 
-                SqlServer.Execute(SqlDelDenpyo)
-                ComMessageBox("伝票を削除しました。" _
+        SqlServer.Execute(SqlDelDenpyo)
+        ComMessageBox("伝票を削除しました。" _
                               , PRG_TITLE _
                               , typMsgBox.MSG_WARNING _
                               , typMsgBoxButton.BUTTON_OK)
-                DispGrid()
-            End If
+        DispGrid()
+      End If
 
-        Catch ex As Exception
-            ComWriteErrLog(ex)
-        End Try
+    Catch ex As Exception
+      ComWriteErrLog(ex)
+    End Try
 
-    End Sub
+  End Sub
 
   Private Sub TxtKakouDayFrom_Validating(sender As Object, e As CancelEventArgs) Handles TxtKakouDayFrom.Validating, TxtKakouDayTo.Validating
     Dim tb As TextBox = CType(sender, TextBox)
@@ -755,7 +772,7 @@ Public Class NohinPrint
           e.Cancel = True
           Exit Sub
         End If
-    End If
+      End If
 
       If String.IsNullOrWhiteSpace(TxtKakouDayFrom.Text) _
         OrElse String.IsNullOrWhiteSpace(TxtKakouDayTo.Text) Then
@@ -772,9 +789,10 @@ Public Class NohinPrint
       End If
 
     End If
-    DispGrid()
 
-
+    If beforeValue <> tb.Text Then
+      DispGrid()
+    End If
   End Sub
 
   Private Sub TxtNohinDay_Validating(sender As Object, e As CancelEventArgs) Handles TxtNohinDay.Validating
@@ -800,6 +818,7 @@ Public Class NohinPrint
   End Sub
 
 
+
   Private Sub TxtSeikyuDay_Validating(sender As Object, e As CancelEventArgs) Handles TxtSeikyuDay.Validating
     If BlnFirst Then
       Exit Sub
@@ -822,4 +841,27 @@ Public Class NohinPrint
   Private Sub NohinPrint_Activated(sender As Object, e As EventArgs) Handles Me.Activated
     DispGrid()
   End Sub
+
+  Private Sub Control_Enter(sender As Object, e As EventArgs) Handles CmbMstCustomer1From.Enter, CmbMstCustomer1To.Enter, CmbMstTanto1.Enter, TxtKakouDayFrom.Enter, TxtKakouDayTo.Enter, TxtDenNo.Enter
+    Dim ctrl = DirectCast(sender, Control)
+    beforeControl = ctrl
+
+    Select Case True
+      Case TypeOf ctrl Is TextBox
+        beforeValue = DirectCast(ctrl, TextBox).Text
+
+      Case TypeOf ctrl Is ComboBox
+        beforeValue = DirectCast(ctrl, ComboBox).Text
+
+      Case TypeOf ctrl Is CheckBox
+        beforeValue = DirectCast(ctrl, CheckBox).Checked.ToString()
+
+      Case TypeOf ctrl Is DateTimePicker
+        beforeValue = DirectCast(ctrl, DateTimePicker).Value.ToString()
+
+      Case Else
+        beforeValue = ctrl.Text
+    End Select
+  End Sub
+
 End Class
