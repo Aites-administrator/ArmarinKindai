@@ -239,12 +239,14 @@ Public Class Form_ResultList
         InsertData("Denku") = Me.CmbMstDenku1.Text
         'InsertData("SeikyuDay") = ""
         Dim tmpDt As New DataTable
-        SqlServer.GetResult(tmpDt, "SELECT * FROM trn_jisseki where denno2 = '" & Me.TxtDenNo.Text & "'")
+        SqlServer.GetResult(tmpDt, "SELECT Denno,GyoNo FROM trn_jisseki where denno2 = '" & Me.TxtDenNo.Text & "'" & " AND gyono2 = '" & DataRow.Cells("行No").Value & "'")
 
         If tmpDt.Rows.Count = 0 Then
           InsertData("DenNo") = Me.TxtDenNo.Text
           InsertData("GyoNo") = DataRow.Cells("行No").Value
         Else
+          InsertData("DenNo") = tmpDt.Rows(0).Item("Denno").ToString
+          InsertData("GyoNo") = tmpDt.Rows(0).Item("GyoNo").ToString
           InsertData("DenNo2") = Me.TxtDenNo.Text
           InsertData("GyoNo2") = DataRow.Cells("行No").Value
 
@@ -1180,9 +1182,61 @@ Public Class Form_ResultList
     Me.TxtBaikaKei.Text = tmpSumDt.Rows(0).Item("売価合計")
     Me.TxtGoukeiKin.Text = tmpSumDt.Rows(0).Item("合計Kingaku")
 
+    SetColumnLocation(DataGridView1)
+
     tmpBeforeCnt = DataGridView1.Rows.Count
   End Sub
 
+
+  Private Sub SetColumnLocation(prmDataGridView1 As DataGridView)
+
+    With DataGridView1
+      ' 商品名は余白を全部使う
+      .Columns("商品名").AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+
+      ' 他の列は AllCells + MinimumWidth を設定
+      .Columns("行No").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("行No").MinimumWidth = 80
+
+      .Columns("商品コード").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("商品コード").MinimumWidth = 100
+
+      .Columns("尾数").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("尾数").MinimumWidth = 80
+
+      .Columns("単位").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("単位").MinimumWidth = 80
+
+      .Columns("数量").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("数量").MinimumWidth = 80
+
+      .Columns("単価").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("単価").MinimumWidth = 80
+
+      .Columns("金額").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("金額").MinimumWidth = 100
+
+      .Columns("生簀ロット番号").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("生簀ロット番号").MinimumWidth = 120
+
+      .Columns("原産地").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("原産地").MinimumWidth = 100
+    End With
+
+    With DataGridView1
+      .Columns("数量").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+      .Columns("単価").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+      .Columns("金額").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+    End With
+
+    With DataGridView1
+      .Columns("行No").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      .Columns("商品コード").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      .Columns("単位").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+    End With
+
+
+  End Sub
   Private Sub DataClear()
 
     Dim dtNow As DateTime = DateTime.Now
@@ -1234,6 +1288,11 @@ Public Class Form_ResultList
       .Columns.Add(SetColumn("原産地"))
       '.Columns.Add(SetColumn("メモ"))
     End With
+
+    For Each col As DataGridViewColumn In DataGridView1.Columns
+      col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+    Next
+
   End Sub
 
   Private Function SetColumn(prmColumnName As String) As DataGridViewTextBoxColumn

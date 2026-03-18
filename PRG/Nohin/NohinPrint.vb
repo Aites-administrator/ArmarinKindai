@@ -366,13 +366,18 @@ Public Class NohinPrint
 
       DataGridView1.DataSource = tmpDt
 
+      For Each col As DataGridViewColumn In DataGridView1.Columns
+        col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
+      Next
+
       '不要列削除
       'DataGridView1.Columns("請求日").Visible = False
-      DataGridView1.Columns("納品日").Visible = False
+      DataGridView1.Columns("加工日").Visible = False
       DataGridView1.Columns("伝区").Visible = False
       DataGridView1.Columns("伝票区分").Visible = False
+      DataGridView1.Columns("PCA").Visible = False
 
-
+      SetColumnLocation(DataGridView1)
     Catch ex As Exception
       Throw New Exception(ex.Message)
     End Try
@@ -400,7 +405,7 @@ Public Class NohinPrint
     sql &= "	,	Isnull(DenNo2,DenNo) 伝票番号 "
     sql &= "	,	TokuiCd 得意先コード "
     sql &= "	,	TokuiNM 得意先名 "
-    sql &= "	,	 COUNT(GyoNo) 明細数 "
+    sql &= "	,	COUNT(GyoNo) 明細数 "
     sql &= "	,	Sum(convert(Integer,UriageKin)) 合計金額  "
     sql &= "	,	UTantoCD 担当者 "
     sql &= "	,	PCAFLG PCA "
@@ -872,4 +877,17 @@ Public Class NohinPrint
     End Select
   End Sub
 
+  Private Sub SetColumnLocation(prmDataGridView1 As DataGridView)
+
+    With DataGridView1
+      .Columns("明細数").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+      .Columns("合計金額").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+    End With
+
+    With DataGridView1
+      .Columns("得意先コード").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      .Columns("担当者").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+    End With
+
+  End Sub
 End Class
