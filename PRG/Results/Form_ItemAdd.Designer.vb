@@ -548,7 +548,7 @@ Partial Class ItemAddForm
         Me.Label19.Name = "Label19"
         Me.Label19.Size = New System.Drawing.Size(101, 37)
         Me.Label19.TabIndex = 102
-        Me.Label19.Text = "個数："
+        Me.Label19.Text = "尾数："
         '
         'TxtHuteikanKosu
         '

@@ -1,8 +1,8 @@
 ﻿Imports System.ComponentModel
 Imports Common
 Imports Common.ClsFunction
-Imports T.R.ZCommonCtrl
 Imports T.R.ZCommonClass.clsCodeLengthSetting
+Imports T.R.ZCommonCtrl
 
 Public Class Form_ResultList
   Inherits FormBase
@@ -238,8 +238,17 @@ Public Class Form_ResultList
         InsertData("NohinDay") = DateFormatChange(typDateFormat.FORMAT_STRING, Me.TxtNohinDay.Text)
         InsertData("Denku") = Me.CmbMstDenku1.Text
         'InsertData("SeikyuDay") = ""
-        InsertData("DenNo") = Me.TxtDenNo.Text
-        InsertData("GyoNo") = DataRow.Cells("行No").Value
+        Dim tmpDt As New DataTable
+        SqlServer.GetResult(tmpDt, "SELECT * FROM trn_jisseki where denno2 = '" & Me.TxtDenNo.Text & "'")
+
+        If tmpDt.Rows.Count = 0 Then
+          InsertData("DenNo") = Me.TxtDenNo.Text
+          InsertData("GyoNo") = DataRow.Cells("行No").Value
+        Else
+          InsertData("DenNo2") = Me.TxtDenNo.Text
+          InsertData("GyoNo2") = DataRow.Cells("行No").Value
+
+        End If
         InsertData("TokuiCD") = Me.CmbMstCustomer1.Text
         InsertData("TokuiNM") = Me.TxtTokuName.Text
         InsertData("TokuiNM2") = tmpTokuiDt.Rows(0).Item("TokuiNM2").ToString
@@ -248,15 +257,15 @@ Public Class Form_ResultList
         InsertData("TokuiAdd1") = tmpTokuiDt.Rows(0).Item("TokuiAdd1").ToString
         InsertData("TokuiAdd2") = tmpTokuiDt.Rows(0).Item("TokuiAdd2").ToString
         InsertData("TokuiTel") = Me.TxtTokuiTel.Text
-        InsertData("TyokuCD") = Me.CmbMstChoku1.Text
+        InsertData("TyokuCD") = If(String.IsNullOrWhiteSpace(Me.CmbMstChoku1.Text), "0".PadLeft(TYOKUSO_CODE_LENGTH, "0"c), Me.CmbMstChoku1.Text)
         InsertData("TyokuNM") = Me.TxtChokuName.Text
         InsertData("SenpoTantoNM") = tmpTokuiDt.Rows(0).Item("SenpoTantoNm").ToString
-        'InsertData("BumonCD") = Me.TxtBumonCd.Text
-        'InsertData("UTantoCD") = Me.CmbMstTanto1.Text
+        InsertData("BumonCD") = Me.TxtBumonCd.Text
+        InsertData("UTantoCD") = Me.CmbMstTanto1.Text
         'InsertData("TekiyoCD") = ""
         'InsertData("TekiyoNM") = Me.TxtTekiyo.Text
         'InsertData("BunruiCD") = Me.TxtBunruiCd.Text
-        'InsertData("DenKBN") = Me.TxtDenpyoKbn.Text
+        InsertData("DenKBN") = Me.TxtDenpyoKbn.Text
         InsertData("ShohinCD") = DataRow.Cells("商品コード").Value
         InsertData("ShohinNM") = DataRow.Cells("商品名").Value
         InsertData("ShohinKN") = tmpShohinDt.Rows(0).Item("ShohinKN").ToString
@@ -288,7 +297,7 @@ Public Class Form_ResultList
         InsertData("Kingaku") = DataRow.Cells("金額").Value
         'InsertData("ShukaPRTFLG") = "0"
         InsertData("NohinPRTFLG") = "0"
-        'InsertData("PCAFLG") = "0"
+        InsertData("PCAFLG") = "0"
         'InsertData("JANCD") = ""
         'InsertData("SakuseiDay") = ""
         'InsertData("OpenFLG") = ""
@@ -1004,6 +1013,11 @@ Public Class Form_ResultList
 
   Private Sub ClickAddGyoButton()
     Try
+      If DataGridView1.Rows.Count = 99 Then
+        ComMessageBox("100行以上の明細を追加することはできません。", PRG_TITLE, typMsgBox.MSG_WARNING)
+        Exit Sub
+      End If
+
       Dim child As New ItemAddForm(Me) ' 親フォームを渡す
       Me.Enabled = False
       child.Show()

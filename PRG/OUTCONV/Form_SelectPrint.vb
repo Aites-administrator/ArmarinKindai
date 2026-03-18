@@ -264,7 +264,7 @@ Public Class Form_SelectPrint
 
     With Controlz(DG2V2.Name)
       If .SelectCount > 0 Then
-        Me.lblPostCount.Text = .SelectCount().ToString() & "行のデータがPCA売上伝票として送信されます。"
+        '        Me.lblPostCount.Text = .SelectCount().ToString() & "行のデータがPCA売上伝票として送信されます。"
       Else
         Me.lblPostCount.Text = ""
       End If
@@ -335,47 +335,58 @@ Public Class Form_SelectPrint
     Dim tmpTokuiCd As String = String.Empty
     Dim tmpHassoCD As String = String.Empty
 
-    tmpGridList = Controlz(DG2V2.Name).GetAllData()
-    'TODO 得意先コード、発送先コード、商品コードで並べる
-    tmpGridList = tmpGridList _
-    .OrderBy(Function(x) x("TokuiCD")) _
-    .ThenBy(Function(x) x("TyokuCD")) _
-    .ThenBy(Function(x) x("ShohinCD")) _
-    .ToList()
+    Try
+      tmpGridList = Controlz(DG2V2.Name).GetAllData()
+      'TODO 得意先コード、発送先コード、商品コードで並べる
+      tmpGridList = tmpGridList _
+      .OrderBy(Function(x) x("TokuiCD")) _
+      .ThenBy(Function(x) x("TyokuCD")) _
+      .ThenBy(Function(x) x("ShohinCD")) _
+      .ToList()
 
-    ' 伝票番号取得 
-    'tmpSlipNumber = AssignNumber(tmpDbCutJ)
-    'tmpLineNumber = 1
+      ' 伝票番号取得 
+      'tmpSlipNumber = AssignNumber(tmpDbCutJ)
+      'tmpLineNumber = 1
 
-    For Each tmpGridData As Dictionary(Of String, String) In tmpGridList
+      For Each tmpGridData As Dictionary(Of String, String) In tmpGridList
 
-      'TODO 得意先、発送先が変わったら、採番する。それまで行Noは更新
-      If tmpTokuiCd <> tmpGridData("TokuiCD") _
-        OrElse tmpHassoCD <> tmpGridData("TyokuCD") Then
-        tmpSlipNumber = AssignNumber(tmpDbCutJ)
-        tmpLineNumber = 1
+        ' 選択データのみ対象
+        If tmpGridData("SelecterCol") <> "〇" Then
+          Continue For
+        End If
 
-        prmDenpyoList.Add(tmpSlipNumber.ToString.PadLeft(DENPYO_NUMBER_LENGTH, "0"c))
-        tmpTokuiCd = tmpGridData("TokuiCD")
-        tmpHassoCD = tmpGridData("TyokuCD")
-      End If
+        If tmpLineNumber > 99 Then
+          Throw New Exception(("100行以上の明細を追加することはできません。"))
+        End If
 
-      Dim UpdGridData As New Dictionary(Of String, String)
+        'TODO 得意先、発送先が変わったら、採番する。それまで行Noは更新
+        If tmpTokuiCd <> tmpGridData("TokuiCD") _
+          OrElse tmpHassoCD <> tmpGridData("TyokuCD") Then
+          tmpSlipNumber = AssignNumber(tmpDbCutJ)
+          tmpLineNumber = 1
 
-      ' 選択データのみ対象
-      If tmpGridData("SelecterCol") <> "〇" Then
-        Continue For
-      End If
+          prmDenpyoList.Add(tmpSlipNumber.ToString.PadLeft(DENPYO_NUMBER_LENGTH, "0"c))
+          tmpTokuiCd = tmpGridData("TokuiCD")
+          tmpHassoCD = tmpGridData("TyokuCD")
+        End If
 
-      UpdGridData = tmpGridData
-      UpdGridData.Add("DenNo2", tmpSlipNumber)
-      UpdGridData.Add("GyoNo2", tmpLineNumber)
+        Dim UpdGridData As New Dictionary(Of String, String)
 
-      tmpDbCutJ.Execute(SqlUpdateJisseki(UpdGridData))
+        UpdGridData = tmpGridData
+        UpdGridData.Add("DenNo2", tmpSlipNumber)
+        UpdGridData.Add("GyoNo2", tmpLineNumber)
 
-      tmpLineNumber += 1
+        tmpDbCutJ.Execute(SqlUpdateJisseki(UpdGridData))
 
-    Next
+        tmpLineNumber += 1
+
+      Next
+
+    Catch ex As Exception
+      Throw New Exception(ex.Message)
+      ComWriteErrLog(ex)
+    End Try
+
 
   End Sub
 

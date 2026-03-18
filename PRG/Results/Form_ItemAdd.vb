@@ -174,6 +174,17 @@ Public Class ItemAddForm
   ''' <param name="sender"></param>
   ''' <param name="e"></param>
   Private Sub TxtNohinSuryo_Validating(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles TxtHuteikanNohinSuryo.Validating, TxtHuteikanTanka.Validating, TxtTeikanNohinSuryo.Validating, TxtTeikanTanka.Validating
+    ' 末尾が小数点なら削除
+    Dim tb As TextBox = CType(sender, TextBox)
+    Dim input As String = tb.Text   ' ← これで取得できる
+
+    ' 末尾が小数点なら削除
+    If input.EndsWith(".") Then
+      input = input.TrimEnd("."c)
+      tb.Text = input
+    End If
+
+
     '金額計算処理
     KingakuCalc()
   End Sub
@@ -843,11 +854,6 @@ Public Class ItemAddForm
     ' 先頭が小数点なら削除
     If cleanText.StartsWith(".") Then
       cleanText = cleanText.TrimStart("."c)
-    End If
-
-    ' 末尾が小数点なら削除
-    If cleanText.EndsWith(".") Then
-      cleanText = cleanText.TrimEnd("."c)
     End If
 
     tb.Text = cleanText
