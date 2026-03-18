@@ -48,18 +48,18 @@ Partial Class Form_SelectPrint
         Me.DataGridView1.Name = "DataGridView1"
         Me.DataGridView1.RowHeadersWidth = 51
         Me.DataGridView1.RowTemplate.Height = 21
-        Me.DataGridView1.Size = New System.Drawing.Size(1411, 258)
+        Me.DataGridView1.Size = New System.Drawing.Size(1411, 235)
         Me.DataGridView1.TabIndex = 2
         '
         'DataGridView2
         '
         Me.DataGridView2.BackgroundColor = System.Drawing.SystemColors.Control
         Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView2.Location = New System.Drawing.Point(20, 420)
+        Me.DataGridView2.Location = New System.Drawing.Point(20, 396)
         Me.DataGridView2.Name = "DataGridView2"
         Me.DataGridView2.RowHeadersWidth = 51
         Me.DataGridView2.RowTemplate.Height = 21
-        Me.DataGridView2.Size = New System.Drawing.Size(1411, 389)
+        Me.DataGridView2.Size = New System.Drawing.Size(1411, 300)
         Me.DataGridView2.TabIndex = 1
         Me.DataGridView2.TabStop = False
         '
@@ -124,7 +124,7 @@ Partial Class Form_SelectPrint
         Me.lblItemDetailListStat.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblItemDetailListStat.Font = New System.Drawing.Font("MS UI Gothic", 14.26415!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.lblItemDetailListStat.ForeColor = System.Drawing.Color.Black
-        Me.lblItemDetailListStat.Location = New System.Drawing.Point(20, 390)
+        Me.lblItemDetailListStat.Location = New System.Drawing.Point(20, 366)
         Me.lblItemDetailListStat.Name = "lblItemDetailListStat"
         Me.lblItemDetailListStat.Size = New System.Drawing.Size(1411, 31)
         Me.lblItemDetailListStat.TabIndex = 15
@@ -150,7 +150,7 @@ Partial Class Form_SelectPrint
         Me.lblInformation.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblInformation.Font = New System.Drawing.Font("MS UI Gothic", 14.26415!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.lblInformation.ForeColor = System.Drawing.Color.Navy
-        Me.lblInformation.Location = New System.Drawing.Point(0, 849)
+        Me.lblInformation.Location = New System.Drawing.Point(0, 744)
         Me.lblInformation.Name = "lblInformation"
         Me.lblInformation.Size = New System.Drawing.Size(1452, 29)
         Me.lblInformation.TabIndex = 18
@@ -163,7 +163,7 @@ Partial Class Form_SelectPrint
         Me.lblUnSendCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.lblUnSendCount.Font = New System.Drawing.Font("MS UI Gothic", 14.26415!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.lblUnSendCount.ForeColor = System.Drawing.Color.Black
-        Me.lblUnSendCount.Location = New System.Drawing.Point(1168, 808)
+        Me.lblUnSendCount.Location = New System.Drawing.Point(1168, 703)
         Me.lblUnSendCount.Name = "lblUnSendCount"
         Me.lblUnSendCount.Size = New System.Drawing.Size(263, 31)
         Me.lblUnSendCount.TabIndex = 19
@@ -175,7 +175,7 @@ Partial Class Form_SelectPrint
         Me.lblPostCount.AutoSize = True
         Me.lblPostCount.Font = New System.Drawing.Font("MS UI Gothic", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.lblPostCount.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(0, Byte), Integer), CType(CType(160, Byte), Integer))
-        Me.lblPostCount.Location = New System.Drawing.Point(23, 820)
+        Me.lblPostCount.Location = New System.Drawing.Point(23, 715)
         Me.lblPostCount.Name = "lblPostCount"
         Me.lblPostCount.Size = New System.Drawing.Size(93, 27)
         Me.lblPostCount.TabIndex = 21
@@ -251,7 +251,7 @@ Partial Class Form_SelectPrint
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(13.0!, 24.0!)
         Me.BackColor = System.Drawing.SystemColors.AppWorkspace
-        Me.ClientSize = New System.Drawing.Size(1451, 877)
+        Me.ClientSize = New System.Drawing.Size(1451, 773)
         Me.Controls.Add(Me.TxtMstCustomer1)
         Me.Controls.Add(Me.btnShowLogForm)
         Me.Controls.Add(Me.Label3)
@@ -272,6 +272,7 @@ Partial Class Form_SelectPrint
         Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.KeyPreview = True
         Me.Name = "Form_SelectPrint"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.DataGridView2, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)

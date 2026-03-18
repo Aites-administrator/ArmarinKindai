@@ -191,11 +191,11 @@ Public Class Form_TokuisakiShohinMasterList
     prmChild.ItemCodeTextValue = ScaleDetail.Rows(i).Cells("商品コード").Value
     prmChild.ItemNameTextValue = ScaleDetail.Rows(i).Cells("商品名").Value
     prmChild.ItemNameKanaTextValue = ScaleDetail.Rows(i).Cells("商品カナ").Value
-    prmChild.HyojunTankaTextValue = ScaleDetail.Rows(i).Cells("定金額").Value
-    prmChild.TaniTextValue = ScaleDetail.Rows(i).Cells("単位").Value
-    prmChild.IrisuTextValue = ScaleDetail.Rows(i).Cells("入数").Value
-    prmChild.NouhinTankaTextValue = ScaleDetail.Rows(i).Cells("卸単価").Value
-    prmChild.TokuisakiTankaTextValue = ScaleDetail.Rows(i).Cells("単価").Value
+    'prmChild.HyojunTankaTextValue = ScaleDetail.Rows(i).Cells("定金額").Value
+    'prmChild.TaniTextValue = ScaleDetail.Rows(i).Cells("単位").Value
+    'prmChild.IrisuTextValue = ScaleDetail.Rows(i).Cells("入数").Value
+    prmChild.NouhinTankaTextValue = ScaleDetail.Rows(i).Cells("単価").Value
+    'prmChild.TokuisakiTankaTextValue = ScaleDetail.Rows(i).Cells("単価").Value
 
   End Sub
   Public Sub SelectScaleMaster()
@@ -246,11 +246,11 @@ Public Class Form_TokuisakiShohinMasterList
     sql &= "    ,	ShohinCD 商品コード "
     sql &= "    ,	ShohinNM 商品名 "
     sql &= "    ,	ShohinKana 商品カナ "
-    sql &= "    ,	Tani 単位 "
-    sql &= "    ,	Irisu 入数 "
-    sql &= "    ,	HyojunKakaku 定金額 "
-    sql &= "    ,	Baika 卸単価 "
-    sql &= "    ,	Tanka 単価 "
+    'sql &= "    ,	Tani 単位 "
+    'sql &= "    ,	Irisu 入数 "
+    'sql &= "    ,	HyojunKakaku 定金額 "
+    sql &= "    ,	Baika 単価 "
+    'sql &= "    ,	Tanka 単価 "
     sql &= "    ,	TDATE 登録日時 "
     sql &= " FROM"
     sql &= "     MST_TOKUISAKI_SHOHIN"

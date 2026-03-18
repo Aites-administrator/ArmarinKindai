@@ -52,9 +52,10 @@ Partial Class Form_TokuisakiShohinMasterDetail
         'BtnCreate
         '
         Me.BtnCreate.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.BtnCreate.Location = New System.Drawing.Point(440, 427)
+        Me.BtnCreate.Location = New System.Drawing.Point(587, 534)
+        Me.BtnCreate.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.BtnCreate.Name = "BtnCreate"
-        Me.BtnCreate.Size = New System.Drawing.Size(123, 43)
+        Me.BtnCreate.Size = New System.Drawing.Size(164, 54)
         Me.BtnCreate.TabIndex = 11
         Me.BtnCreate.Text = "F1:登録"
         Me.BtnCreate.UseVisualStyleBackColor = True
@@ -63,68 +64,80 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.Label6.AutoSize = True
         Me.Label6.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label6.Location = New System.Drawing.Point(6, 286)
+        Me.Label6.Location = New System.Drawing.Point(8, 358)
+        Me.Label6.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(57, 30)
+        Me.Label6.Size = New System.Drawing.Size(73, 37)
         Me.Label6.TabIndex = 86
         Me.Label6.Text = "単価"
+        Me.Label6.Visible = False
         '
         'Label5
         '
         Me.Label5.AutoSize = True
         Me.Label5.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label5.Location = New System.Drawing.Point(6, 247)
+        Me.Label5.Location = New System.Drawing.Point(8, 309)
+        Me.Label5.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(79, 30)
+        Me.Label5.Size = New System.Drawing.Size(73, 37)
         Me.Label5.TabIndex = 85
-        Me.Label5.Text = "卸単価"
+        Me.Label5.Text = "単価"
         '
         'TxtTokuisakiTanka
         '
         Me.TxtTokuisakiTanka.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.TxtTokuisakiTanka.Location = New System.Drawing.Point(159, 288)
+        Me.TxtTokuisakiTanka.Location = New System.Drawing.Point(212, 360)
+        Me.TxtTokuisakiTanka.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.TxtTokuisakiTanka.MaxLength = 7
         Me.TxtTokuisakiTanka.Name = "TxtTokuisakiTanka"
-        Me.TxtTokuisakiTanka.Size = New System.Drawing.Size(147, 33)
+        Me.TxtTokuisakiTanka.Size = New System.Drawing.Size(195, 39)
         Me.TxtTokuisakiTanka.TabIndex = 10
+        Me.TxtTokuisakiTanka.Visible = False
         '
         'TxtNouhinTanka
         '
         Me.TxtNouhinTanka.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.TxtNouhinTanka.Location = New System.Drawing.Point(159, 249)
+        Me.TxtNouhinTanka.Location = New System.Drawing.Point(212, 311)
+        Me.TxtNouhinTanka.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.TxtNouhinTanka.MaxLength = 7
         Me.TxtNouhinTanka.Name = "TxtNouhinTanka"
-        Me.TxtNouhinTanka.Size = New System.Drawing.Size(147, 33)
+        Me.TxtNouhinTanka.Size = New System.Drawing.Size(195, 39)
         Me.TxtNouhinTanka.TabIndex = 9
         '
         'TxtHyojunTanka
         '
         Me.TxtHyojunTanka.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.TxtHyojunTanka.Location = New System.Drawing.Point(159, 210)
+        Me.TxtHyojunTanka.Location = New System.Drawing.Point(212, 262)
+        Me.TxtHyojunTanka.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.TxtHyojunTanka.MaxLength = 7
         Me.TxtHyojunTanka.Name = "TxtHyojunTanka"
-        Me.TxtHyojunTanka.Size = New System.Drawing.Size(147, 33)
+        Me.TxtHyojunTanka.Size = New System.Drawing.Size(195, 39)
         Me.TxtHyojunTanka.TabIndex = 8
+        Me.TxtHyojunTanka.Visible = False
         '
         'Label4
         '
         Me.Label4.AutoSize = True
         Me.Label4.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label4.Location = New System.Drawing.Point(6, 209)
+        Me.Label4.Location = New System.Drawing.Point(8, 261)
+        Me.Label4.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(79, 30)
+        Me.Label4.Size = New System.Drawing.Size(101, 37)
         Me.Label4.TabIndex = 83
         Me.Label4.Text = "定金額"
+        Me.Label4.Visible = False
         '
         'Label3
         '
         Me.Label3.AutoSize = True
         Me.Label3.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label3.Location = New System.Drawing.Point(6, 170)
+        Me.Label3.Location = New System.Drawing.Point(8, 212)
+        Me.Label3.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(57, 30)
+        Me.Label3.Size = New System.Drawing.Size(73, 37)
         Me.Label3.TabIndex = 82
         Me.Label3.Text = "入数"
+        Me.Label3.Visible = False
         '
         'GroupBox1
         '
@@ -146,49 +159,57 @@ Partial Class Form_TokuisakiShohinMasterDetail
         Me.GroupBox1.Controls.Add(Me.TxtItemKana)
         Me.GroupBox1.Controls.Add(Me.NameLabel)
         Me.GroupBox1.Controls.Add(Me.CodeLabel)
-        Me.GroupBox1.Location = New System.Drawing.Point(17, 42)
+        Me.GroupBox1.Location = New System.Drawing.Point(23, 52)
+        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(672, 379)
+        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.GroupBox1.Size = New System.Drawing.Size(896, 474)
         Me.GroupBox1.TabIndex = 89
         Me.GroupBox1.TabStop = False
         '
         'TxtItemName
         '
         Me.TxtItemName.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.TxtItemName.Location = New System.Drawing.Point(278, 58)
+        Me.TxtItemName.Location = New System.Drawing.Point(371, 72)
+        Me.TxtItemName.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.TxtItemName.MaxLength = 10
         Me.TxtItemName.Name = "TxtItemName"
-        Me.TxtItemName.Size = New System.Drawing.Size(388, 33)
+        Me.TxtItemName.Size = New System.Drawing.Size(516, 39)
         Me.TxtItemName.TabIndex = 4
         '
         'TxtTokuName
         '
         Me.TxtTokuName.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.TxtTokuName.Location = New System.Drawing.Point(278, 15)
+        Me.TxtTokuName.Location = New System.Drawing.Point(371, 19)
+        Me.TxtTokuName.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.TxtTokuName.MaxLength = 10
         Me.TxtTokuName.Name = "TxtTokuName"
         Me.TxtTokuName.ReadOnly = True
-        Me.TxtTokuName.Size = New System.Drawing.Size(388, 33)
+        Me.TxtTokuName.Size = New System.Drawing.Size(516, 39)
         Me.TxtTokuName.TabIndex = 2
         '
         'Label1
         '
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(6, 135)
+        Me.Label1.Location = New System.Drawing.Point(8, 169)
+        Me.Label1.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(57, 30)
+        Me.Label1.Size = New System.Drawing.Size(73, 37)
         Me.Label1.TabIndex = 90
         Me.Label1.Text = "単位"
+        Me.Label1.Visible = False
         '
         'TxtTani
         '
         Me.TxtTani.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.TxtTani.Location = New System.Drawing.Point(159, 136)
+        Me.TxtTani.Location = New System.Drawing.Point(212, 170)
+        Me.TxtTani.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.TxtTani.MaxLength = 4
         Me.TxtTani.Name = "TxtTani"
-        Me.TxtTani.Size = New System.Drawing.Size(147, 33)
+        Me.TxtTani.Size = New System.Drawing.Size(195, 39)
         Me.TxtTani.TabIndex = 6
+        Me.TxtTani.Visible = False
         '
         'CmbMstItem1
         '
@@ -203,9 +224,10 @@ Partial Class Form_TokuisakiShohinMasterDetail
         Me.CmbMstItem1.EventCancel = False
         Me.CmbMstItem1.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.CmbMstItem1.FormattingEnabled = True
-        Me.CmbMstItem1.Location = New System.Drawing.Point(159, 57)
+        Me.CmbMstItem1.Location = New System.Drawing.Point(212, 71)
+        Me.CmbMstItem1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.CmbMstItem1.Name = "CmbMstItem1"
-        Me.CmbMstItem1.Size = New System.Drawing.Size(113, 34)
+        Me.CmbMstItem1.Size = New System.Drawing.Size(149, 40)
         Me.CmbMstItem1.SkipChkCode = False
         Me.CmbMstItem1.TabIndex = 3
         Me.CmbMstItem1.ValueMember = "Code"
@@ -223,9 +245,10 @@ Partial Class Form_TokuisakiShohinMasterDetail
         Me.CmbMstCustomer1.EventCancel = False
         Me.CmbMstCustomer1.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.CmbMstCustomer1.FormattingEnabled = True
-        Me.CmbMstCustomer1.Location = New System.Drawing.Point(159, 16)
+        Me.CmbMstCustomer1.Location = New System.Drawing.Point(212, 20)
+        Me.CmbMstCustomer1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.CmbMstCustomer1.Name = "CmbMstCustomer1"
-        Me.CmbMstCustomer1.Size = New System.Drawing.Size(113, 34)
+        Me.CmbMstCustomer1.Size = New System.Drawing.Size(149, 40)
         Me.CmbMstCustomer1.SkipChkCode = True
         Me.CmbMstCustomer1.TabIndex = 1
         Me.CmbMstCustomer1.ValueMember = "Code"
@@ -234,38 +257,43 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.Label2.AutoSize = True
         Me.Label2.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label2.Location = New System.Drawing.Point(6, 96)
+        Me.Label2.Location = New System.Drawing.Point(8, 120)
+        Me.Label2.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(47, 30)
+        Me.Label2.Size = New System.Drawing.Size(59, 37)
         Me.Label2.TabIndex = 81
         Me.Label2.Text = "カナ"
         '
         'TxtIrisu
         '
         Me.TxtIrisu.Font = New System.Drawing.Font("Segoe UI", 14.25!)
-        Me.TxtIrisu.Location = New System.Drawing.Point(159, 171)
+        Me.TxtIrisu.Location = New System.Drawing.Point(212, 214)
+        Me.TxtIrisu.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.TxtIrisu.MaxLength = 4
         Me.TxtIrisu.Name = "TxtIrisu"
-        Me.TxtIrisu.Size = New System.Drawing.Size(147, 33)
+        Me.TxtIrisu.Size = New System.Drawing.Size(195, 39)
         Me.TxtIrisu.TabIndex = 7
+        Me.TxtIrisu.Visible = False
         '
         'TxtItemKana
         '
         Me.TxtItemKana.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.TxtItemKana.ImeMode = System.Windows.Forms.ImeMode.KatakanaHalf
-        Me.TxtItemKana.Location = New System.Drawing.Point(159, 97)
+        Me.TxtItemKana.Location = New System.Drawing.Point(212, 121)
+        Me.TxtItemKana.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.TxtItemKana.MaxLength = 36
         Me.TxtItemKana.Name = "TxtItemKana"
-        Me.TxtItemKana.Size = New System.Drawing.Size(507, 33)
+        Me.TxtItemKana.Size = New System.Drawing.Size(675, 39)
         Me.TxtItemKana.TabIndex = 5
         '
         'NameLabel
         '
         Me.NameLabel.AutoSize = True
         Me.NameLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.NameLabel.Location = New System.Drawing.Point(6, 57)
+        Me.NameLabel.Location = New System.Drawing.Point(8, 71)
+        Me.NameLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.NameLabel.Name = "NameLabel"
-        Me.NameLabel.Size = New System.Drawing.Size(106, 30)
+        Me.NameLabel.Size = New System.Drawing.Size(135, 37)
         Me.NameLabel.TabIndex = 79
         Me.NameLabel.Text = "商品コード"
         '
@@ -273,18 +301,20 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.CodeLabel.AutoSize = True
         Me.CodeLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CodeLabel.Location = New System.Drawing.Point(6, 15)
+        Me.CodeLabel.Location = New System.Drawing.Point(8, 19)
+        Me.CodeLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.CodeLabel.Name = "CodeLabel"
-        Me.CodeLabel.Size = New System.Drawing.Size(128, 30)
+        Me.CodeLabel.Size = New System.Drawing.Size(163, 37)
         Me.CodeLabel.TabIndex = 77
         Me.CodeLabel.Text = "得意先コード"
         '
         'CloseButton
         '
         Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CloseButton.Location = New System.Drawing.Point(569, 427)
+        Me.CloseButton.Location = New System.Drawing.Point(759, 534)
+        Me.CloseButton.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.CloseButton.Name = "CloseButton"
-        Me.CloseButton.Size = New System.Drawing.Size(123, 43)
+        Me.CloseButton.Size = New System.Drawing.Size(164, 54)
         Me.CloseButton.TabIndex = 12
         Me.CloseButton.Text = "F10:終了"
         Me.CloseButton.UseVisualStyleBackColor = True
@@ -293,23 +323,25 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.TitleLabel.AutoSize = True
         Me.TitleLabel.Font = New System.Drawing.Font("Segoe UI", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TitleLabel.Location = New System.Drawing.Point(12, 9)
+        Me.TitleLabel.Location = New System.Drawing.Point(16, 11)
+        Me.TitleLabel.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.TitleLabel.Name = "TitleLabel"
-        Me.TitleLabel.Size = New System.Drawing.Size(216, 30)
+        Me.TitleLabel.Size = New System.Drawing.Size(274, 37)
         Me.TitleLabel.TabIndex = 86
         Me.TitleLabel.Text = "得意先商品マスタ詳細"
         '
         'Form_TokuisakiShohinMasterDetail
         '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(8.0!, 15.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(703, 488)
+        Me.ClientSize = New System.Drawing.Size(937, 610)
         Me.Controls.Add(Me.BtnCreate)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.CloseButton)
         Me.Controls.Add(Me.TitleLabel)
         Me.DoubleBuffered = True
         Me.KeyPreview = True
+        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
         Me.Name = "Form_TokuisakiShohinMasterDetail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "36"

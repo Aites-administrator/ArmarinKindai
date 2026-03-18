@@ -234,12 +234,10 @@ Public Class Form_ResultList
           GetDenpyoNo(Me.TxtDenNo.Text, DataRow.Cells("行No").Value, ChkSaiban(DataRow, tmpBeforeNohinDay, tmpBeforeTokuiCd, DataRow.Cells("行No").Value))
         End If
 
-
-
         InsertData("UketukeDay") = Me.TxtNohinDay.Text
         InsertData("NohinDay") = DateFormatChange(typDateFormat.FORMAT_STRING, Me.TxtNohinDay.Text)
         InsertData("Denku") = Me.CmbMstDenku1.Text
-        InsertData("SeikyuDay") = ""
+        'InsertData("SeikyuDay") = ""
         InsertData("DenNo") = Me.TxtDenNo.Text
         InsertData("GyoNo") = DataRow.Cells("行No").Value
         InsertData("TokuiCD") = Me.CmbMstCustomer1.Text
@@ -251,20 +249,21 @@ Public Class Form_ResultList
         InsertData("TokuiAdd2") = tmpTokuiDt.Rows(0).Item("TokuiAdd2").ToString
         InsertData("TokuiTel") = Me.TxtTokuiTel.Text
         InsertData("TyokuCD") = Me.CmbMstChoku1.Text
+        InsertData("TyokuNM") = Me.TxtChokuName.Text
         InsertData("SenpoTantoNM") = tmpTokuiDt.Rows(0).Item("SenpoTantoNm").ToString
-        InsertData("BumonCD") = Me.TxtBumonCd.Text
-        InsertData("UTantoCD") = Me.CmbMstTanto1.Text
-        InsertData("TekiyoCD") = ""
-        InsertData("TekiyoNM") = Me.TxtTekiyo.Text
-        InsertData("BunruiCD") = Me.TxtBunruiCd.Text
-        InsertData("DenKBN") = Me.TxtDenpyoKbn.Text
+        'InsertData("BumonCD") = Me.TxtBumonCd.Text
+        'InsertData("UTantoCD") = Me.CmbMstTanto1.Text
+        'InsertData("TekiyoCD") = ""
+        'InsertData("TekiyoNM") = Me.TxtTekiyo.Text
+        'InsertData("BunruiCD") = Me.TxtBunruiCd.Text
+        'InsertData("DenKBN") = Me.TxtDenpyoKbn.Text
         InsertData("ShohinCD") = DataRow.Cells("商品コード").Value
         InsertData("ShohinNM") = DataRow.Cells("商品名").Value
         InsertData("ShohinKN") = tmpShohinDt.Rows(0).Item("ShohinKN").ToString
         InsertData("SMstKBN") = tmpShohinDt.Rows(0).Item("SMstKBN").ToString
         InsertData("Ku") = Me.CmbMstUriKbn1.Text
-        InsertData("SokoCD") = ""
-        InsertData("Irisu") = DataRow.Cells("個数").Value
+        'InsertData("SokoCD") = ""
+        InsertData("Irisu") = "0" 'DataRow.Cells("個数").Value
         InsertData("Hakosu") = DataRow.Cells("定貫タイプ").Value
         InsertData("Suryo") = DataRow.Cells("数量").Value
         InsertData("Tani") = DataRow.Cells("単位").Value
@@ -283,19 +282,19 @@ Public Class Form_ResultList
         InsertData("UriTanka") = "0"
         InsertData("Baikagaku") = "0"
         InsertData("Kikaku") = "0"
-        InsertData("Iro") = tmpShohinDt.Rows(0).Item("Iro").ToString
+        InsertData("Iro") = DataRow.Cells("尾数").Value 'tmpShohinDt.Rows(0).Item("Iro").ToString
         InsertData("Size") = tmpShohinDt.Rows(0).Item("Size").ToString
         InsertData("JutyuSu") = ""
         InsertData("Kingaku") = DataRow.Cells("金額").Value
-        InsertData("ShukaPRTFLG") = "0"
+        'InsertData("ShukaPRTFLG") = "0"
         InsertData("NohinPRTFLG") = "0"
-        InsertData("PCAFLG") = "0"
-        InsertData("JANCD") = ""
-        InsertData("SakuseiDay") = ""
-        InsertData("OpenFLG") = ""
-        InsertData("HoryuFLG") = ""
-        InsertData("ShatenCD") = ""
-        InsertData("TorihikisakiCD") = ""
+        'InsertData("PCAFLG") = "0"
+        'InsertData("JANCD") = ""
+        'InsertData("SakuseiDay") = ""
+        'InsertData("OpenFLG") = ""
+        'InsertData("HoryuFLG") = ""
+        'InsertData("ShatenCD") = ""
+        'InsertData("TorihikisakiCD") = ""
         InsertData("Memo1") = DataRow.Cells("生簀ロット番号").Value
         'InsertData("Memo2") = DataRow.Cells("メモ").Value
         InsertData("Hoka1") = Me.TxtHoka1.Text
@@ -916,6 +915,7 @@ Public Class Form_ResultList
     sql &= "	,	TyokuCD 直送先コード "
     sql &= "	,	ShohinCD ShohinCD "
     sql &= "	,	ShohinNM ShohinNM "
+    sql &= "	,	Iro Iro"
     sql &= "	,	Irisu Irisu"
     sql &= "	,	Tani Tani "
     sql &= "	,	JutyuSu 受注数 "
@@ -1125,7 +1125,7 @@ Public Class Form_ResultList
       DataGridView1.Rows(tmpCnt).Cells("行No").Value = tmpRow("GyoNo").ToString
       DataGridView1.Rows(tmpCnt).Cells("商品コード").Value = tmpRow("ShohinCD").ToString
       DataGridView1.Rows(tmpCnt).Cells("商品名").Value = tmpRow("ShohinNM").ToString
-      DataGridView1.Rows(tmpCnt).Cells("個数").Value = tmpRow("Irisu").ToString
+      DataGridView1.Rows(tmpCnt).Cells("尾数").Value = tmpRow("Iro").ToString 'tmpRow("Irisu").ToString
       DataGridView1.Rows(tmpCnt).Cells("単位").Value = tmpRow("Tani").ToString
       DataGridView1.Rows(tmpCnt).Cells("定貫タイプ").Value = tmpRow("Hakosu").ToString
       DataGridView1.Rows(tmpCnt).Cells("数量").Value = tmpRow("Suryo").ToString
@@ -1134,6 +1134,7 @@ Public Class Form_ResultList
       DataGridView1.Rows(tmpCnt).Cells("生簀ロット番号").Value = tmpRow("Memo1").ToString
       'DataGridView1.Rows(tmpCnt).Cells("メモ").Value = tmpRow("Memo2").ToString
       DataGridView1.Rows(tmpCnt).Cells("原産地").Value = tmpRow("Biko").ToString
+      DataGridView1.Columns("定貫タイプ").Visible = False
       tmpCnt += 1
 
     Next
@@ -1211,7 +1212,7 @@ Public Class Form_ResultList
       .Columns.Add(SetColumn("商品名"))
       .Columns.Add(SetColumn("定貫タイプ"))
       .Columns.Add(SetColumn("数量"))
-      .Columns.Add(SetColumn("個数"))
+      .Columns.Add(SetColumn("尾数"))
       .Columns.Add(SetColumn("単位"))
       .Columns.Add(SetColumn("単価"))
       .Columns.Add(SetColumn("金額"))

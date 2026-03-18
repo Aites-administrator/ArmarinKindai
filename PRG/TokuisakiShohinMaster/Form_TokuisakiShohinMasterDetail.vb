@@ -122,6 +122,8 @@ Public Class Form_TokuisakiShohinMasterDetail
         '更新メソッド呼出し
         UpdateScaleMaster()
     End Select
+
+
   End Sub
   Private Sub UnitNumberText_KeyPress(sender As Object, e As KeyPressEventArgs)
     'キーが [0]～[9] または [BackSpace] 以外の場合イベントをキャンセル

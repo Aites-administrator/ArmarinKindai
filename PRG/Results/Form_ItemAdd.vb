@@ -469,7 +469,7 @@ Public Class ItemAddForm
           tmpDataGridRow.Cells("行No").Value = Me.TxtGyoNo.Text
           tmpDataGridRow.Cells("商品コード").Value = Me.CmbMstItem1.Text
           tmpDataGridRow.Cells("商品名").Value = Me.TxtItemName.Text
-          tmpDataGridRow.Cells("個数").Value = If(Me.TxtKeiryoFlg.Text = HU_TEI_KAN, Me.TxtHuteikanKosu.Text, Me.TxtTeikanNohinSuryo.Text)
+          tmpDataGridRow.Cells("尾数").Value = If(Me.TxtKeiryoFlg.Text = HU_TEI_KAN, Me.TxtHuteikanKosu.Text, Me.TxtTeikanNohinSuryo.Text)
           tmpDataGridRow.Cells("定貫タイプ").Value = Me.TxtKeiryoFlg.Text
           tmpDataGridRow.Cells("単位").Value = If(Me.TxtKeiryoFlg.Text = HU_TEI_KAN, Me.TxtHuteikanTani.Text, Me.TxtTeikanTani.Text)
           tmpDataGridRow.Cells("数量").Value = If(Me.TxtKeiryoFlg.Text = HU_TEI_KAN, Me.TxtHuteikanNohinSuryo.Text, "")
@@ -498,7 +498,7 @@ Public Class ItemAddForm
         .Cells("行No").Value = CInt(DataGridView1.Rows(DataGridView1.Rows.Count - 2).Cells("行No").Value) + 1
         .Cells("商品コード").Value = Me.CmbMstItem1.Text
         .Cells("商品名").Value = Me.TxtItemName.Text
-        .Cells("個数").Value = If(CmbTeikan.SelectedIndex = TEI_KAN, If(String.IsNullOrWhiteSpace(Me.TxtTeikanNohinSuryo.Text), "0", Me.TxtTeikanNohinSuryo.Text), If(String.IsNullOrWhiteSpace(Me.TxtHuteikanKosu.Text), "0", Me.TxtHuteikanKosu.Text))
+        .Cells("尾数").Value = If(CmbTeikan.SelectedIndex = TEI_KAN, If(String.IsNullOrWhiteSpace(Me.TxtTeikanNohinSuryo.Text), "0", Me.TxtTeikanNohinSuryo.Text), If(String.IsNullOrWhiteSpace(Me.TxtHuteikanKosu.Text), "0", Me.TxtHuteikanKosu.Text))
         .Cells("定貫タイプ").Value = Me.TxtKeiryoFlg.Text
         .Cells("単位").Value = Me.TxtHuteikanTani.Text
         .Cells("数量").Value = If(CmbTeikan.SelectedIndex = HU_TEI_KAN, If(String.IsNullOrWhiteSpace(Me.TxtHuteikanNohinSuryo.Text), "0", Me.TxtHuteikanNohinSuryo.Text), "")
@@ -579,7 +579,7 @@ Public Class ItemAddForm
 
     If CmbTeikan.SelectedIndex = TEI_KAN AndAlso
       String.IsNullOrWhiteSpace(TxtTeikanNohinSuryo.Text) Then
-      ComMessageBox("個数を入力してください。", PRG_TITLE, typMsgBox.MSG_WARNING)
+      ComMessageBox("尾数を入力してください。", PRG_TITLE, typMsgBox.MSG_WARNING)
       TxtTeikanNohinSuryo.Focus()
       rtn = False
       Return rtn
@@ -679,13 +679,13 @@ Public Class ItemAddForm
     TxtKeiryoFlg.Text = DataGridView2.Rows(prmIndex).Cells("定貫タイプ").Value
 
     If TxtKeiryoFlg.Text = TEI_KAN Then
-      Me.TxtTeikanNohinSuryo.Text = DataGridView2.Rows(prmIndex).Cells("個数").Value
+      Me.TxtTeikanNohinSuryo.Text = DataGridView2.Rows(prmIndex).Cells("尾数").Value
       Me.TxtTeikanTani.Text = DataGridView2.Rows(prmIndex).Cells("単位").Value
       Me.TxtTeikanTanka.Text = DataGridView2.Rows(prmIndex).Cells("単価").Value
       Me.TxtTeikanKingaku.Text = DataGridView2.Rows(prmIndex).Cells("金額").Value
 
     Else
-      Me.TxtHuteikanKosu.Text = DataGridView2.Rows(prmIndex).Cells("個数").Value
+      Me.TxtHuteikanKosu.Text = DataGridView2.Rows(prmIndex).Cells("尾数").Value
       Me.TxtHuteikanNohinSuryo.Text = DataGridView2.Rows(prmIndex).Cells("数量").Value
       Me.TxtHuteikanTani.Text = DataGridView2.Rows(prmIndex).Cells("単位").Value
       Me.TxtHuteikanTanka.Text = DataGridView2.Rows(prmIndex).Cells("単価").Value
@@ -714,7 +714,7 @@ Public Class ItemAddForm
       .Columns.Add(SetColumn("行No"))
       .Columns.Add(SetColumn("商品コード"))
       .Columns.Add(SetColumn("商品名"))
-      .Columns.Add(SetColumn("個数"))
+      .Columns.Add(SetColumn("尾数"))
       .Columns.Add(SetColumn("単位"))
       .Columns.Add(SetColumn("数量"))
       .Columns.Add(SetColumn("単価"))
@@ -757,6 +757,7 @@ Public Class ItemAddForm
     sql &= " 	,	ShohinNM ShohinNM "
     sql &= " 	,	ISNULL(ShohinKN,'') ShohinNMカナ "
     sql &= " 	,	ISNULL(SShohinCD,'') 先方ShohinCD "
+    sql &= " 	,	Iro 尾数 "
     sql &= " 	,	Irisu 入数 "
     sql &= " 	,	Hakosu Hakosu "
     sql &= " 	,	Tani Tani "

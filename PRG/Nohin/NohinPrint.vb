@@ -582,24 +582,32 @@ Public Class NohinPrint
     Dim ReportType As String = ReadSettingIniFile("REPRINT_TYPE", "VALUE")
     Dim ReportWkTable As String = "WK_NOHIN"
 
-    If RdoPrint.Checked Then
-      tmpRdoPrint = 1
-    Else
-      tmpRdoPrint = 0
-    End If
+    Try
+      If RdoPrint.Checked Then
+        tmpRdoPrint = 1
+      Else
+        tmpRdoPrint = 0
+      End If
 
-    If RdoAll.Checked Then
-      tmpRdoPrint = -1
-    End If
+      If RdoAll.Checked Then
+        tmpRdoPrint = -1
+      End If
 
-    tmpWhereList.Add("ISNULL(DenNO2,DenNO) = ", "'" & DataGridView1.CurrentRow.Cells("伝票番号").Value & "'")
-    If tmpRdoPrint <> -1 Then
-      tmpWhereList.Add("NohinPRTFLG =", "'" & tmpRdoPrint & "'")
-    End If
+      tmpWhereList.Add("ISNULL(DenNO2,DenNO) = ", "'" & DataGridView1.CurrentRow.Cells("伝票番号").Value & "'")
+      If tmpRdoPrint <> -1 Then
+        tmpWhereList.Add("NohinPRTFLG =", "'" & tmpRdoPrint & "'")
+      End If
 
-    ReportName = If(ReportType = ClsCommonGlobalData.REPORT_TYPE_SHUKKA, "R_SHUKKA", "R_NOHIN")
+      ReportName = If(ReportType = ClsCommonGlobalData.REPORT_TYPE_SHUKKA, "R_SHUKKA", "R_NOHIN")
 
-    ClsPrintingProcess.PrintProcess(ClsCommonGlobalData.PRINT_PREVIEW, ReportWkTable, ReportName, tmpWhereList)
+      ClsPrintingProcess.PrintProcess(ClsCommonGlobalData.PRINT_PREVIEW, ReportWkTable, ReportName, tmpWhereList)
+
+      '画面更新
+      DispGrid()
+    Catch ex As Exception
+      ComWriteErrLog(ex, False)
+    End Try
+
 
   End Sub
 

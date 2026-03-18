@@ -590,6 +590,8 @@ Public Class Form_SelectPrint
                                 , PRG_TITLE _
                                 , typMsgBox.MSG_WARNING _
                                 , typMsgBoxButton.BUTTON_OK)
+        prmCmbMstCustomer.Text = String.Empty
+        prmTxtLabelCustomer.Text = String.Empty
         rtn = True
       End If
     End If
@@ -677,7 +679,7 @@ Public Class Form_SelectPrint
   Private Sub Form_SelectPrint_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
     ' IPC通信起動
-    InitIPC(PRG_ID)
+    'InitIPC(PRG_ID)
 
     Me.Text = PRG_TITLE
 
@@ -795,6 +797,7 @@ Public Class Form_SelectPrint
       _DeliveryDate = Me.CmbDateProcessing1.SelectedValue.ToString()
     End If
 
+    CmbMstCustomerValidating(CmbMstCustomer1, TxtMstCustomer1)
     ' 得意先一覧再表示
     If SrcSqlCunstomerList <> CreateGrid2Src1() Then
       SrcSqlCunstomerList = CreateGrid2Src1()
@@ -804,7 +807,6 @@ Public Class Form_SelectPrint
         .SrcSql = SrcSqlCunstomerList
         .AutoSearch = False
       End With
-      CmbMstCustomerValidating(CmbMstCustomer1, TxtMstCustomer1)
 
     End If
 
@@ -1030,22 +1032,9 @@ Public Class Form_SelectPrint
   ''' <param name="e"></param>
   Private Sub btnEnd_Click(sender As Object, e As EventArgs) Handles btnEnd.Click
 
-    With Controlz(DG2V1.Name)
-      .AutoSearch = False
-      .ClearSelectedList()
-      .ResetPosition()
-    End With
+    Close()
 
-    With Controlz(DG2V2.Name)
-      .AutoSearch = False
-      .ClearSelectedList()
-      .ResetPosition()
-    End With
 
-    Me.CmbDateProcessing1.SelectedIndex = 0
-    Me.CmbMstCustomer1.SelectedIndex = -1
-
-    Me.Hide()
   End Sub
 
 #End Region
