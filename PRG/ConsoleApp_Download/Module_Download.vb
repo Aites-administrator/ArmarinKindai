@@ -1017,7 +1017,7 @@ Module Module_Download
   ''' <remarks>以下何れかの条件に一致する場合は伝票番号の採番が必要
   '''         ・納品日が変わった
   '''         ・得意先が変わった
-  '''         ・明細行数が21行以上になった
+  '''         ・明細行数が100行以上になった
   '''         ・発送先が変わった </remarks>
   Private Function ChkSaiban(prmDr As DataRow _
                           , ByRef prmBeforeNohinDay As String _
@@ -1029,7 +1029,7 @@ Module Module_Download
     If (prmBeforeNohinDay <> prmDr("JISSEKI_DATE").ToString _
                 OrElse prmTokuiCd <> prmDr("FREE1_CD").ToString _
                 OrElse prmHassousakiCd <> prmDr("FREE2_CD").ToString _
-                OrElse prmGyoNo = 20) Then
+                OrElse prmGyoNo >= 99) Then
       rtn = True
     End If
 
