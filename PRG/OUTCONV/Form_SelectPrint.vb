@@ -804,6 +804,12 @@ Public Class Form_SelectPrint
     Static SrcSqlCunstomerList As String
     Static SrcSqlItemDetailList As String
 
+    '得意先、納品日が変更がないときはスルーする
+    If (lastCmbMstCustomer.Equals(CmbMstCustomer1.Text) = True) _
+      AndAlso (_DeliveryDate.Equals(Me.CmbDateProcessing1.SelectedValue.ToString()) = True) Then
+      Exit Sub
+    End If
+
     If (_DeliveryDate <> Me.CmbDateProcessing1.SelectedValue.ToString()) Then
       _DeliveryDate = Me.CmbDateProcessing1.SelectedValue.ToString()
     End If

@@ -239,17 +239,33 @@ Public Class Form_ResultList
         InsertData("Denku") = Me.CmbMstDenku1.Text
         'InsertData("SeikyuDay") = ""
         Dim tmpDt As New DataTable
-        SqlServer.GetResult(tmpDt, "SELECT Denno,GyoNo FROM trn_jisseki where denno2 = '" & Me.TxtDenNo.Text & "'" & " AND gyono2 = '" & DataRow.Cells("行No").Value & "'")
+        Dim rows() As DataRow
+        SqlServer.GetResult(tmpDt, "SELECT Denno,GyoNo,Denno2,GyoNo2,ShukaPRTFLG FROM trn_jisseki where denno2 = '" & Me.TxtDenNo.Text & "'")
 
         If tmpDt.Rows.Count = 0 Then
+          '通常伝票
           InsertData("DenNo") = Me.TxtDenNo.Text
           InsertData("GyoNo") = DataRow.Cells("行No").Value
         Else
-          InsertData("DenNo") = tmpDt.Rows(0).Item("Denno").ToString
-          InsertData("GyoNo") = tmpDt.Rows(0).Item("GyoNo").ToString
+          '集約伝票
+          rows = tmpDt.Select("GyoNo2 = " & DataRow.Cells("行No").Value)
+          Dim tmpDenoNo As String
+          Dim tmpGyoNo As String
+
+          '追加明細の時に行番号を+1する
+          If rows.Count = 0 Then
+            tmpDenoNo = tmpDt.Rows(0).Item("Denno").ToString()
+            tmpGyoNo = CInt(tmpDt.Compute("MAX(GyoNo)", "")) + 1
+          Else
+            tmpDenoNo = rows(0).Item("Denno").ToString()
+            tmpGyoNo = rows(0).Item("GyoNo").ToString
+          End If
+
+          InsertData("DenNo") = tmpDenoNo
+          InsertData("GyoNo") = tmpGyoNo
+          InsertData("ShukaPRTFLG") = tmpDt.Rows(0).Item("ShukaPRTFLG").ToString
           InsertData("DenNo2") = Me.TxtDenNo.Text
           InsertData("GyoNo2") = DataRow.Cells("行No").Value
-
         End If
         InsertData("TokuiCD") = Me.CmbMstCustomer1.Text
         InsertData("TokuiNM") = Me.TxtTokuName.Text
@@ -297,7 +313,6 @@ Public Class Form_ResultList
         InsertData("Size") = tmpShohinDt.Rows(0).Item("Size").ToString
         InsertData("JutyuSu") = ""
         InsertData("Kingaku") = DataRow.Cells("金額").Value
-        'InsertData("ShukaPRTFLG") = "0"
         InsertData("NohinPRTFLG") = "0"
         InsertData("PCAFLG") = "0"
         'InsertData("JANCD") = ""
@@ -323,7 +338,6 @@ Public Class Form_ResultList
         Dim sql As String = If(tmpJissekiDt.Rows.Count = 0, CreateInsSql("TRN_JISSEKI", InsertData), CreateUpdSql("TRN_JISSEKI", InsertData) & WhereSql)
 
         SqlServer.Execute(sql)
-
 
       Next
 
@@ -913,7 +927,7 @@ Public Class Form_ResultList
     Dim sql As String = String.Empty
     sql &= " SELECT	ISNULL(DenNo2,DenNo) 伝票番号 "
     sql &= "	,	ISNULL(GyoNo2,GyoNo) GyoNo "
-    sql &= "	,	Format(UketukeDay,'yyyy/MM/dd') 納品日 "
+    'sql &= "	,	Format(UketukeDay,'yyyy/MM/dd') 納品日 "
     sql &= "	,	NohinDay 納品日 "
     sql &= "	,	SeikyuDay 請求日 "
     sql &= "	,	Ku 売上区分 "

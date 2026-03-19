@@ -366,6 +366,11 @@ Public Class NohinPrint
 
       DataGridView1.DataSource = tmpDt
 
+      If tmpDt.Rows.Count = 0 Then
+        Me.TxtMeisaiSu.Text = ""
+        Me.TxtGoukeiKin.Text = ""
+      End If
+
       For Each col As DataGridViewColumn In DataGridView1.Columns
         col.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter
       Next
@@ -449,11 +454,11 @@ Public Class NohinPrint
     sql &= "     ,    PCAFLG "
     sql &= " ORDER BY "
     If Me.RdoUketsukeAsc.Checked Then
-      sql &= " Format(UketukeDay,'yyyy/MM/dd'), "
+      sql &= " NohinDay, "
     End If
 
     If Me.RdoUketsukeDesc.Checked Then
-      sql &= " Format(UketukeDay,'yyyy/MM/dd') Desc, "
+      sql &= " NohinDay Desc, "
     End If
 
     If Me.RdoTokuiAsc.Checked Then
@@ -463,7 +468,7 @@ Public Class NohinPrint
     If Me.RdoTokuiDesc.Checked Then
       sql &= " TokuiCD DESC, "
     End If
-    sql &= " Isnull(DenNo2, DenNo) "
+    sql &= " Isnull(DenNo2, DenNo) desc "
     Return sql
 
   End Function
