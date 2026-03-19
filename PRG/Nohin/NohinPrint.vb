@@ -381,6 +381,7 @@ Public Class NohinPrint
       DataGridView1.Columns("伝区").Visible = False
       DataGridView1.Columns("伝票区分").Visible = False
       DataGridView1.Columns("PCA").Visible = False
+      DataGridView1.Columns("担当者").Visible = False
 
       SetColumnLocation(DataGridView1)
     Catch ex As Exception
