@@ -522,8 +522,8 @@ Public Class OutExcel
         DataGridView1.Rows(tmpCnt).Cells("納品日").Value = tmpRow("納品日").ToString
         DataGridView1.Rows(tmpCnt).Cells("得意先コード").Value = tmpRow("得意先コード").ToString
         DataGridView1.Rows(tmpCnt).Cells("得意先名").Value = tmpRow("得意先名").ToString
-        DataGridView1.Rows(tmpCnt).Cells("直送先コード").Value = tmpRow("直送先コード").ToString
-        DataGridView1.Rows(tmpCnt).Cells("直送先名").Value = tmpRow("直送先名").ToString
+        DataGridView1.Rows(tmpCnt).Cells("発送先コード").Value = tmpRow("発送先コード").ToString
+        DataGridView1.Rows(tmpCnt).Cells("発送先名").Value = tmpRow("発送先名").ToString
         DataGridView1.Rows(tmpCnt).Cells("商品コード").Value = tmpRow("商品コード").ToString
         DataGridView1.Rows(tmpCnt).Cells("商品名").Value = tmpRow("商品名").ToString
         DataGridView1.Rows(tmpCnt).Cells("尾数").Value = tmpRow("尾数").ToString 'なし
@@ -531,8 +531,8 @@ Public Class OutExcel
         DataGridView1.Rows(tmpCnt).Cells("単位").Value = tmpRow("単位").ToString
         DataGridView1.Rows(tmpCnt).Cells("単価").Value = tmpRow("単価").ToString
         DataGridView1.Rows(tmpCnt).Cells("金額").Value = tmpRow("金額").ToString
-        DataGridView1.Rows(tmpCnt).Cells("原産地名").Value = tmpRow("原産地名").ToString
-        DataGridView1.Rows(tmpCnt).Cells("生簀No").Value = tmpRow("生簀No").ToString
+        DataGridView1.Rows(tmpCnt).Cells("原産地").Value = tmpRow("原産地").ToString
+        DataGridView1.Rows(tmpCnt).Cells("生簀ロット番号").Value = tmpRow("生簀ロット番号").ToString
         'DataGridView1.Rows(tmpCnt).Cells("加工日").Value = tmpRow("加工日").ToString
         'DataGridView1.Rows(tmpCnt).Cells("請求日").Value = tmpRow("請求日").ToString
         'DataGridView1.Rows(tmpCnt).Cells("先方担当者名").Value = tmpRow("先方担当者名").ToString
@@ -561,9 +561,11 @@ Public Class OutExcel
 
       Next
 
-    For Each col As DataGridViewColumn In DataGridView1.Columns
-      col.Width = 125
-    Next
+      For Each col As DataGridViewColumn In DataGridView1.Columns
+        col.Width = 125
+      Next
+
+      SetColumnLocation(DataGridView1)
     Catch ex As Exception
       Throw New Exception(ex.Message)
     End Try
@@ -597,8 +599,8 @@ Public Class OutExcel
     DataGridView1.Columns.Add(SetColumn("納品日"))
     DataGridView1.Columns.Add(SetColumn("得意先コード"))
     DataGridView1.Columns.Add(SetColumn("得意先名"))
-    DataGridView1.Columns.Add(SetColumn("直送先コード"))
-    DataGridView1.Columns.Add(SetColumn("直送先名"))
+    DataGridView1.Columns.Add(SetColumn("発送先コード"))
+    DataGridView1.Columns.Add(SetColumn("発送先名"))
     DataGridView1.Columns.Add(SetColumn("商品コード"))
     DataGridView1.Columns.Add(SetColumn("商品名"))
     DataGridView1.Columns.Add(SetColumn("尾数"))
@@ -606,8 +608,8 @@ Public Class OutExcel
     DataGridView1.Columns.Add(SetColumn("単位"))
     DataGridView1.Columns.Add(SetColumn("単価"))
     DataGridView1.Columns.Add(SetColumn("金額"))
-    DataGridView1.Columns.Add(SetColumn("原産地名"))
-    DataGridView1.Columns.Add(SetColumn("生簀No"))
+    DataGridView1.Columns.Add(SetColumn("原産地"))
+    DataGridView1.Columns.Add(SetColumn("生簀ロット番号"))
     'DataGridView1.Columns.Add(SetColumn("加工日"))
     'DataGridView1.Columns.Add(SetColumn("請求日"))
     'DataGridView1.Columns.Add(SetColumn("先方担当者名"))
@@ -719,8 +721,8 @@ Public Class OutExcel
     sql &= "	,	NohinDay 納品日 "
     sql &= "	,	TokuiCd 得意先コード "
     sql &= "	,	TokuiNM 得意先名 "
-    sql &= "	,	TyokuCD 直送先コード "
-    sql &= "	,	TyokuNM 直送先名 "
+    sql &= "	,	TyokuCD 発送先コード "
+    sql &= "	,	TyokuNM 発送先名 "
     sql &= "	,	ShohinCD 商品コード "
     sql &= "	,	ShohinNM 商品名 "
     sql &= "	,	Iro 尾数 "
@@ -728,8 +730,8 @@ Public Class OutExcel
     sql &= "	,	Tani 単位 "
     sql &= "	,	Tanka 単価 "
     sql &= "	,	Kingaku 金額 "
-    sql &= "	,	Biko 原産地名 "
-    sql &= "	,	Memo1 生簀No "
+    sql &= "	,	Biko 原産地 "
+    sql &= "	,	Memo1 生簀ロット番号 "
     sql &= " FROM TRN_JISSEKI "
     sql &= " WHERE 1 = 1 "
     If Not String.IsNullOrWhiteSpace(dtFrom.ToString) Then
@@ -778,5 +780,77 @@ Public Class OutExcel
       Case Else
         beforeValue = ctrl.Text
     End Select
+  End Sub
+
+  Private Sub SetColumnLocation(prmDataGridView1 As DataGridView)
+
+    With DataGridView1
+      ' 商品名は余白を全部使う
+      .Columns("伝票番号").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("行番号").MinimumWidth = 80
+
+      ' 他の列は AllCells + MinimumWidth を設定
+      .Columns("行番号").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("行番号").MinimumWidth = 50
+
+      .Columns("納品日").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("納品日").MinimumWidth = 50
+
+      .Columns("得意先コード").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("得意先コード").MinimumWidth = 80
+
+      .Columns("得意先名").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("得意先名").MinimumWidth = 100
+
+      .Columns("発送先コード").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("発送先コード").MinimumWidth = 80
+
+      .Columns("発送先名").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("発送先名").MinimumWidth = 100
+
+      .Columns("商品コード").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("商品コード").MinimumWidth = 80
+
+      .Columns("商品名").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("商品名").MinimumWidth = 100
+
+      .Columns("尾数").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("尾数").MinimumWidth = 50
+
+      .Columns("単位").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("単位").MinimumWidth = 50
+
+      .Columns("重量").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("重量").MinimumWidth = 50
+
+      .Columns("単価").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("単価").MinimumWidth = 50
+
+      .Columns("金額").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("金額").MinimumWidth = 100
+
+      .Columns("生簀ロット番号").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("生簀ロット番号").MinimumWidth = 100
+
+      .Columns("原産地").AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+      .Columns("原産地").MinimumWidth = 80
+    End With
+
+    With DataGridView1
+      .Columns("尾数").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+      .Columns("重量").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+      .Columns("単価").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+      .Columns("金額").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight
+    End With
+
+    With DataGridView1
+      .Columns("行番号").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      .Columns("得意先コード").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      .Columns("発送先コード").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      .Columns("商品コード").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+      .Columns("単位").DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+    End With
+
+
   End Sub
 End Class
