@@ -10,6 +10,7 @@ Public Class ClsAutoCommunication
   Private Shared watcher As System.IO.FileSystemWatcher = Nothing
   Private Shared Concat_ScaleNumber As String = String.Empty
   Private Shared PrintableCheck As Boolean = True
+  Private Shared process As System.Diagnostics.Process
   Public Shared Sub AutoCommunication(prmPrintableCheck As Boolean)
     PrintableCheck = prmPrintableCheck
     If Not (watcher Is Nothing) Then
@@ -210,17 +211,22 @@ Public Class ClsAutoCommunication
 
           ReportName = If(ReportType = ClsCommonGlobalData.REPORT_TYPE_SHUKKA, "R_SHUKKA", "R_NOHIN")
 
-          Dim DownloadExe As New ProcessStartInfo With {
-                  .FileName = DownloadPath,
-                  .Arguments = Concat_ScaleNumber,
-                      .CreateNoWindow = True,
-                      .UseShellExecute = False
-                  }
-          'ComMessageBox("開始", "テスト", typMsgBox.MSG_NORMAL)
-          Dim p As System.Diagnostics.Process = System.Diagnostics.Process.Start(DownloadExe)
-          p.WaitForExit()
+          'Dim DownloadExe As New ProcessStartInfo With {
+          '        .FileName = DownloadPath,
+          '        .Arguments = Concat_ScaleNumber,
+          '            .CreateNoWindow = True,
+          '            .UseShellExecute = False
+          '        }
+          ''ComMessageBox("開始", "テスト", typMsgBox.MSG_NORMAL)
 
-          If p.ExitCode <> 0 Then
+          'Dim p As System.Diagnostics.Process = System.Diagnostics.Process.Start(DownloadExe)
+
+          If Not TryStartWhenNotRunning(DownloadPath, "Download", Concat_ScaleNumber) Then
+            Exit Sub
+          End If
+          process.WaitForExit()
+
+          If process.ExitCode <> 0 Then
             Throw New Exception("取込失敗")
           End If
           'ComMessageBox("実績受信終了しました。" & vbCrLf & "処理結果をご確認下さい。", "確認", typMsgBox.MSG_NORMAL, typMsgBoxButton.BUTTON_OK)
@@ -309,4 +315,39 @@ Public Class ClsAutoCommunication
     System.IO.File.Copy(DownloadPath, BackupPath)
   End Sub
 
+
+  Private Shared Function IsProcessRunning(processName As String) As Boolean
+    Dim result As Boolean = False
+    Try
+      Dim ps = Process.GetProcessesByName(processName)
+      If ps IsNot Nothing AndAlso ps.Length > 0 Then result = True
+    Catch
+    End Try
+    Return result
+  End Function
+
+  Private Shared Function StartDownloadApp(exePath As String, args As String) As Boolean
+    Dim result As Boolean = False
+    Try
+      If File.Exists(exePath) Then
+        Dim psi As New ProcessStartInfo()
+        psi.FileName = exePath
+        psi.Arguments = args
+        psi.UseShellExecute = False
+        psi.CreateNoWindow = False
+        process = Process.Start(psi)
+        result = True
+      End If
+    Catch
+    End Try
+    Return result
+  End Function
+
+  Private Shared Function TryStartWhenNotRunning(exePath As String, processName As String, args As String) As Boolean
+    Dim result As Boolean = False
+    If IsProcessRunning(processName) = False Then
+      result = StartDownloadApp(exePath, args)
+    End If
+    Return result
+  End Function
 End Class
