@@ -96,7 +96,8 @@ Module Module_Download
         For Each filePath As String In System.IO.Directory.GetFiles(targetPath, searchPattern)
 
           ' ファイル利用可能待ち
-          If False = Wait4FileReady(filePath, 3, 1) Then
+          If False = Wait4FileReady(filePath, 5, 1000) Then
+            InsertTRNLOG(UnitNumberArray(j), "NG", filePath, "read time out")
             Continue For
           End If
 
