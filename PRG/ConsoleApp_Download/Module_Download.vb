@@ -81,48 +81,40 @@ Module Module_Download
       'Dim UpLoadFile As String
       Dim URL As String
 
+      Dim targetPath As String = FtpDownloadPath
+      Dim searchPattern As String = String.Empty ' ワイルドカード指定
+
       '計量器毎にループ（実績）
       For j As Integer = 0 To UnitNumberArray.Length - 1
-        tmpFileName = TRAN_FILE_NAME & FileNameDigits & Integer.Parse(UnitNumberArray(j)).ToString()
+        'tmpFileName = TRAN_FILE_NAME & FileNameDigits & Integer.Parse(UnitNumberArray(j)).ToString()
+        targetPath &= "\" & UnitNumberArray(j)
+        searchPattern = TRAN_FILE_NAME _
+                      & FileNameDigits _
+                      & Integer.Parse(UnitNumberArray(j)).ToString() _
+                      & "_" & New String("?"c, 12) & ".csv"
 
-        Console.WriteLine(IpAddressArray(j) & "号機の実績受信処理 START")
-        Console.WriteLine("******************************")
-        DownloadPath = FtpDownloadPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & ".CSV"
-        BackupPath = FtpBackupPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & "_" & dtNow.ToString("yyMMddHHmmss") & ".CSV"
-        URL = "ftp://localhost" & "/" & UnitNumberArray(j) & "/" & tmpFileName & ".CSV"
-        DownloadFtp(DownloadPath, BackupPath, URL, UnitNumberArray(j))
-        System.Threading.Thread.Sleep(2000)
-        'ログ登録　＆ 削除ファイル送信
-        If ErrorJudFlg Then
-          InsertTRNLOG(UnitNumberArray(j), "NG", "", "実績受信失敗")
-          Console.WriteLine("実績受信処理失敗")
-          Console.WriteLine("号機番号 ： " & UnitNumberArray(j))
-          Console.WriteLine("******************************")
-          'ClsSetMessage.SetMessage("実績受信処理失敗")
-        Else
-          InsertTRNLOG(UnitNumberArray(j), "OK", "", "実績受信成功")
-          Console.WriteLine("実績受信処理成功")
-          Console.WriteLine("号機番号 ： " & UnitNumberArray(j))
-          Console.WriteLine("******************************")
+        For Each filePath As String In System.IO.Directory.GetFiles(targetPath, searchPattern)
+
+          ' ファイル利用可能待ち
+          If False = Wait4FileReady(filePath, 3, 1) Then
+            Continue For
+          End If
+
+          tmpFileName = Path.GetFileNameWithoutExtension(filePath)
+          DownloadPath = FtpDownloadPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & ".CSV"
+          BackupPath = FtpBackupPath & "/" & UnitNumberArray(j) & "/" & tmpFileName & "_" & dtNow.ToString("yyMMddHHmmss") & ".CSV"
+          URL = "ftp://localhost" & "/" & UnitNumberArray(j) & "/" & tmpFileName & ".CSV"
+          DownloadFtp(DownloadPath, BackupPath, URL, UnitNumberArray(j))
           System.Threading.Thread.Sleep(2000)
-          'ClsSetMessage.SetMessage("実績受信処理成功")
-        End If
-        Console.WriteLine(UnitNumberArray(j) & "号機の実績受信処理 END")
-        Console.WriteLine("******************************")
+          'ログ登録　＆ 削除ファイル送信
+          If ErrorJudFlg Then
+            InsertTRNLOG(UnitNumberArray(j), "NG", "", "実績受信失敗")
+          Else
+            InsertTRNLOG(UnitNumberArray(j), "OK", "", "実績受信成功")
+            System.Threading.Thread.Sleep(2000)
+          End If
+        Next
       Next
-      Console.WriteLine("*******************************************************************************")
-      Console.WriteLine("***    *****     *****     ******    ***** *** *****    ***********************")
-      Console.WriteLine("*** ********** ******* *** ****** ********  ** ***** *** **********************")
-      Console.WriteLine("***    ******* *******     ******   ****** * * ***** *** **********************")
-      Console.WriteLine("*** ********** ******* ********** ******** **  ***** *** **********************")
-      Console.WriteLine("*** ********** ******* **********    ***** *** *****    ***********************")
-      Console.WriteLine("*******************************************************************************")
-      Console.WriteLine("実績受信処理終了")
-      Console.WriteLine("******************************")
-      Console.WriteLine("このウィンドウを閉じるには、任意のキーを押してください...")
-      'ClsSetMessage.SetMessage("実績受信処理終了")
-
-      'Console.ReadKey()
     Catch ex As Exception
       Throw New Exception(ex.Message)
     End Try
@@ -1118,4 +1110,50 @@ Module Module_Download
     Return DateTime.Parse(prmTargetData).ToString("HHmm")
   End Function
 
+  Private Function Wait4FileReady(filePath As String, retryCount As Integer, waitMs As Integer) As Boolean
+    Dim result As Boolean = False
+    Dim i As Integer = 0
+
+    Do While i < retryCount AndAlso result = False
+      If System.IO.File.Exists(filePath) Then
+        Dim size1 As Long = 0
+        Dim size2 As Long = 0
+        Dim canOpen As Boolean = False
+
+        Try
+          Dim fi As New System.IO.FileInfo(filePath)
+          size1 = fi.Length
+
+          Threading.Thread.Sleep(waitMs)
+
+          fi.Refresh()
+          size2 = fi.Length
+
+          If size1 = size2 AndAlso fi.LastWriteTime < DateTime.Now.AddSeconds(-3) Then
+            Try
+              Using fs As New System.IO.FileStream(filePath, IO.FileMode.Open, IO.FileAccess.Read, IO.FileShare.Read)
+                canOpen = True
+              End Using
+            Catch
+              canOpen = False
+            End Try
+          End If
+        Catch
+          canOpen = False
+        End Try
+
+        If canOpen Then
+          result = True
+        End If
+      End If
+
+      If result = False Then
+        Threading.Thread.Sleep(waitMs)
+      End If
+
+      i += 1
+    Loop
+
+    Return result
+  End Function
 End Module
