@@ -891,7 +891,7 @@ Module Module_Download
       SqlServer.GetResult(tmpTSDt, GetMstTokuisakiShohin(tmpTokuisakiCd, tmpShohinCd))
       If (tmpTSDt.Rows.Count = 0) Then
         '<TODO > 00000の得意先を入れる対応を行ったが、商品マスタで管理するのはありか。 
-        SqlServer.GetResult(tmpTSDt, GetMstTokuisakiShohin("000000", tmpShohinCd))
+        SqlServer.GetResult(tmpTSDt, GetMstTokuisakiShohin("0".PadLeft(CUSTOMER_CODE_LENGTH, "0"c), tmpShohinCd))
         If (tmpTSDt.Rows.Count = 0) Then
           tmpTSDr = Nothing
         Else

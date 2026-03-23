@@ -2,6 +2,7 @@
 Imports Common
 Imports Common.ClsFunction
 Imports T.R.ZCommonCtrl
+Imports T.R.ZCommonClass.clsCodeLengthSetting
 
 Public Class ItemAddForm
   Inherits FormBase
@@ -61,7 +62,6 @@ Public Class ItemAddForm
     parentForm = parent
 
     ' InitializeComponent() 呼び出しの後で初期化を追加します。
-
   End Sub
 
   ''' <summary>
@@ -117,6 +117,8 @@ Public Class ItemAddForm
         originalValues(ctrl.Name) = ctrl.Text
       End If
     Next
+
+    Me.TxtCustCd.Text = parentForm.CmbMstCustomer1.SelectedValue.ToString()
 
   End Sub
 
@@ -388,9 +390,13 @@ Public Class ItemAddForm
       Try
 
         ' SQL実行結果が指定した件数か？
-        Call tmpDb.GetResult(prmDt, SqlGetTokuisakiShohinCD(prmTCode, prmSCode))
+        Call tmpDb.GetResult(prmDt, SqlGetTokuisakiShohinCD(prmTCode, prmSCode))  ' 得意先コード指定で検索
         If (prmDt.Rows.Count = 0) Then
-          ret = False
+          ' 得意先単位の単価が存在しない場合は共通単価(得意先 = 0)を検索
+          Call tmpDb.GetResult(prmDt, SqlGetTokuisakiShohinCD("0".PadLeft(CUSTOMER_CODE_LENGTH, "0"c), prmSCode))  ' 得意先コード指定で検索
+          If (prmDt.Rows.Count = 0) Then
+            ret = False
+          End If
         End If
 
       Catch ex As Exception
