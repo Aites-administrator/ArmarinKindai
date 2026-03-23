@@ -75,7 +75,7 @@ Public Class NohinPrint
       TxtKakouDayTo.Text = New Date(dtNow.Year, dtNow.Month, dtNow.Day)
       TxtKakouDayFrom.Focus()
       RdoUketsukeDesc.Checked = True
-      RdoAll.Checked = True
+      RdoNotPrint.Checked = True
 
       DispGrid()
 

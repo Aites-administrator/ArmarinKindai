@@ -335,7 +335,7 @@ Public Class ClsPrintingProcess
     Dim ReportType As String = ReadSettingIniFile("REPORT_TYPE", "VALUE")
 
     sql &= " SELECT	trn_jisseki.NohinDay "
-    sql &= "	,	ISNULL(trn_jisseki.DenNO2,trn_jisseki.DenNO) DenNo "
+    sql &= "	,	CASE WHEN trn_jisseki.DenNO2 IS NULL THEN trn_jisseki.DenNO ELSE trn_jisseki.DenNO2 + '*' END AS DenNo "
     sql &= "	,	RIGHT('00' + CAST(ISNULL(trn_jisseki.GyoNo2,trn_jisseki.GyoNo)AS VARCHAR(2)), 2)  GyoNo "
     sql &= "	,	trn_jisseki.TokuiCD "
     sql &= "	,	trn_jisseki.TokuiNm "
@@ -385,7 +385,7 @@ Public Class ClsPrintingProcess
     Dim ReportType As String = ReadSettingIniFile("REPORT_TYPE", "VALUE")
 
     sql &= "SELECT	trn_jisseki.NohinDay "
-    sql &= "	,	trn_jisseki.DenNO2 DenNo "
+    sql &= "	,	trn_jisseki.DenNO2 + '*' DenNo "
     sql &= "	,	RIGHT('00' + CAST(trn_jisseki.GyoNo2 AS VARCHAR(2)), 2) GyoNo "
     sql &= "	,	trn_jisseki.TokuiCD "
     sql &= "	,	trn_jisseki.TokuiNm "
