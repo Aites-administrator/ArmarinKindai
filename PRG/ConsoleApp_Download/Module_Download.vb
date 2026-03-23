@@ -858,7 +858,7 @@ Module Module_Download
 
       Dim tmpHiduke As String = prmDataRow.Item("JISSEKI_DATE").ToString
       tmpHiduke = tmpHiduke.Substring(0, 4) + "/" + tmpHiduke.Substring(4, 2) + "/" + tmpHiduke.Substring(6, 2)
-      Dim tmpJikan As String = prmDataRow.Item("JISSEKI_DATE").ToString.PadLeft(4, "0"c)
+      Dim tmpJikan As String = prmDataRow.Item("JISSEKI_TIME").ToString.PadLeft(4, "0"c)
       tmpJikan = tmpJikan.Substring(0, 2) + ":" + tmpJikan.Substring(2, 2)
 
       'データ操作関連
