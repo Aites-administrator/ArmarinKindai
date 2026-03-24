@@ -53,7 +53,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.BtnCreate.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.BtnCreate.Location = New System.Drawing.Point(587, 534)
-        Me.BtnCreate.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.BtnCreate.Margin = New System.Windows.Forms.Padding(4)
         Me.BtnCreate.Name = "BtnCreate"
         Me.BtnCreate.Size = New System.Drawing.Size(164, 54)
         Me.BtnCreate.TabIndex = 11
@@ -79,15 +79,15 @@ Partial Class Form_TokuisakiShohinMasterDetail
         Me.Label5.Location = New System.Drawing.Point(8, 309)
         Me.Label5.Margin = New System.Windows.Forms.Padding(4, 0, 4, 0)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(73, 37)
+        Me.Label5.Size = New System.Drawing.Size(118, 37)
         Me.Label5.TabIndex = 85
-        Me.Label5.Text = "単価"
+        Me.Label5.Text = "単価(kg)"
         '
         'TxtTokuisakiTanka
         '
         Me.TxtTokuisakiTanka.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.TxtTokuisakiTanka.Location = New System.Drawing.Point(212, 360)
-        Me.TxtTokuisakiTanka.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TxtTokuisakiTanka.Margin = New System.Windows.Forms.Padding(4)
         Me.TxtTokuisakiTanka.MaxLength = 7
         Me.TxtTokuisakiTanka.Name = "TxtTokuisakiTanka"
         Me.TxtTokuisakiTanka.Size = New System.Drawing.Size(195, 39)
@@ -98,7 +98,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.TxtNouhinTanka.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.TxtNouhinTanka.Location = New System.Drawing.Point(212, 311)
-        Me.TxtNouhinTanka.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TxtNouhinTanka.Margin = New System.Windows.Forms.Padding(4)
         Me.TxtNouhinTanka.MaxLength = 7
         Me.TxtNouhinTanka.Name = "TxtNouhinTanka"
         Me.TxtNouhinTanka.Size = New System.Drawing.Size(195, 39)
@@ -108,7 +108,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.TxtHyojunTanka.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.TxtHyojunTanka.Location = New System.Drawing.Point(212, 262)
-        Me.TxtHyojunTanka.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TxtHyojunTanka.Margin = New System.Windows.Forms.Padding(4)
         Me.TxtHyojunTanka.MaxLength = 7
         Me.TxtHyojunTanka.Name = "TxtHyojunTanka"
         Me.TxtHyojunTanka.Size = New System.Drawing.Size(195, 39)
@@ -160,9 +160,9 @@ Partial Class Form_TokuisakiShohinMasterDetail
         Me.GroupBox1.Controls.Add(Me.NameLabel)
         Me.GroupBox1.Controls.Add(Me.CodeLabel)
         Me.GroupBox1.Location = New System.Drawing.Point(23, 52)
-        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.GroupBox1.Margin = New System.Windows.Forms.Padding(4)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.GroupBox1.Padding = New System.Windows.Forms.Padding(4)
         Me.GroupBox1.Size = New System.Drawing.Size(896, 474)
         Me.GroupBox1.TabIndex = 89
         Me.GroupBox1.TabStop = False
@@ -171,7 +171,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.TxtItemName.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.TxtItemName.Location = New System.Drawing.Point(371, 72)
-        Me.TxtItemName.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TxtItemName.Margin = New System.Windows.Forms.Padding(4)
         Me.TxtItemName.MaxLength = 10
         Me.TxtItemName.Name = "TxtItemName"
         Me.TxtItemName.Size = New System.Drawing.Size(516, 39)
@@ -181,7 +181,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.TxtTokuName.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.TxtTokuName.Location = New System.Drawing.Point(371, 19)
-        Me.TxtTokuName.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TxtTokuName.Margin = New System.Windows.Forms.Padding(4)
         Me.TxtTokuName.MaxLength = 10
         Me.TxtTokuName.Name = "TxtTokuName"
         Me.TxtTokuName.ReadOnly = True
@@ -204,7 +204,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.TxtTani.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.TxtTani.Location = New System.Drawing.Point(212, 170)
-        Me.TxtTani.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TxtTani.Margin = New System.Windows.Forms.Padding(4)
         Me.TxtTani.MaxLength = 4
         Me.TxtTani.Name = "TxtTani"
         Me.TxtTani.Size = New System.Drawing.Size(195, 39)
@@ -225,7 +225,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         Me.CmbMstItem1.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.CmbMstItem1.FormattingEnabled = True
         Me.CmbMstItem1.Location = New System.Drawing.Point(212, 71)
-        Me.CmbMstItem1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.CmbMstItem1.Margin = New System.Windows.Forms.Padding(4)
         Me.CmbMstItem1.Name = "CmbMstItem1"
         Me.CmbMstItem1.Size = New System.Drawing.Size(149, 40)
         Me.CmbMstItem1.SkipChkCode = False
@@ -246,7 +246,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         Me.CmbMstCustomer1.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.CmbMstCustomer1.FormattingEnabled = True
         Me.CmbMstCustomer1.Location = New System.Drawing.Point(212, 20)
-        Me.CmbMstCustomer1.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.CmbMstCustomer1.Margin = New System.Windows.Forms.Padding(4)
         Me.CmbMstCustomer1.Name = "CmbMstCustomer1"
         Me.CmbMstCustomer1.Size = New System.Drawing.Size(149, 40)
         Me.CmbMstCustomer1.SkipChkCode = True
@@ -268,7 +268,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.TxtIrisu.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.TxtIrisu.Location = New System.Drawing.Point(212, 214)
-        Me.TxtIrisu.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TxtIrisu.Margin = New System.Windows.Forms.Padding(4)
         Me.TxtIrisu.MaxLength = 4
         Me.TxtIrisu.Name = "TxtIrisu"
         Me.TxtIrisu.Size = New System.Drawing.Size(195, 39)
@@ -280,7 +280,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         Me.TxtItemKana.Font = New System.Drawing.Font("Segoe UI", 14.25!)
         Me.TxtItemKana.ImeMode = System.Windows.Forms.ImeMode.KatakanaHalf
         Me.TxtItemKana.Location = New System.Drawing.Point(212, 121)
-        Me.TxtItemKana.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.TxtItemKana.Margin = New System.Windows.Forms.Padding(4)
         Me.TxtItemKana.MaxLength = 36
         Me.TxtItemKana.Name = "TxtItemKana"
         Me.TxtItemKana.Size = New System.Drawing.Size(675, 39)
@@ -312,7 +312,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         '
         Me.CloseButton.Font = New System.Drawing.Font("Segoe UI", 14.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.CloseButton.Location = New System.Drawing.Point(759, 534)
-        Me.CloseButton.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.CloseButton.Margin = New System.Windows.Forms.Padding(4)
         Me.CloseButton.Name = "CloseButton"
         Me.CloseButton.Size = New System.Drawing.Size(164, 54)
         Me.CloseButton.TabIndex = 12
@@ -341,7 +341,7 @@ Partial Class Form_TokuisakiShohinMasterDetail
         Me.Controls.Add(Me.TitleLabel)
         Me.DoubleBuffered = True
         Me.KeyPreview = True
-        Me.Margin = New System.Windows.Forms.Padding(4, 4, 4, 4)
+        Me.Margin = New System.Windows.Forms.Padding(4)
         Me.Name = "Form_TokuisakiShohinMasterDetail"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "36"
