@@ -1184,9 +1184,9 @@ Err_Exit:
   Public Shared Function MoveBackupTOImportPath(prmBackupFolder As String, prmScaleNumber As String) As Boolean
     Dim rtn As Boolean = False
     Dim tmpBkFileName As String = TRAN_FILE_NAME & "*.csv"
-    Dim tmpFileName As String = TRAN_FILE_NAME & ReadSettingIniFile("FILENAME_DIGITS", "VALUE") & Integer.Parse(prmScaleNumber) & ".csv"
+    'Dim tmpFileName As String = TRAN_FILE_NAME & ReadSettingIniFile("FILENAME_DIGITS", "VALUE") & Integer.Parse(prmScaleNumber) & ".csv"
     If Dir(prmBackupFolder & "\" & tmpBkFileName) <> "" Then
-      System.IO.File.Move(prmBackupFolder & "\" & Dir(prmBackupFolder & "\" & tmpBkFileName), ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE") & "\" & prmScaleNumber & "\" & tmpFileName)
+      System.IO.File.Move(prmBackupFolder & "\" & Dir(prmBackupFolder & "\" & tmpBkFileName), ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE") & "\" & prmScaleNumber & "\" & Dir(prmBackupFolder & "\" & tmpBkFileName))
       rtn = True
     End If
     Return rtn

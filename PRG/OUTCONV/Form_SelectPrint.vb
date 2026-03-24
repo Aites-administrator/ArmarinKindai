@@ -695,7 +695,7 @@ Public Class Form_SelectPrint
     Me.Text = PRG_TITLE
 
     ' 出荷日のコンボボックスを先頭に設定
-    Me.CmbDateProcessing1.SelectedIndex = 0
+    Me.CmbDateProcessing1.SelectedIndex = -1
     _DeliveryDate = CmbDateProcessing1.SelectedValue.ToString
     ' 画面初期化
     Call InitForm02()
@@ -932,8 +932,6 @@ Public Class Form_SelectPrint
         If Controlz(DG2V2.Name).SelectCount = 0 Then
           Throw New Exception("変換対象が選択されていません。")
         End If
-
-        '確認メッセージ表示チェック
 
         ' 集約伝票作成
         Call CreateShuyakuDenpyo(tmpDbCutJ, tmpDenpyoList)

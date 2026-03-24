@@ -293,6 +293,14 @@ Public Class ClsPrintingProcess
                 tmpRow("TokuiNm") = row("TokuiNm")
                 tmpRow("TyokuCd") = row("TyokuCd")
                 tmpRow("TyokuNM") = row("TyokuNM")
+                '即時発行対象の得意先のみ単価を設定
+                Dim tmpTokuiDt As New DataTable
+                _SqlServer.GetResult(tmpTokuiDt, "SELECT * FROM M_TOKUISAKI_PRINT_CTRL WHERE TOKUISAKI_CD = '" & row("TokuiCD") & "' AND INSTANT_PRINT_FLG = 1 ")
+                If tmpTokuiDt.Rows.Count = 1 Then
+                  tmpRow("Tanka") = row("Tanka")
+                Else
+                  tmpRow("Tanka") = ""
+                End If
                 tmpRow("SortNumber") = 1
 
                 sql = SqlInsNohin(prmTableName, tmpRow, dt)
@@ -334,8 +342,8 @@ Public Class ClsPrintingProcess
     Dim sql As String = String.Empty
     Dim ReportType As String = ReadSettingIniFile("REPORT_TYPE", "VALUE")
 
-    sql &= " SELECT	trn_jisseki.NohinDay "
-    sql &= "	,	CASE WHEN trn_jisseki.DenNO2 IS NULL THEN trn_jisseki.DenNO ELSE trn_jisseki.DenNO2 + '*' END AS DenNo "
+    sql &= " Select	trn_jisseki.NohinDay "
+    sql &= "	,	Case When trn_jisseki.DenNO2 Is NULL Then trn_jisseki.DenNO Else trn_jisseki.DenNO2 + '*' END AS DenNo "
     sql &= "	,	RIGHT('00' + CAST(ISNULL(trn_jisseki.GyoNo2,trn_jisseki.GyoNo)AS VARCHAR(2)), 2)  GyoNo "
     sql &= "	,	trn_jisseki.TokuiCD "
     sql &= "	,	trn_jisseki.TokuiNm "
