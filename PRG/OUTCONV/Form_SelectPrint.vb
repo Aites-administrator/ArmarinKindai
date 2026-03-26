@@ -695,8 +695,10 @@ Public Class Form_SelectPrint
     Me.Text = PRG_TITLE
 
     ' 出荷日のコンボボックスを先頭に設定
-    Me.CmbDateProcessing1.SelectedIndex = -1
-    _DeliveryDate = CmbDateProcessing1.SelectedValue.ToString
+    Me.CmbDateProcessing1.SelectedIndex = 0
+    If CmbDateProcessing1.Items.Count <> 0 Then
+      _DeliveryDate = CmbDateProcessing1.SelectedValue.ToString
+    End If
     ' 画面初期化
     Call InitForm02()
 

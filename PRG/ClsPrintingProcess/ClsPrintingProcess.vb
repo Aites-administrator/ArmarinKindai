@@ -293,14 +293,6 @@ Public Class ClsPrintingProcess
                 tmpRow("TokuiNm") = row("TokuiNm")
                 tmpRow("TyokuCd") = row("TyokuCd")
                 tmpRow("TyokuNM") = row("TyokuNM")
-                '即時発行対象の得意先のみ単価を設定
-                Dim tmpTokuiDt As New DataTable
-                _SqlServer.GetResult(tmpTokuiDt, "SELECT * FROM M_TOKUISAKI_PRINT_CTRL WHERE TOKUISAKI_CD = '" & row("TokuiCD") & "' AND INSTANT_PRINT_FLG = 1 ")
-                If tmpTokuiDt.Rows.Count = 1 Then
-                  tmpRow("Tanka") = row("Tanka")
-                Else
-                  tmpRow("Tanka") = ""
-                End If
                 tmpRow("SortNumber") = 1
 
                 sql = SqlInsNohin(prmTableName, tmpRow, dt)
@@ -310,6 +302,15 @@ Public Class ClsPrintingProcess
               Next
             End If
 
+          End If
+
+          '即時発行対象の得意先のみ単価を設定
+          Dim tmpTokuiDt As New DataTable
+          _SqlServer.GetResult(tmpTokuiDt, "SELECT * FROM M_TOKUISAKI_PRINT_CTRL WHERE TOKUISAKI_CD = '" & row("TokuiCD") & "' AND INSTANT_PRINT_FLG = 1 ")
+          If tmpTokuiDt.Rows.Count = 1 Then
+            row("Tanka") = row("Tanka")
+          Else
+            row("Tanka") = ""
           End If
 
           sql = SqlInsNohin(prmTableName, row, dt)

@@ -32,6 +32,8 @@ Public Class CmbDateProcessing
 
     sql &= " SELECT Format(NohinDay,'" & CODE_FORMAT & "')  AS Code  "
     sql &= " FROM ("
+    sql &= " SELECT CONVERT(varchar(10), GETDATE(), 111) AS NohinDay "
+    sql &= " UNION  "
     sql &= " SELECT CAST(NohinDay AS datetime) AS NohinDay "
     'sql &= " SELECT LEFT(NohinDay,4) + '/'  + SUBSTRING(NohinDay,5,2) + '/' + RIGHT(NohinDay,2) AS NohinDay "
     sql &= " FROM TRN_JISSEKI "
