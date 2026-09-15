@@ -17,8 +17,6 @@ Public Class ClsAutoCommunication
       Return
     End If
 
-
-
     watcher = New System.IO.FileSystemWatcher
     '監視するディレクトリを指定
     watcher.IncludeSubdirectories = True
@@ -42,7 +40,6 @@ Public Class ClsAutoCommunication
     watcher.EnableRaisingEvents = True
     Console.WriteLine("監視を開始しました。")
 
-
   End Sub
 
   'イベントハンドラ
@@ -54,6 +51,7 @@ Public Class ClsAutoCommunication
     Dim FtpFolder As String = Path.GetDirectoryName(e.FullPath)    'Ftpフォルダ取得
 
     Try
+
 
       If e.FullPath.Contains("TRAN") Then
         If e.FullPath.Contains("\bk") Then

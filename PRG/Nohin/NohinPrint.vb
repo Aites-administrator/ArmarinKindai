@@ -745,6 +745,8 @@ Public Class NohinPrint
 
   Private Sub ClickDeleteButton()
     Try
+
+      Dim idx = DataGridView1.CurrentRow.Index
       If DataGridView1.CurrentRow Is Nothing Then
         ComMessageBox("削除する伝票を選択してください。", "確認", typMsgBox.MSG_WARNING, typMsgBoxButton.BUTTON_OK)
         Exit Sub
@@ -755,6 +757,7 @@ Public Class NohinPrint
                               , typMsgBox.MSG_WARNING _
                               , typMsgBoxButton.BUTTON_OKCANCEL) = typMsgBoxResult.RESULT_OK Then
 
+        DataGridView1.CurrentCell = DataGridView1.Rows(idx).Cells("伝票番号")
         SqlServer.Execute(SqlDelDenpyo)
         ComMessageBox("伝票を削除しました。" _
                               , PRG_TITLE _

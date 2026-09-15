@@ -48,10 +48,21 @@ Public Class Form_OutPut
   End Sub
 
   Private Sub Form_OutPut_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+    Dim errMsg As String = String.Empty
     If Process.GetProcessesByName("Nohin").Count = 0 _
-             AndAlso Process.GetProcessesByName("Result").Count = 0 Then
+      AndAlso Process.GetProcessesByName("Result").Count = 0 Then
     Else
-      ComMessageBox("実績確認検索画面を終了してから閉じてください。", "実績確認", typMsgBox.MSG_WARNING)
+      errMsg = "納品書発行画面を終了してから閉じてください。"
+    End If
+
+    If Process.GetProcessesByName("SelectPrint").Count = 0 Then
+
+    Else
+      errMsg = "選択一括発行画面を終了してから閉じてください。"
+    End If
+
+    If Not String.IsNullOrWhiteSpace(errMsg) Then
+      ComMessageBox(errMsg, "納品書発行", typMsgBox.MSG_WARNING)
       e.Cancel = True
     End If
   End Sub

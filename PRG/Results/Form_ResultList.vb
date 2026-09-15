@@ -67,6 +67,8 @@ Public Class Form_ResultList
     End Get
   End Property
   Private Sub ResultList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+    CreateButton.Enabled = False
     ' フォームの最大化ボタンを無効にする
     MaximizeBox = False
 
@@ -179,8 +181,8 @@ Public Class Form_ResultList
           End If
 
         Case Keys.F3
-          ' 登録
-          ClickCreateButton()
+          '' 登録
+          'ClickCreateButton()
         Case Keys.F10
           ' 終了
           ClickCloseButton()

@@ -785,7 +785,8 @@ Public Class ClsFunction
     ' 拡張子を取得
     Dim extension As String = Path.GetExtension(prmFullPath)
 
-    fileName = fileName & "_" & DateTime.Now.ToString("yyyyMMddHHmmss") & extension
+    'fileName = fileName & "_" & DateTime.Now.ToString("yyyyMMddHHmmss") & extension
+    fileName = fileName & extension
     ' bkディレクトリ内に元のファイル名を付与したパスを生成
     Dim modifiedPath As String = Path.Combine(bkDirectory, fileName)
 

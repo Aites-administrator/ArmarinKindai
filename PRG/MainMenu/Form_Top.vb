@@ -32,10 +32,11 @@ Public Class Form_Top
       'If Not System.IO.Directory.Exists(ClsFunction.ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE")) Then
       '  System.IO.Directory.Move(ClsFunction.ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE") & StopFtpText, ClsFunction.ReadSettingIniFile("FTP_DOWNLOAD_PATH", "VALUE"))
       'End If
+
       StartFtp("FTPSVC")
 
-    '待機中受信中メッセージ更新
-    Task.Run(Sub() StartPipeServer())
+      '待機中受信中メッセージ更新
+      Task.Run(Sub() StartPipeServer())
     'serverThread.IsBackground = True
     'serverThread.Start()
 
@@ -48,6 +49,10 @@ Public Class Form_Top
     myTimer.Enabled = True
 
     AddHandler myTimer.Tick, New EventHandler(AddressOf timer_Tick)
+
+      'FTPフォルダからbkフォルダに移動
+
+      '取込実施。メッセージ表示
 
     Catch ex As Exception
       ComWriteErrLog(ex)
@@ -304,7 +309,9 @@ Public Class Form_Top
 
   Private Sub Form_Top_Closing(sender As Object, e As CancelEventArgs) Handles Me.Closing
     Try
-    DisplayClose()
+
+
+      DisplayClose()
     Catch ex As Exception
       ComWriteErrLog(ex)
       ComMessageBox(ex.Message, "メインメニュー", typMsgBox.MSG_ERROR)

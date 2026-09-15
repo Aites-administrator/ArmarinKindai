@@ -307,9 +307,8 @@ Public Class ClsPrintingProcess
           '即時発行対象の得意先のみ単価を設定
           Dim tmpTokuiDt As New DataTable
           _SqlServer.GetResult(tmpTokuiDt, "SELECT * FROM M_TOKUISAKI_PRINT_CTRL WHERE TOKUISAKI_CD = '" & row("TokuiCD") & "' AND INSTANT_PRINT_FLG = 1 ")
-          If tmpTokuiDt.Rows.Count = 1 Then
-            row("Tanka") = row("Tanka")
-          Else
+          '即時発行ではない得意先のとき、単価を空にする
+          If tmpTokuiDt.Rows.Count = 0 Then
             row("Tanka") = ""
           End If
 
@@ -355,12 +354,17 @@ Public Class ClsPrintingProcess
     sql &= "		then '' "
     sql &= "		else trn_jisseki.Iro  "
     sql &= "		end IRISU "
+    'sql &= "	,	CASE WHEN "
+    'sql &= "		trn_jisseki.ShohinCD >= 100 "
+    'sql &= "		then '' "
+    'sql &= "		else trn_jisseki.Suryo "
+    'sql &= "		end Suryo "
+    sql &= "	, trn_jisseki.Suryo "
     sql &= "	,	CASE WHEN "
     sql &= "		trn_jisseki.ShohinCD >= 100 "
-    sql &= "		then '' "
-    sql &= "		else trn_jisseki.Suryo "
-    sql &= "		end Suryo "
-    sql &= "	,	trn_jisseki.Tanka "
+    sql &= "		then '0' "
+    sql &= "		else trn_jisseki.Tanka "
+    sql &= "		end Tanka "
     sql &= "	,	trn_jisseki.UriageKin "
     sql &= "	,	'8%' Zeiritsu "
     sql &= "	,	CASE WHEN "
@@ -405,12 +409,17 @@ Public Class ClsPrintingProcess
     sql &= "		then '' "
     sql &= "		else trn_jisseki.Iro  "
     sql &= "		end IRISU "
+    'sql &= "	,	CASE WHEN "
+    'sql &= "		trn_jisseki.ShohinCD >= 100 "
+    'sql &= "		then '' "
+    'sql &= "		else trn_jisseki.Suryo "
+    'sql &= "		end Suryo "
+    sql &= "	, trn_jisseki.Suryo "
     sql &= "	,	CASE WHEN "
     sql &= "		trn_jisseki.ShohinCD >= 100 "
-    sql &= "		then '' "
-    sql &= "		else trn_jisseki.Suryo "
-    sql &= "		end Suryo "
-    sql &= "	,	trn_jisseki.Tanka "
+    sql &= "		then '0' "
+    sql &= "		else trn_jisseki.Tanka "
+    sql &= "		end Tanka "
     sql &= "	,	trn_jisseki.UriageKin "
     sql &= "	,	'8%' Zeiritsu "
     sql &= "	,	CASE WHEN "
